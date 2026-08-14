@@ -7114,6 +7114,7 @@ window.__v155NoAutoRefreshGlitchFixAdded=true;
    }))};
  }
  function boot(){
+   if(window.__WIPKO_CLOUD_V1__)return;
    ensureStatus();
    patchSaveFunction();
    patchRenderForApplyOnly();
@@ -8809,71 +8810,116 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
  'use strict';
  window.__WIPKO_CLOUD_V1__=true;
  var CLOUD_CACHE='wipko_cloud_v1_cache';
- var cloudVersion=0, cloudTimer=null, cloudSaving=false, cloudPending=false;
- function status(text,ok){
-   try{var el=document.getElementById('serverStatus');if(el){el.title=text;el.setAttribute('aria-label',text);el.className='server-note '+(ok?'':'off')}}catch(e){}
+ var cloudVersion=0,cloudSaving=false,cloudQueued=false,cloudReady=false,cloudTimer=null,lastCommittedJson='';
+
+ function status(text,ok){try{var el=document.getElementById('serverStatus');if(el){el.title=text;el.setAttribute('aria-label',text);el.className='server-note '+(ok?'':'off')}}catch(e){}}
+ function snapshot(){try{return JSON.stringify(db||{})}catch(e){return '{}'}}
+ function cacheWrite(json){try{localStorage.setItem(CLOUD_CACHE,json||snapshot())}catch(e){}}
+ function writeCompatibilityCache(json){
+   try{
+     var data=json||snapshot();
+     if(typeof KEY!=='undefined'&&KEY)localStorage.setItem(KEY,data);
+     localStorage.setItem('wipko_persistent_db',data);
+     localStorage.setItem('wipko_latest_db',data);
+     try{if(typeof KEY!=='undefined'&&KEY)sessionStorage.setItem(KEY,data);sessionStorage.setItem('wipko_persistent_db',data)}catch(_e){}
+     cacheWrite(data);
+   }catch(e){}
  }
- function cacheWrite(){try{localStorage.setItem(CLOUD_CACHE,JSON.stringify(db))}catch(e){}}
- // Cloud mode must never start the historical network merge/polling layers.
- try{if(typeof serverSyncTimer!=='undefined'&&serverSyncTimer){clearInterval(serverSyncTimer);serverSyncTimer=null}}catch(e){}
- try{if(typeof apiSaveTimer!=='undefined'&&apiSaveTimer){clearTimeout(apiSaveTimer);apiSaveTimer=null}}catch(e){}
+ function applyCloudDb(payload){
+   if(!payload||!payload.db||typeof payload.db!=='object')return false;
+   db=payload.db;if(typeof migrateDb==='function')migrateDb();cloudVersion=Number(payload.version||0);
+   var json=snapshot();writeCompatibilityCache(json);lastCommittedJson=json;return true;
+ }
+
  window.apiMode=function(){return true};try{apiMode=window.apiMode}catch(e){}
  window.startServerSyncLoop=function(){return false};try{startServerSyncLoop=window.startServerSyncLoop}catch(e){}
  window.syncFromServer=async function(){return false};try{syncFromServer=window.syncFromServer}catch(e){}
- // Do not import old PC/local databases automatically. Cloud state is authoritative.
- window.readSavedDb=function(){try{var raw=localStorage.getItem(CLOUD_CACHE);return raw?JSON.parse(raw):null}catch(e){return null}};
- try{readSavedDb=window.readSavedDb}catch(e){}
+ window.readSavedDb=function(){try{var raw=localStorage.getItem(CLOUD_CACHE);return raw?JSON.parse(raw):null}catch(e){return null}};try{readSavedDb=window.readSavedDb}catch(e){}
+
  async function cloudLoad(){
    try{
+     status('Cloud Database: Loading…',true);
      var r=await fetch('/api/db',{cache:'no-store',headers:{'Accept':'application/json'}});
      if(!r.ok)throw new Error('Cloud database HTTP '+r.status);
-     var p=await r.json();
-     cloudVersion=Number(p.version||0);
-     if(p.db&&typeof p.db==='object'&&Object.keys(p.db).length){db=p.db;migrateDb();cacheWrite();status('Cloud Database: Connected',true);return true}
-     if(!db)db=blank();migrateDb();
-     await cloudSave(true);
-     status('Cloud Database: Initialized',true);return true;
-   }catch(err){console.error('Cloud load failed',err);status('Cloud Database: Connection failed',false);return false}
+     var p=await r.json();cloudVersion=Number(p.version||0);
+     if(p.db&&typeof p.db==='object'&&Object.keys(p.db).length){applyCloudDb(p);cloudReady=true;status('Cloud Database: Connected',true);return true}
+     if(!db)db=typeof blank==='function'?blank():{};if(typeof migrateDb==='function')migrateDb();
+     var ok=await cloudSave(true);cloudReady=!!ok;status(ok?'Cloud Database: Initialized':'Cloud Database: Initialization failed',!!ok);return !!ok;
+   }catch(err){console.error('Cloud load failed',err);cloudReady=false;status('Cloud Database: Connection failed',false);return false}
  }
+
  async function cloudSave(force){
    if(!db)return false;
-   if(cloudSaving){cloudPending=true;return true}
+   var currentJson=snapshot();writeCompatibilityCache(currentJson);
+   if(!force&&cloudReady&&currentJson===lastCommittedJson)return true;
+   if(cloudSaving){cloudQueued=true;return true}
    cloudSaving=true;
    try{
-     cacheWrite();
-     var r=await fetch('/api/db',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({version:cloudVersion,db:db,source:'WipkoERP_Cloud_v1'})});
-     var p=await r.json().catch(function(){return {}});
-     if(!r.ok)throw new Error(p.message||('Cloud save HTTP '+r.status));
-     cloudVersion=Number(p.version||cloudVersion||0);
-     status(p.conflict?'Cloud Database: Saved (newer revision replaced)':'Cloud Database: Saved',true);
-     return true;
-   }catch(err){console.error('Cloud save failed',err);status('Cloud Database: Save failed',false);return false}
-   finally{
-     cloudSaving=false;
-     if(cloudPending){cloudPending=false;setTimeout(function(){cloudSave(true)},40)}
-   }
+     status('Cloud Database: Saving…',true);
+     var r=await fetch('/api/db',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},cache:'no-store',body:JSON.stringify({version:cloudVersion,db:db,source:'WipkoERP_Cloud_v1'})});
+     var p=await r.json().catch(function(){return {}});if(!r.ok)throw new Error(p.message||('Cloud save HTTP '+r.status));
+     cloudVersion=Number(p.version||cloudVersion||0);lastCommittedJson=currentJson;cloudReady=true;status('Cloud Database: Saved',true);return true;
+   }catch(err){console.error('Cloud save failed',err);cloudReady=false;status('Cloud Database: SAVE FAILED',false);try{alert('Cloud save failed. This record is not safely stored yet. Please do not refresh or close the page.')}catch(e){}return false}
+   finally{cloudSaving=false;if(cloudQueued){cloudQueued=false;setTimeout(function(){cloudSave(true)},0)}}
  }
- window.loadFromServer=cloudLoad;try{loadFromServer=window.loadFromServer}catch(e){}
- window.saveToServer=cloudSave;try{saveToServer=window.saveToServer}catch(e){}
- window.scheduleServerSave=function(){clearTimeout(cloudTimer);cloudTimer=setTimeout(function(){cloudSave(false)},120)};try{scheduleServerSave=window.scheduleServerSave}catch(e){}
- // Neutralize obsolete network buttons/helpers left by historical versions.
- window.v156NetworkSaveNow=function(){return cloudSave(true)};
- window.v156NetworkPullNow=cloudLoad;
+ function scheduleCloudSave(){clearTimeout(cloudTimer);cloudTimer=setTimeout(function(){cloudSave(false)},20)}
+
+ function cloudAwareSave(){
+   try{if(typeof ensureStableIds==='function')ensureStableIds()}catch(e){}
+   try{if(typeof reconcilePayments==='function')reconcilePayments()}catch(e){}
+   var json=snapshot();writeCompatibilityCache(json);scheduleCloudSave();return true;
+ }
+
+ function installCloudHooks(){
+   // Run after all legacy DOMContentLoaded hooks, so nothing can replace cloud persistence afterwards.
+   window.save=cloudAwareSave;try{save=cloudAwareSave}catch(e){}
+   window.scheduleServerSave=scheduleCloudSave;try{scheduleServerSave=window.scheduleServerSave}catch(e){}
+   window.saveToServer=cloudSave;try{saveToServer=window.saveToServer}catch(e){}
+   window.loadFromServer=cloudLoad;try{loadFromServer=window.loadFromServer}catch(e){}
+
+   var sc=window.saveCrud;
+   if(typeof sc==='function'&&!sc.__cloudCommitWrapped){
+     var wrapped=async function(){var result=await sc.apply(this,arguments);var ok=await cloudSave(true);if(!ok)throw new Error('Cloud database commit failed');return result};
+     wrapped.__cloudCommitWrapped=true;window.saveCrud=wrapped;try{saveCrud=wrapped}catch(e){}
+   }
+   ['saveQuote','saveInvoice','saveCompany','saveMaster','saveUser'].forEach(function(name){
+     try{
+       var fn=window[name];if(typeof fn!=='function'||fn.__cloudCommitWrapped)return;
+       var wrapped=async function(){var result=fn.apply(this,arguments);await Promise.resolve(result);var ok=await cloudSave(true);if(!ok)throw new Error('Cloud database commit failed');return result};
+       wrapped.__cloudCommitWrapped=true;window[name]=wrapped;
+       if(name==='saveQuote')try{saveQuote=wrapped}catch(e){}
+       if(name==='saveInvoice')try{saveInvoice=wrapped}catch(e){}
+       if(name==='saveCompany')try{saveCompany=wrapped}catch(e){}
+       if(name==='saveMaster')try{saveMaster=wrapped}catch(e){}
+       if(name==='saveUser')try{saveUser=wrapped}catch(e){}
+     }catch(e){}
+   });
+ }
+
+ window.addEventListener('pagehide',function(){
+   try{var json=snapshot();if(json===lastCommittedJson)return;var blob=new Blob([JSON.stringify({version:cloudVersion,db:db,source:'WipkoERP_Cloud_v1_pagehide'})],{type:'application/json'});navigator.sendBeacon('/api/db',blob)}catch(e){}
+ });
+
+ window.v156NetworkSaveNow=function(){return cloudSave(true)};window.v156NetworkPullNow=cloudLoad;
  window.v156NetworkSyncStatus=function(){return {enabled:true,mode:'railway-cloud',version:cloudVersion}};
  window.v159TestServerSave=async function(){var ok=await cloudSave(true);alert(ok?'Cloud save successful.':'Cloud save failed.');return ok};
- window.v160PushLocalToServerNow=cloudSave;
- window.v161PushRestoredDataToServer=function(){return cloudSave(true)};
- window.v163ForceSaveCurrentDbToServer=function(){return cloudSave(true)};
- // Start only after all historical scripts have loaded and cloud functions are final.
+ window.v160PushLocalToServerNow=cloudSave;window.v161PushRestoredDataToServer=function(){return cloudSave(true)};window.v163ForceSaveCurrentDbToServer=function(){return cloudSave(true)};
+
  async function startCloud(){
    try{
+     installCloudHooks();
      var form=document.getElementById('loginForm');if(form&&typeof login==='function')form.onsubmit=login;
-     var loaded=await cloudLoad();
-     if(!loaded&&typeof db==='undefined'){db=blank();migrateDb()}
+     var loaded=await cloudLoad();if(!loaded){status('Cloud startup failed — database unavailable',false);return}
+     // Core boot must not reload stale browser data over PostgreSQL.
+     window.loadFromServer=async function(){return true};try{loadFromServer=window.loadFromServer}catch(e){}
      if(typeof window.__wipkoCoreBoot==='function')await window.__wipkoCoreBoot();
+     installCloudHooks(); // final install after every legacy startup hook has completed
+     window.loadFromServer=cloudLoad;try{loadFromServer=window.loadFromServer}catch(e){}
      status('Cloud Database: Connected',true);
    }catch(err){console.error(err);status('Cloud startup failed',false)}
  }
+ // Initial hooks are useful for direct calls before DOMContentLoaded; startCloud installs them again afterwards.
+ installCloudHooks();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startCloud,{once:true});else startCloud();
 })();
 </script>
