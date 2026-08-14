@@ -1,0 +1,19 @@
+{
+  "name": "wipkoerp-cloud",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WipkoERP Cloud v1 for Railway",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "compression": "^1.7.4",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "pg": "^8.13.1"
+  }
+}

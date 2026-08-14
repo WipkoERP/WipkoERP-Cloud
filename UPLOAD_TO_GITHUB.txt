@@ -1,0 +1,10 @@
+UPLOAD THESE FILES/FOLDERS TO THE ROOT OF WipkoERP-Cloud:
+
+.gitignore
+package.json
+railway.json
+server.js
+README.md
+public/
+
+Do not upload the ZIP itself into the repo. Extract it first, then upload the contents above.
