@@ -50,7 +50,7 @@ async function initDb() {
 app.get('/api/health', async (_req,res) => {
   try {
     const r = await pool.query('SELECT NOW() AS now');
-    res.json({ ok:true, app:'WipkoERP Cloud v1', database:true, time:r.rows[0].now });
+    res.json({ ok:true, app:'WipkoERP Cloud v1', build:'persistence-fix-v2', database:true, time:r.rows[0].now });
   } catch (e) {
     res.status(500).json({ ok:false, database:false, message:e.message });
   }
@@ -78,7 +78,17 @@ app.post('/api/db', async (req,res) => {
     if (cur.rowCount) {
       const currentVersion=Number(cur.rows[0].version||0);
       const supplied=Number(req.body.version||0);
-      conflict=Boolean(supplied && supplied!==currentVersion);
+      conflict=Boolean(supplied!==currentVersion);
+      if (conflict) {
+        await client.query('ROLLBACK');
+        return res.status(409).json({
+          ok:false,
+          conflict:true,
+          message:'Stale client database version. Reload the latest cloud data before saving.',
+          version:currentVersion,
+          db:cur.rows[0].data
+        });
+      }
       nextVersion=currentVersion+1;
       // Keep a rolling server-side snapshot before replacement.
       await client.query('INSERT INTO wipko_state_backups(version,data,source) VALUES($1,$2::jsonb,$3)',[currentVersion,JSON.stringify(cur.rows[0].data),'pre-save']);
