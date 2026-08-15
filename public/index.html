@@ -8808,9 +8808,9 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
 <script id="wipko-cloud-v1-adapter">
 (function(){
  'use strict';
- window.__WIPKO_CLOUD_V1__=true;
+ window.__WIPKO_CLOUD_V1__=true;window.__WIPKO_CLOUD_PERSISTENCE_FIX_V3__='2026-08-15';
  var CLOUD_CACHE='wipko_cloud_v1_cache';
- var cloudVersion=0,cloudSaving=false,cloudQueued=false,cloudReady=false,cloudTimer=null,lastCommittedJson='';
+ var cloudVersion=0,cloudReady=false,cloudTimer=null,lastCommittedJson='',cloudSaveChain=Promise.resolve();
 
  function status(text,ok){try{var el=document.getElementById('serverStatus');if(el){el.title=text;el.setAttribute('aria-label',text);el.className='server-note '+(ok?'':'off')}}catch(e){}}
  function snapshot(){try{return JSON.stringify(db||{})}catch(e){return '{}'}}
@@ -8828,7 +8828,11 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
  function applyCloudDb(payload){
    if(!payload||!payload.db||typeof payload.db!=='object')return false;
    db=payload.db;if(typeof migrateDb==='function')migrateDb();cloudVersion=Number(payload.version||0);
-   var json=snapshot();writeCompatibilityCache(json);lastCommittedJson=json;return true;
+   var json=snapshot();writeCompatibilityCache(json);lastCommittedJson=json;
+   // Any save requested before the first cloud load came from stale browser state.
+   // Discard it instead of uploading it over the authoritative PostgreSQL copy.
+   clearTimeout(cloudTimer);cloudTimer=null;
+   return true;
  }
 
  window.apiMode=function(){return true};try{apiMode=window.apiMode}catch(e){}
@@ -8844,26 +8848,55 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
      var p=await r.json();cloudVersion=Number(p.version||0);
      if(p.db&&typeof p.db==='object'&&Object.keys(p.db).length){applyCloudDb(p);cloudReady=true;status('Cloud Database: Connected',true);return true}
      if(!db)db=typeof blank==='function'?blank():{};if(typeof migrateDb==='function')migrateDb();
+     // The server is genuinely empty, so this browser may seed it once.
+     cloudReady=true;
      var ok=await cloudSave(true);cloudReady=!!ok;status(ok?'Cloud Database: Initialized':'Cloud Database: Initialization failed',!!ok);return !!ok;
    }catch(err){console.error('Cloud load failed',err);cloudReady=false;status('Cloud Database: Connection failed',false);return false}
  }
 
- async function cloudSave(force){
+ async function performCloudSave(force){
    if(!db)return false;
    var currentJson=snapshot();writeCompatibilityCache(currentJson);
-   if(!force&&cloudReady&&currentJson===lastCommittedJson)return true;
-   if(cloudSaving){cloudQueued=true;return true}
-   cloudSaving=true;
-   try{
-     status('Cloud Database: Saving…',true);
-     var r=await fetch('/api/db',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},cache:'no-store',body:JSON.stringify({version:cloudVersion,db:db,source:'WipkoERP_Cloud_v1'})});
-     var p=await r.json().catch(function(){return {}});if(!r.ok)throw new Error(p.message||('Cloud save HTTP '+r.status));
-     cloudVersion=Number(p.version||cloudVersion||0);lastCommittedJson=currentJson;cloudReady=true;status('Cloud Database: Saved',true);return true;
-   }catch(err){console.error('Cloud save failed',err);cloudReady=false;status('Cloud Database: SAVE FAILED',false);try{alert('Cloud save failed. This record is not safely stored yet. Please do not refresh or close the page.')}catch(e){}return false}
-   finally{cloudSaving=false;if(cloudQueued){cloudQueued=false;setTimeout(function(){cloudSave(true)},0)}}
+   if(!cloudReady){status('Cloud Database: Waiting for initial load…',true);return false}
+   if(!force&&currentJson===lastCommittedJson)return true;
+   var attempts=0;
+   while(attempts<3){
+     attempts++;
+     try{
+       status(attempts===1?'Cloud Database: Saving…':'Cloud Database: Retrying save…',true);
+       var r=await fetch('/api/db',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},cache:'no-store',body:JSON.stringify({version:cloudVersion,db:db,source:'WipkoERP_Cloud_v1'})});
+       var p=await r.json().catch(function(){return {}});
+       if(!r.ok)throw new Error((p.message||('Cloud save HTTP '+r.status))+(p.detail?' — '+p.detail:''));
+       cloudVersion=Number(p.version||cloudVersion||0);
+       if(p.db&&typeof p.db==='object'){
+         db=p.db;if(typeof migrateDb==='function')migrateDb();
+         currentJson=snapshot();writeCompatibilityCache(currentJson);
+       }
+       lastCommittedJson=currentJson;
+       status(p.merged?'Cloud Database: Saved + merged latest changes':'Cloud Database: Saved',true);
+       return true;
+     }catch(err){
+       console.error('Cloud save attempt '+attempts+' failed',err);
+       if(attempts<3)await new Promise(function(resolve){setTimeout(resolve,250*attempts)});
+       else{
+         status('Cloud Database: SAVE FAILED',false);
+         try{alert('Cloud save failed after 3 attempts. This record is still visible locally but is not safely stored in PostgreSQL yet.\n\n'+(err&&err.message?err.message:'Unknown cloud error'))}catch(e){}
+         return false;
+       }
+     }
+   }
+   return false;
  }
- function scheduleCloudSave(){clearTimeout(cloudTimer);cloudTimer=setTimeout(function(){cloudSave(false)},20)}
-
+ async function cloudSave(force){
+   // Serialize every cloud write. No two ERP saves can POST the same database revision in parallel.
+   var run=function(){return performCloudSave(!!force)};
+   cloudSaveChain=cloudSaveChain.then(run,run);
+   return cloudSaveChain;
+ }
+ function scheduleCloudSave(){
+   if(!cloudReady)return false;
+   clearTimeout(cloudTimer);cloudTimer=setTimeout(function(){cloudSave(false)},40);return true;
+ }
  function cloudAwareSave(){
    try{if(typeof ensureStableIds==='function')ensureStableIds()}catch(e){}
    try{if(typeof reconcilePayments==='function')reconcilePayments()}catch(e){}
@@ -8879,13 +8912,13 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
 
    var sc=window.saveCrud;
    if(typeof sc==='function'&&!sc.__cloudCommitWrapped){
-     var wrapped=async function(){var result=await sc.apply(this,arguments);var ok=await cloudSave(true);if(!ok)throw new Error('Cloud database commit failed');return result};
+     var wrapped=async function(){var result=await sc.apply(this,arguments);var ok=await cloudSave(true);if(!ok)return false;return result};
      wrapped.__cloudCommitWrapped=true;window.saveCrud=wrapped;try{saveCrud=wrapped}catch(e){}
    }
    ['saveQuote','saveInvoice','saveCompany','saveMaster','saveUser'].forEach(function(name){
      try{
        var fn=window[name];if(typeof fn!=='function'||fn.__cloudCommitWrapped)return;
-       var wrapped=async function(){var result=fn.apply(this,arguments);await Promise.resolve(result);var ok=await cloudSave(true);if(!ok)throw new Error('Cloud database commit failed');return result};
+       var wrapped=async function(){var result=fn.apply(this,arguments);await Promise.resolve(result);var ok=await cloudSave(true);if(!ok)return false;return result};
        wrapped.__cloudCommitWrapped=true;window[name]=wrapped;
        if(name==='saveQuote')try{saveQuote=wrapped}catch(e){}
        if(name==='saveInvoice')try{saveInvoice=wrapped}catch(e){}
@@ -8896,9 +8929,7 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
    });
  }
 
- window.addEventListener('pagehide',function(){
-   try{var json=snapshot();if(json===lastCommittedJson)return;var blob=new Blob([JSON.stringify({version:cloudVersion,db:db,source:'WipkoERP_Cloud_v1_pagehide'})],{type:'application/json'});navigator.sendBeacon('/api/db',blob)}catch(e){}
- });
+ window.addEventListener('pagehide',function(){try{clearTimeout(cloudTimer)}catch(e){}});
 
  window.v156NetworkSaveNow=function(){return cloudSave(true)};window.v156NetworkPullNow=cloudLoad;
  window.v156NetworkSyncStatus=function(){return {enabled:true,mode:'railway-cloud',version:cloudVersion}};
