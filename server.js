@@ -50,7 +50,7 @@ async function initDb() {
 app.get('/api/health', async (_req,res) => {
   try {
     const r = await pool.query('SELECT NOW() AS now');
-    res.json({ ok:true, app:'WipkoERP Cloud v1', build:'persistence-fix-v2', database:true, time:r.rows[0].now });
+    res.json({ ok:true, app:'WipkoERP Cloud v1', build:'persistence-fix-v3', database:true, time:r.rows[0].now });
   } catch (e) {
     res.status(500).json({ ok:false, database:false, message:e.message });
   }
@@ -67,6 +67,51 @@ app.get('/api/db', async (_req,res) => {
   }
 });
 
+function recordKey(row, index) {
+  if (!row || typeof row !== 'object') return `__index_${index}`;
+  return String(row.id || row.invoiceNo || row.no || row.quotationNo || row.reference || row.code || row.username || `__index_${index}`);
+}
+
+function mergeArray(existing, incoming) {
+  const out = [];
+  const positions = new Map();
+  (Array.isArray(existing) ? existing : []).forEach((row, i) => {
+    const k = recordKey(row, i);
+    positions.set(k, out.length);
+    out.push(row);
+  });
+  (Array.isArray(incoming) ? incoming : []).forEach((row, i) => {
+    const k = recordKey(row, i);
+    if (positions.has(k)) {
+      const pos = positions.get(k);
+      const oldRow = out[pos];
+      out[pos] = (oldRow && typeof oldRow === 'object' && row && typeof row === 'object')
+        ? { ...oldRow, ...row }
+        : row;
+    } else {
+      positions.set(k, out.length);
+      out.push(row);
+    }
+  });
+  return out;
+}
+
+function mergeDb(current, incoming) {
+  if (!current || typeof current !== 'object' || Array.isArray(current)) return incoming;
+  if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) return current;
+  const merged = { ...current };
+  for (const [key, value] of Object.entries(incoming)) {
+    if (Array.isArray(value)) {
+      merged[key] = mergeArray(current[key], value);
+    } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+      merged[key] = { ...(current[key] && typeof current[key] === 'object' ? current[key] : {}), ...value };
+    } else {
+      merged[key] = value;
+    }
+  }
+  return merged;
+}
+
 app.post('/api/db', async (req,res) => {
   const incoming=req.body && req.body.db;
   if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) return res.status(400).json({message:'Invalid ERP database payload'});
@@ -74,33 +119,31 @@ app.post('/api/db', async (req,res) => {
   try {
     await client.query('BEGIN');
     const cur=await client.query('SELECT version, data FROM wipko_app_state WHERE id=1 FOR UPDATE');
-    let nextVersion=1, conflict=false;
+    let nextVersion=1;
+    let finalDb=incoming;
+    let merged=false;
     if (cur.rowCount) {
       const currentVersion=Number(cur.rows[0].version||0);
       const supplied=Number(req.body.version||0);
-      conflict=Boolean(supplied!==currentVersion);
-      if (conflict) {
-        await client.query('ROLLBACK');
-        return res.status(409).json({
-          ok:false,
-          conflict:true,
-          message:'Stale client database version. Reload the latest cloud data before saving.',
-          version:currentVersion,
-          db:cur.rows[0].data
-        });
+      if (supplied!==currentVersion) {
+        // Never reject a legitimate save just because another tab/PC saved first.
+        // Merge by stable record identity so stale clients cannot erase newer cloud records.
+        finalDb=mergeDb(cur.rows[0].data||{},incoming);
+        merged=true;
       }
       nextVersion=currentVersion+1;
-      // Keep a rolling server-side snapshot before replacement.
       await client.query('INSERT INTO wipko_state_backups(version,data,source) VALUES($1,$2::jsonb,$3)',[currentVersion,JSON.stringify(cur.rows[0].data),'pre-save']);
       await client.query('DELETE FROM wipko_state_backups WHERE id NOT IN (SELECT id FROM wipko_state_backups ORDER BY id DESC LIMIT 30)');
-      await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[nextVersion,JSON.stringify(incoming),String(req.body.source||incoming.__client||'web')]);
+      await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[nextVersion,JSON.stringify(finalDb),String(req.body.source||incoming.__client||'web')]);
     } else {
-      await client.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[nextVersion,JSON.stringify(incoming),String(req.body.source||'initial')]);
+      await client.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[nextVersion,JSON.stringify(finalDb),String(req.body.source||'initial')]);
     }
     await client.query('COMMIT');
-    res.json({ok:true,version:nextVersion,conflict});
+    res.json({ok:true,version:nextVersion,merged,db:finalDb});
   } catch(e) {
-    await client.query('ROLLBACK');console.error(e);res.status(500).json({message:'Database save failed'});
+    try{await client.query('ROLLBACK')}catch(_e){}
+    console.error('Database save failed:',e);
+    res.status(500).json({message:'Database save failed',detail:e.message});
   } finally { client.release(); }
 });
 
