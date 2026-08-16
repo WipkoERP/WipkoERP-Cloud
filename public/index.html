@@ -2591,29 +2591,14 @@ function anaSummary(d){let completed=d.projects.filter(p=>p.status==='Completed'
 function dashboard(){let income=sum(db.accounts.filter(a=>a.type==='Income'),'amount'),exp=sum(db.accounts.filter(a=>a.type==='Expense'),'amount'),vat=sum(db.accounts,'vat'),pay=db.payroll.reduce((s,x)=>s+(+x.basic||0)+(+x.allowance||0)-(+x.deductions||0),0),cams=sum(db.cctv,'cameras'),due=db.cctv.filter(x=>dateStatus(x.amcExpiry)==='Due Soon').length;setTimeout(()=>drawChart('chart',db.master.projectStatus.map(s=>[s,db.projects.filter(p=>p.status===s).length])),0);let alerts=[...db.cctv.map(x=>['CCTV AMC',clientName(x.client)+' - '+(x.location||'AMC'),x.amcExpiry,dateStatus(x.amcExpiry),x.client]),...db.employees.flatMap(e=>[['Visa',e.name,e.visa,dateStatus(e.visa),''],['EID',e.name,e.eid,dateStatus(e.eid),''],['Passport',e.name,e.passport,dateStatus(e.passport),'']])].filter(x=>x[3]&&x[3]!=='OK');return'<div class=cards>'+[['Clients',db.clients.length],['Projects',db.projects.length],['Income',money(income)],['Expense',money(exp)],['Profit',money(income-exp)],['Cameras',cams]].map(x=>'<div class=card><span>'+x[0]+'</span><b>'+x[1]+'</b></div>').join('')+'</div><div class=panel><h2>V13 Added Features</h2><div class=cards style="grid-template-columns:repeat(4,1fr)"><div class=info><b>Preprint Invoice</b><br><span>6cm top + 3cm bottom blank</span></div><div class=info><b>Client Uploads</b><br><span>TL / AMC / Diagram / Other</span></div><div class=info><b>ZAM Portal</b><br><span>Open portal in new browser tab</span></div><div class=info><b>WhatsApp Alerts</b><br><span>Renewal message button</span></div></div></div><div class="grid2"><div class=panel><h2>Project Status Chart</h2><canvas id=chart height=240></canvas></div><div class=panel><h2>Infographics</h2><div class=cards style="grid-template-columns:repeat(2,1fr)">'+[['AMC Due',due],['VAT',money(vat)],['Payroll',money(pay)],['Quotations',db.quotations.length]].map(x=>'<div class=info><span>'+x[0]+'</span><h2>'+x[1]+'</h2></div>').join('')+'</div></div></div><div class=panel><h2>Expiry & Renewal Alerts</h2><table><thead><tr><th>Type</th><th>Name</th><th>Expiry</th><th>Status / Action</th></tr></thead><tbody>'+alerts.map(a=>'<tr><td>'+a[0]+'</td><td>'+a[1]+'</td><td>'+a[2]+'</td><td>'+pill(a[3])+(a[4]?' <button class="mini" onclick="whatsapp(\''+a[4]+'\',\''+a[0]+'\',\''+a[2]+'\')">WhatsApp</button>':'')+'</td></tr>').join('')+'</tbody></table></div>'}
 function sum(a,k){return a.reduce((s,x)=>s+(+x[k]||0),0)}function drawChart(id,data){let c=$(id);if(!c)return;let ctx=c.getContext('2d');c.width=c.clientWidth;c.height=240;let max=Math.max(1,...data.map(x=>x[1])),w=(c.width-50)/Math.max(1,data.length);ctx.clearRect(0,0,c.width,c.height);ctx.font='12px Segoe UI';data.forEach(([n,v],i)=>{let h=(c.height-70)*v/max,x=35+i*w,y=c.height-35-h;let g=ctx.createLinearGradient(0,y,0,c.height);g.addColorStop(0,'#22c55e');g.addColorStop(1,'#0b5ed7');ctx.fillStyle=g;ctx.fillRect(x,y,w-18,h);ctx.fillStyle='#0b2a4a';ctx.fillText(v,x+w/2-8,y-7);ctx.save();ctx.translate(x,c.height-12);ctx.rotate(-.35);ctx.fillText(n,0,0);ctx.restore()})}
 
-async function fileToData(input){
- let file=input.files&&input.files[0];if(!file)return;
- let hidden=input.parentElement.querySelector('input[type=hidden]');if(!hidden)return;
- if(file.size>25*1024*1024){input.value='';return alert('Attachment is too large. Maximum file size is 25 MB.');}
- let old=hidden.value,statusEl=input.parentElement.querySelector('.cloud-attachment-status');
- if(!statusEl){statusEl=document.createElement('small');statusEl.className='cloud-attachment-status';input.insertAdjacentElement('afterend',statusEl)}
- statusEl.textContent='Uploading to cloud…';input.disabled=true;
- try{
-   let r=await fetch('/api/attachments',{method:'POST',headers:{'Content-Type':'application/octet-stream','X-File-Name':encodeURIComponent(file.name),'X-File-Type':file.type||'application/octet-stream'},body:file});
-   let p={};try{p=await r.json()}catch(e){}
-   if(!r.ok)throw new Error(p.message||('Upload failed ('+r.status+')'));
-   hidden.value=JSON.stringify({name:p.name||file.name,type:p.type||file.type,size:p.size||file.size,attachmentId:p.id,url:p.url||('/api/attachments/'+encodeURIComponent(p.id))});
-   statusEl.textContent='Uploaded to cloud';
- }catch(err){hidden.value=old;input.value='';statusEl.textContent='Upload failed';alert('Attachment upload failed. Existing saved attachment was kept.\n\n'+(err.message||err));}
- finally{input.disabled=false}
-}function signatureToData(input){let file=input.files[0];if(!file)return;if(!file.type.startsWith('image/'))return alert('Please select PNG/JPG signature image');let hidden=input.parentElement.querySelector('input[name=signature]'),prev=input.parentElement.querySelector('.signature-preview');let r=new FileReader();r.onload=()=>{hidden.value=r.result;if(prev){prev.src=r.result;prev.classList.remove('hidden')}};r.readAsDataURL(file)}function imageToData(input){let file=input.files[0];if(!file)return;if(!file.type.startsWith('image/'))return alert('Please select image file');let hidden=input.parentElement.querySelector('input[type=hidden]'),prev=input.parentElement.querySelector('img');let r=new FileReader();r.onload=()=>{hidden.value=r.result;if(prev)prev.src=r.result};r.readAsDataURL(file)}function companyStampToData(input){let file=input.files[0];if(!file)return;if(!file.type.startsWith('image/'))return alert('Please select stamp image');let hidden=input.parentElement.querySelector('input[name=stamp]'),prev=input.parentElement.querySelector('img');let r=new FileReader();r.onload=()=>{hidden.value=r.result;if(prev){prev.src=r.result;prev.classList.remove('hidden')}};r.readAsDataURL(file)}
+function fileToData(input){let file=input.files[0];if(!file)return;let hidden=input.parentElement.querySelector('input[type=hidden]');let r=new FileReader();r.onload=()=>{hidden.value=JSON.stringify({name:file.name,type:file.type,data:r.result});};r.readAsDataURL(file)}function signatureToData(input){let file=input.files[0];if(!file)return;if(!file.type.startsWith('image/'))return alert('Please select PNG/JPG signature image');let hidden=input.parentElement.querySelector('input[name=signature]'),prev=input.parentElement.querySelector('.signature-preview');let r=new FileReader();r.onload=()=>{hidden.value=r.result;if(prev){prev.src=r.result;prev.classList.remove('hidden')}};r.readAsDataURL(file)}function imageToData(input){let file=input.files[0];if(!file)return;if(!file.type.startsWith('image/'))return alert('Please select image file');let hidden=input.parentElement.querySelector('input[type=hidden]'),prev=input.parentElement.querySelector('img');let r=new FileReader();r.onload=()=>{hidden.value=r.result;if(prev)prev.src=r.result};r.readAsDataURL(file)}function companyStampToData(input){let file=input.files[0];if(!file)return;if(!file.type.startsWith('image/'))return alert('Please select stamp image');let hidden=input.parentElement.querySelector('input[name=stamp]'),prev=input.parentElement.querySelector('img');let r=new FileReader();r.onload=()=>{hidden.value=r.result;if(prev){prev.src=r.result;prev.classList.remove('hidden')}};r.readAsDataURL(file)}
 function uploadBadges(x){return ['tlFile','amcFile','diagramFile','otherFile'].map(k=>{try{let f=JSON.parse(x[k]||'');return f.name?'<span class="pill ok">'+f.name+'</span>':''}catch{return''}}).join(' ')}
 function fillMessageTemplate(t,c,extra={}){return(t||'').replaceAll('{client}',c.company||'Client').replaceAll('{company}',c.company||'Client').replaceAll('{type}',extra.type||'Renewal').replaceAll('{expiry}',extra.expiry||'').replaceAll('{phone}',c.mobile||c.phone||'')}
 function openWhatsapp(c,msg){let phone=(c.mobile||c.phone||'').replace(/[^0-9]/g,'');if(!phone)return alert('Client phone number missing');window.open('https://wa.me/'+phone+'?text='+encodeURIComponent(msg),'_blank')}
 function whatsapp(clientId,type,expiry){let c=db.clients.find(x=>x.id===clientId)||{};let tpl=db.template.renewalMessage||'Dear {client}, your {type} renewal is due on {expiry}. Please contact Wipko Technologies LLC.';openWhatsapp(c,fillMessageTemplate(tpl,c,{type,expiry}))}
 function whatsappPromo(clientId){let c=db.clients.find(x=>x.id===clientId)||{};let tpl=db.template.promotionalMessage||'Dear {client}, Wipko Technologies LLC provides CCTV, AMC, networking and IT solutions.';openWhatsapp(c,fillMessageTemplate(tpl,c,{}))}
 function safe(v){return(v===undefined||v===null||v==='')?'-':String(v)}
-function previewStoredFile(col,id,k){let o=(db[col]||[]).find(x=>x.id===id)||{};try{let f=JSON.parse(o[k]||'');if(f.url){window.open(f.url,'_blank');return}if(f.attachmentId){window.open('/api/attachments/'+encodeURIComponent(f.attachmentId),'_blank');return}if(f.data){window.open(f.data,'_blank');return}}catch(e){}alert('No saved attachment is available for preview.')}
+function previewStoredFile(col,id,k){let o=(db[col]||[]).find(x=>x.id===id)||{};try{let f=JSON.parse(o[k]||'');if(f.data){window.open(f.data,'_blank');return}}catch(e){}alert('Preview available only for files uploaded and saved inside this browser backup.')}
 function filePreviewButtons(col,o){let labels={tlFile:'Trade Licence',amcFile:'AMC Contract',diagramFile:'Diagram',otherFile:'Other'};return Object.keys(labels).map(k=>'<button class="mini" onclick="previewStoredFile(\''+col+'\',\''+o.id+'\',\''+k+'\')">Preview '+labels[k]+'</button>').join(' ')}
 function cleanWindowsPathText(t){return String(t||'').trim().replace(/^"|"$/g,'')}
 function browsePathFile(input,el){let f=input.files&&input.files[0];if(!f||!el)return;let val=f.path||input.value||f.name;el.value=cleanWindowsPathText(val)}
@@ -8971,18 +8956,18 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
 })();
 </script>
 
-<style id="wipko-approved-feature-update-v1">
+<style id="wipko-approved-feature-update-v2-safe">
 /* Approved changes only: invoice/quotation signature & description */
-#workspace .doc-signatures .sig-img-wrap{height:18mm!important;margin:-2.5mm 0 -1.2mm!important}
-#workspace .doc-signatures .sign-img{max-width:72mm!important;max-height:26mm!important;transform:translateY(.8mm)!important}
+#workspace .doc-signatures .sig-img-wrap{height:12mm!important;margin:-1.8mm 0 -1mm!important}
+#workspace .doc-signatures .sign-img{max-width:58mm!important;max-height:18mm!important;transform:translateY(.7mm)!important}
 #workspace .iq-table textarea.desc-box{min-height:8mm!important;max-height:none!important;height:auto;overflow:hidden!important;white-space:pre-wrap!important;word-break:break-word!important;resize:vertical!important}
 @media print{
- #workspace .doc-signatures .sig-img-wrap{height:17mm!important}
- #workspace .doc-signatures .sign-img{max-width:70mm!important;max-height:25mm!important}
+ #workspace .doc-signatures .sig-img-wrap{height:11mm!important}
+ #workspace .doc-signatures .sign-img{max-width:56mm!important;max-height:17mm!important}
  #workspace .iq-table textarea.desc-box{max-height:none!important;overflow:hidden!important;resize:none!important}
 }
 </style>
-<script id="wipko-approved-feature-update-v1">
+<script id="wipko-approved-feature-update-v2-safe">
 (function(){
  'use strict';
  // Item description: grow only the description textarea so all entered lines remain visible/printable.
@@ -8995,6 +8980,17 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
  // Live header clock. This does not render/reload the Dashboard.
  function liveClock(){try{if(typeof updateHeaderInfo==='function')updateHeaderInfo()}catch(e){}}
  liveClock();window.__wipkoLiveClockTimer&&clearInterval(window.__wipkoLiveClockTimer);window.__wipkoLiveClockTimer=setInterval(liveClock,1000);
+
+ // Dashboard Export PDF button: intercept the existing button in capture phase so the working dashboard module stays untouched.
+ document.addEventListener('click',function(e){
+   var b=e.target&&e.target.closest?e.target.closest('.v36-dashboard .v36-button'):null;
+   if(!b)return;
+   var t=(b.textContent||'').replace(/\s+/g,' ').trim();
+   if(t==='Export PDF / Print'){
+     e.preventDefault();e.stopImmediatePropagation();
+     if(window.wipkoDashboardPrint)window.wipkoDashboardPrint();
+   }
+ },true);
 
  // Reliable dashboard report print: copy the rendered dashboard and convert canvas charts to images first.
  window.wipkoDashboardPrint=function(){
@@ -9023,29 +9019,6 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
      return {id:rec.id,name:rec.name,savedAt:rec.savedAt,updatedAt:rec.updatedAt};
    }
  };
-})();
-</script>
-
-<style id="wipko-cloud-sidebar-stable-v1">
-@media (min-width:901px){
- body:not(.erp-sidebar-collapsed) .saas-side{width:245px!important}
- body:not(.erp-sidebar-collapsed) .saas-main{margin-left:245px!important;width:calc(100% - 245px)!important}
-}
-</style>
-<script id="wipko-cloud-sidebar-stable-v1-script">
-(function(){
- 'use strict';
- var KEY='wipko_erp_sidebar_collapsed';
- function wanted(){try{return localStorage.getItem(KEY)==='1'}catch(e){return false}}
- function apply(){
-   var v=wanted();document.body.classList.toggle('erp-sidebar-collapsed',v);
-   var b=document.getElementById('sidebarToggleBtn');if(b){b.title=v?'Expand sidebar':'Collapse sidebar';b.setAttribute('aria-expanded',String(!v));}
- }
- apply();document.addEventListener('DOMContentLoaded',apply);window.addEventListener('pageshow',apply);
- var oldRender=window.render;
- if(typeof oldRender==='function'&&!oldRender.__sidebarStableWrapped){
-   var wrapped=function(){var r=oldRender.apply(this,arguments);apply();return r};wrapped.__sidebarStableWrapped=true;window.render=wrapped;try{render=wrapped}catch(e){}
- }
 })();
 </script>
 </body></html>
