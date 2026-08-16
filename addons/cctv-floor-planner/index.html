@@ -13,6 +13,11 @@
       <button id="newBtn">New</button>
       <label class="file-btn">Import Plan<input id="planInput" type="file" accept="image/*" hidden></label>
       <button id="saveBtn">Save Project</button>
+      <button id="addPageBtn">+ Page</button>
+      <select id="pageSelect" title="Pages"><option value="0">Page 1</option></select>
+      <button id="deletePageBtn" title="Delete current page">Delete Page</button>
+      <label class="file-btn">Insert Image<input id="imageInput" type="file" accept="image/*" hidden></label>
+      <button id="saveClientBtn">Save Diagram in Client</button>
       <label class="file-btn">Open Project<input id="projectInput" type="file" accept="application/json,.cctvplan" hidden></label>
       <button id="undoBtn">Undo</button>
       <button id="redoBtn">Redo</button>
@@ -60,7 +65,9 @@
 
       <div class="panel">
         <h3>Project</h3>
-        <label>Client <input id="clientName" placeholder="Client name"></label>
+        <label>Client <input id="clientName" list="clientOptions" placeholder="Search client..." autocomplete="off"><datalist id="clientOptions"></datalist></label>
+        <label>Saved Diagrams<select id="savedDiagramSelect"><option value="">Select saved diagram</option></select></label>
+        <button id="loadClientDiagramBtn" type="button">Load Selected Diagram</button>
         <label>Project <input id="projectName" placeholder="Project title"></label>
         <label>Site / Location <input id="siteLocation" placeholder="Site location"></label>
         <label>Drawing No. <input id="drawingNo" placeholder="CCTV-001"></label>
@@ -93,6 +100,13 @@
         <label>Opacity <input id="camOpacity" type="range" min="10" max="80"><span id="camOpacityVal"></span></label>
         <label>Cone colour <input id="camColor" type="color" value="#66aaff"></label>
         <label><input id="showLabel" type="checkbox" checked> Show label</label>
+      </div>
+
+      <div id="imageProps" class="properties hidden">
+        <label>Width <input id="imageWidth" type="number" min="20"></label>
+        <label>Height <input id="imageHeight" type="number" min="20"></label>
+        <label>Rotate <input id="imageAngle" type="range" min="-180" max="180" value="0"><span id="imageAngleVal">0°</span></label>
+        <div class="crop-grid"><label>Crop Left %<input id="cropLeft" type="number" min="0" max="90" value="0"></label><label>Crop Right %<input id="cropRight" type="number" min="0" max="90" value="0"></label><label>Crop Top %<input id="cropTop" type="number" min="0" max="90" value="0"></label><label>Crop Bottom %<input id="cropBottom" type="number" min="0" max="90" value="0"></label></div>
       </div>
       <div id="textProps" class="properties hidden">
         <label>Text <textarea id="textValue" rows="4"></textarea></label>

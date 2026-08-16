@@ -9,3 +9,9 @@
 .arch-door-icon{position:relative;display:inline-block;width:24px;height:22px;vertical-align:-5px;margin-right:4px;color:currentColor}
 .arch-door-icon:before{content:'';position:absolute;left:0;bottom:0;width:5px;height:18px;background:currentColor;border-radius:4px;box-shadow:-11px 18px 0 2px currentColor}
 .arch-door-icon:after{content:'';position:absolute;left:0;bottom:0;width:18px;height:18px;border:5px solid currentColor;border-left:none;border-bottom:none;border-radius:0 20px 0 0;transform:translate(0,1px)}
+
+/* Approved Diagram Maker feature update */
+#pageSelect{width:auto;min-width:92px;margin:0;background:#202a3b;color:#fff;border-color:#455065;padding:8px}
+#deletePageBtn{color:#fecaca}.crop-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}.crop-grid label{margin:4px 0}
+#loadClientDiagramBtn{width:100%;border:1px solid var(--line);background:#f8fafc;padding:8px;border-radius:7px;cursor:pointer}
+.transform-handle{cursor:pointer}
