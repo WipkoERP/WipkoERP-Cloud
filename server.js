@@ -45,12 +45,22 @@ async function initDb() {
       source TEXT
     )
   `);
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS wipko_attachments (
+      id TEXT PRIMARY KEY,
+      file_name TEXT NOT NULL,
+      mime_type TEXT,
+      file_size BIGINT NOT NULL DEFAULT 0,
+      data BYTEA NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
 }
 
 app.get('/api/health', async (_req,res) => {
   try {
     const r = await pool.query('SELECT NOW() AS now');
-    res.json({ ok:true, app:'WipkoERP Cloud v1', build:'persistence-fix-v3', database:true, time:r.rows[0].now });
+    res.json({ ok:true, app:'WipkoERP Cloud v1', build:'persistence-fix-v3-attachments-v1', database:true, time:r.rows[0].now });
   } catch (e) {
     res.status(500).json({ ok:false, database:false, message:e.message });
   }
@@ -145,6 +155,35 @@ app.post('/api/db', async (req,res) => {
     console.error('Database save failed:',e);
     res.status(500).json({message:'Database save failed',detail:e.message});
   } finally { client.release(); }
+});
+
+
+// Cloud attachment storage: keep binary files outside the ERP JSON snapshot.
+app.post('/api/attachments', express.raw({type:'application/octet-stream',limit:'30mb'}), async (req,res) => {
+  try {
+    const data=Buffer.isBuffer(req.body)?req.body:Buffer.alloc(0);
+    if(!data.length)return res.status(400).json({message:'Empty attachment'});
+    const max=25*1024*1024;
+    if(data.length>max)return res.status(413).json({message:'Attachment is too large. Maximum file size is 25 MB.'});
+    const id='ATT-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,10).toUpperCase();
+    const fileName=decodeURIComponent(String(req.headers['x-file-name']||'attachment')).slice(0,255);
+    const mime=String(req.headers['x-file-type']||'application/octet-stream').slice(0,150);
+    await pool.query('INSERT INTO wipko_attachments(id,file_name,mime_type,file_size,data) VALUES($1,$2,$3,$4,$5)',[id,fileName,mime,data.length,data]);
+    res.json({ok:true,id,name:fileName,type:mime,size:data.length,url:'/api/attachments/'+encodeURIComponent(id)});
+  } catch(e){console.error('Attachment upload failed:',e);res.status(500).json({message:'Attachment upload failed',detail:e.message});}
+});
+
+app.get('/api/attachments/:id', async (req,res) => {
+  try {
+    const r=await pool.query('SELECT file_name,mime_type,file_size,data FROM wipko_attachments WHERE id=$1',[String(req.params.id||'')]);
+    if(!r.rowCount)return res.status(404).send('Attachment not found');
+    const row=r.rows[0];
+    res.setHeader('Content-Type',row.mime_type||'application/octet-stream');
+    res.setHeader('Content-Length',String(row.file_size||row.data.length));
+    res.setHeader('Content-Disposition',`inline; filename*=UTF-8''${encodeURIComponent(row.file_name||'attachment')}`);
+    res.setHeader('Cache-Control','private, max-age=3600');
+    res.send(row.data);
+  } catch(e){console.error('Attachment read failed:',e);res.status(500).send('Attachment read failed');}
 });
 
 // Admin-friendly cloud backup download of the central state.
