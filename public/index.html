@@ -2360,7 +2360,6 @@ body.erp-sidebar-collapsed .side-db-status-wrap{padding:2px 0}
       <div class="topbar-right">
         <label class="search-card"><span>⌕</span><input id="globalSearch" placeholder="Search anything..." oninput="runGlobalSearch(this.value)"></label>
         <div class="date-card" id="dateCard"></div>
-        <button class="icon-btn" title="Notifications">🔔<span class="notify-dot">5</span></button>
         <div class="mini-user"><div class="mini-user-avatar">A</div><div id="whoMini"></div></div>
         <div class="quick-new-wrap">
           <button class="new-btn" onclick="toggleNewMenu(event)">+ New ▾</button>
@@ -2627,7 +2626,7 @@ function viewClient(id){let c=db.clients.find(x=>x.id===id);if(!c)return;let inv
 function viewCctv(id){let x=db.cctv.find(z=>z.id===id);if(!x)return;let c=db.clients.find(c=>c.id===x.client)||{};let attach=(label,k)=>'<button class="mini" onclick="previewStoredFile(\'cctv\',\''+x.id+'\',\''+k+'\')">Preview '+label+'</button>';let html='<h3>Client Details</h3>'+detailTable([['Company Name',c.company],['Contact Person',c.contact],['Phone',c.phone],['Email',c.email],['Address',c.address],['TRN Number',c.trn],['ZAM User Email',c.zamEmail],['ZAM Password',c.zamPass]])+'<h3>CCTV / AMC Details</h3>'+detailTable([['Site',x.site],['Location',x.location],['Last Renewal',x.lastRenewal],['AMC Expiry',x.amcExpiry],['No. of Cameras',x.cameras],['Camera Configuration',x.config],['AMC Contract',attach('AMC Contract','contract')],['Screenshots',attach('Screenshots','screens')],['Site Diagram',attach('Site Diagram','diagram')]])+'<h3>Attached Files</h3><div class="file-actions">'+attach('AMC Contract','contract')+attach('Screenshots','screens')+attach('Site Diagram','diagram')+'</div>';showRecordModal('CCTV / AMC Full Details',html)}
 function doc(type){
 let d=type==='quote'?quoteDraft:invoiceDraft;
-let title=type==='quote'?'QUOTATION':'INVOICE';
+let title=type==='quote'?'QUOTATION':'TAX INVOICE';
 let no=d.no||((type==='quote'?'QTN':'INV')+'-'+String(Date.now()).slice(-6));
 let date=d.date||today();
 let client=db.clients.find(c=>c.id===d.client)||{};
@@ -2673,7 +2672,7 @@ return '<div class="iq-doc-wrap">'+pages.map(function(p,idx){
   return '<div class="doc-a4 print-target hf-doc iq-page">'+header()+'<div class="hf-body iq-body">'+(p.info?info:continuation(idx+1,totalPages))+tableHead+rows(p.rows,p.offset)+tableEnd+(p.bottom?'<button class="ghost no-print" onclick="addDocItem(\''+type+'\')">+ Add Item</button>'+bottom:'')+'</div>'+footer()+'</div>';
 }).join('')+'</div>';
 }
-function itemRow(type,it,i){let line=calcLine(it);return'<tr><td>'+(i+1)+'</td><td><textarea class="desc-box" onchange="updateItem(\''+type+'\','+i+',\'desc\',this.value)">'+(it.desc||'')+'</textarea></td><td><input value="'+(it.type||'LT')+'" onchange="updateItem(\''+type+'\','+i+',\'type\',this.value)"></td><td><input type=number value="'+(it.qty||1)+'" onchange="updateItem(\''+type+'\','+i+',\'qty\',this.value)"></td><td><input type=number value="'+(it.rate||0)+'" onchange="updateItem(\''+type+'\','+i+',\'rate\',this.value)"></td><td>'+money(line.vat)+'</td><td>'+money(line.total)+'</td><td class="no-print action-col"><button class="mini danger" onclick="removeItem(\''+type+'\','+i+')">X</button></td></tr>'}
+function itemRow(type,it,i){let line=calcLine(it);return'<tr><td>'+(i+1)+'</td><td><textarea class="desc-box" oninput="wipkoGrowDesc(this)" onchange="updateItem(\''+type+'\','+i+',\'desc\',this.value)">'+(it.desc||'')+'</textarea></td><td><input value="'+(it.type||'LT')+'" onchange="updateItem(\''+type+'\','+i+',\'type\',this.value)"></td><td><input type=number value="'+(it.qty||1)+'" onchange="updateItem(\''+type+'\','+i+',\'qty\',this.value)"></td><td><input type=number value="'+(it.rate||0)+'" onchange="updateItem(\''+type+'\','+i+',\'rate\',this.value)"></td><td>'+money(line.vat)+'</td><td>'+money(line.total)+'</td><td class="no-print action-col"><button class="mini danger" onclick="removeItem(\''+type+'\','+i+')">X</button></td></tr>'}
 function calcLine(it){let sub=Math.max((+it.qty||0)*(+it.rate||0),0),vat=sub*.05;return{sub,vat,total:sub+vat}}function calcItems(items){return items.reduce((s,it)=>{let l=calcLine(it);s.sub+=l.sub;s.vat+=l.vat;s.total+=l.total;return s},{sub:0,vat:0,total:0})}function updateItem(type,i,k,v){let d=type==='quote'?quoteDraft:invoiceDraft;d.items[i][k]=['qty','rate','discount'].includes(k)?+v||0:v;render()}function addDocItem(type){let d=type==='quote'?quoteDraft:invoiceDraft;d.items.push({desc:'',type:'LT',qty:1,rate:0});render()}function removeItem(type,i){let d=type==='quote'?quoteDraft:invoiceDraft;d.items.splice(i,1);render()}function setDocClient(type,v){let d=type==='quote'?quoteDraft:invoiceDraft;d.client=v;render()}function saveQuote(){quoteDraft.no=$('docNo').value;quoteDraft.date=$('docDate').value;quoteDraft.valid=$('docValid')?.value||today();let t=calcItems(quoteDraft.items);let rec={...quoteDraft,id:quoteDraft.id||uid('QTN'),total:t.total};let i=db.quotations.findIndex(q=>q.id===rec.id);i>=0?db.quotations[i]=rec:db.quotations.push(rec);quoteDraft=JSON.parse(JSON.stringify(rec));log('Quotation saved',rec.no);save();render()}function loadQuote(id){quoteDraft=JSON.parse(JSON.stringify(db.quotations.find(q=>q.id===id)));openPage('quotation')}function quoteToInvoice(id){let q=db.quotations.find(x=>x.id===id)||quoteDraft;invoiceDraft={no:'INV-'+String(Date.now()).slice(-6),date:today(),client:q.client,items:JSON.parse(JSON.stringify(q.items||[]))};log('Quotation converted to invoice',q.no||'current');openPage('invoice')}function saveInvoice(){invoiceDraft.no=$('docNo').value;invoiceDraft.date=$('docDate').value;invoiceDraft.payStatus=$('invoicePayStatus')?.value||invoiceDraft.payStatus||'Pending';let t=calcItems(invoiceDraft.items);let rec={...invoiceDraft,id:invoiceDraft.id||uid('INV'),total:t.total};let i=db.invoices.findIndex(x=>x.id===rec.id);i>=0?db.invoices[i]=rec:db.invoices.push(rec);invoiceDraft=JSON.parse(JSON.stringify(rec));syncAmcStatus();log('Invoice saved',rec.no);save();render()}function printDoc(){
   try{
     var ws=document.getElementById('workspace');
@@ -5420,9 +5419,11 @@ window.__v90AMCReadabilityPadding=true;
    w.document.open(); w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'</body></html>'); w.document.close(); w.focus(); setTimeout(function(){try{w.print()}catch(e){}},700);
  }
  function viewAmc(idOrObj){
-   var x=getAmc(idOrObj);
-   var body='<div class="amc-v88-toolbar no-print"><button id="amcV102PrintBtn">Open A4 PDF / Print</button></div><div class="v89-print-warning">Invoice/quotation unchanged. First-page client seal is fixed above the footer with reserved clearance.</div><div class="amc-preview-two-pages">'+amcHtml(x,'amc-preview-page-card')+'</div>';
-   if(typeof showRecordModal==='function'){showRecordModal('Annual Maintenance Contract',body);setTimeout(function(){var b=document.getElementById('amcV102PrintBtn'); if(b)b.onclick=function(){openAmcPrint(x)}},50)}else openAmcPrint(x);
+   var x=getAmc(idOrObj), w=window.open('', '_blank', 'width=1050,height=900');
+   if(!w){alert('Popup blocked. Please allow popups for this app.');return}
+   w.document.open();
+   w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'</body></html>');
+   w.document.close();w.focus();
  }
  window.amcContractHtml=amcHtml;
  window.amcOpenContract=viewAmc;
@@ -8952,6 +8953,61 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
  // Initial hooks are useful for direct calls before DOMContentLoaded; startCloud installs them again afterwards.
  installCloudHooks();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',startCloud,{once:true});else startCloud();
+})();
+</script>
+
+<style id="wipko-approved-feature-update-v1">
+/* Approved changes only: invoice/quotation signature & description */
+#workspace .doc-signatures .sig-img-wrap{height:12mm!important;margin:-1.8mm 0 -1mm!important}
+#workspace .doc-signatures .sign-img{max-width:58mm!important;max-height:18mm!important;transform:translateY(.7mm)!important}
+#workspace .iq-table textarea.desc-box{min-height:8mm!important;max-height:none!important;height:auto;overflow:hidden!important;white-space:pre-wrap!important;word-break:break-word!important;resize:vertical!important}
+@media print{
+ #workspace .doc-signatures .sig-img-wrap{height:11mm!important}
+ #workspace .doc-signatures .sign-img{max-width:56mm!important;max-height:17mm!important}
+ #workspace .iq-table textarea.desc-box{max-height:none!important;overflow:hidden!important;resize:none!important}
+}
+</style>
+<script id="wipko-approved-feature-update-v1">
+(function(){
+ 'use strict';
+ // Item description: grow only the description textarea so all entered lines remain visible/printable.
+ window.wipkoGrowDesc=function(el){if(!el)return;el.style.height='auto';el.style.height=Math.max(34,el.scrollHeight+2)+'px'};
+ function growAll(){document.querySelectorAll('#workspace textarea.desc-box').forEach(window.wipkoGrowDesc)}
+ document.addEventListener('input',function(e){if(e.target&&e.target.matches&&e.target.matches('#workspace textarea.desc-box'))window.wipkoGrowDesc(e.target)});
+ var _render=window.render;
+ if(typeof _render==='function')window.render=function(){var r=_render.apply(this,arguments);requestAnimationFrame(growAll);return r};
+
+ // Live header clock. This does not render/reload the Dashboard.
+ function liveClock(){try{if(typeof updateHeaderInfo==='function')updateHeaderInfo()}catch(e){}}
+ liveClock();window.__wipkoLiveClockTimer&&clearInterval(window.__wipkoLiveClockTimer);window.__wipkoLiveClockTimer=setInterval(liveClock,1000);
+
+ // Reliable dashboard report print: copy the rendered dashboard and convert canvas charts to images first.
+ window.wipkoDashboardPrint=function(){
+   var src=document.querySelector('#workspace .v36-dashboard');if(!src){window.print();return}
+   var clone=src.cloneNode(true), sc=src.querySelectorAll('canvas'), cc=clone.querySelectorAll('canvas');
+   sc.forEach(function(c,i){try{var im=document.createElement('img');im.src=c.toDataURL('image/png');im.style.width='100%';im.style.height='auto';if(cc[i])cc[i].replaceWith(im)}catch(e){}});
+   clone.querySelectorAll('.no-print,button').forEach(function(x){x.remove()});
+   var styles=Array.from(document.querySelectorAll('link[rel="stylesheet"],style')).map(function(x){return x.outerHTML}).join('');
+   var w=window.open('','_blank','width=1200,height=900');if(!w){alert('Popup blocked. Please allow popups to export the Dashboard report.');return}
+   w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Wipko ERP Dashboard Report</title>'+styles+'<style>body{background:#fff!important;padding:12mm!important}.v36-dashboard{max-width:100%!important}.v36-profile{display:none!important}@page{size:A4 landscape;margin:8mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){setTimeout(function(){window.print()},250)}<\/script></body></html>');w.document.close();
+ };
+
+ // Client ↔ Diagram Maker cloud bridge. Saves diagrams only inside the selected client record.
+ window.WipkoDiagramBridge={
+   clients:function(){return (window.db&&Array.isArray(db.clients)?db.clients:[]).filter(function(c){return !c.isDeleted}).map(function(c){return {id:c.id,name:c.company||c.name||c.clientName||c.id}})},
+   list:function(clientId){var c=(db.clients||[]).find(function(x){return String(x.id)===String(clientId)});return c&&Array.isArray(c.diagrams)?c.diagrams.map(function(d){return {id:d.id,name:d.name||'Diagram',savedAt:d.savedAt||'',updatedAt:d.updatedAt||''}}):[]},
+   load:function(clientId,diagramId){var c=(db.clients||[]).find(function(x){return String(x.id)===String(clientId)});var d=c&&Array.isArray(c.diagrams)?c.diagrams.find(function(x){return String(x.id)===String(diagramId)}):null;return d?JSON.parse(JSON.stringify(d.data||{})):null},
+   save:function(clientId,payload,name,diagramId){
+     var c=(db.clients||[]).find(function(x){return String(x.id)===String(clientId)});if(!c)throw new Error('Please select a valid client.');
+     c.diagrams=Array.isArray(c.diagrams)?c.diagrams:[];var now=new Date().toISOString(),id=diagramId||('DGM-'+Date.now().toString(36));var i=c.diagrams.findIndex(function(x){return String(x.id)===String(id)});
+     var rec={id:id,name:String(name||payload&&payload.meta&&payload.meta.project||'CCTV Diagram').trim()||'CCTV Diagram',savedAt:i>=0?(c.diagrams[i].savedAt||now):now,updatedAt:now,data:JSON.parse(JSON.stringify(payload||{}))};
+     if(i>=0)c.diagrams[i]=rec;else c.diagrams.push(rec);
+     // Compatibility pointer: latest saved diagram stays visible as the client's Diagram attachment metadata.
+     c.diagramFile=JSON.stringify({name:rec.name+'.cctvplan',type:'application/json',diagramId:rec.id,clientId:c.id,savedAt:now});
+     if(typeof log==='function')log('Client diagram saved',(c.company||c.id)+' / '+rec.name);else if(typeof save==='function')save();
+     return {id:rec.id,name:rec.name,savedAt:rec.savedAt,updatedAt:rec.updatedAt};
+   }
+ };
 })();
 </script>
 </body></html>
