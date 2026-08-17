@@ -2793,7 +2793,7 @@ let clientRows=(type==='quote'||type==='invoice')
 ?'<div class="iq-client-details"><div><b>Address</b><span>'+esc(client.address||client.location||'-')+'</span></div><div><b>Tel. &amp; Email</b><span>'+esc(client.phone||'-')+' &nbsp; | &nbsp; '+esc(client.email||'-')+'</span></div><div><b>Contact Person</b><span>'+esc(client.contact||'-')+' &nbsp; | &nbsp; '+esc(client.mobile||'-')+'</span></div><div><b>TRN Number</b><span>'+esc(client.trn||'-')+'</span></div></div>'
 :'<p><strong>'+esc(client.company||'')+'</strong><br><span class="iq-contact-line">Address: '+esc(client.address||client.location||'-')+' &nbsp; | &nbsp; Tel: '+esc(client.phone||client.contact||'-')+' &nbsp; | &nbsp; Email: '+esc(client.email||'-')+'</span><br><span>TRN: '+esc(client.trn||'-')+'</span></p>';
 let titleIcon=(type==='invoice'||type==='quote')?'<span class="iq-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 2.75h8.8L19 6.95V21.25H6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.5 2.9v4.4h4.3M9 11h7M9 14.5h7M9 18h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>':'';
-let info='<div class="pre-info iq-info"><div class="pre-client"><b>Bill To / العميل</b><select id="docClient" onchange="setDocClient(\''+type+'\',this.value)"><option value="">Select Client</option>'+db.clients.map(c=>'<option value="'+c.id+'" '+(c.id===d.client?'selected':'')+'>'+c.company+'</option>').join('')+'</select><div class="iq-client-company"><strong>'+esc(client.company||'')+'</strong></div>'+clientRows+'</div>'
+let info='<div class="pre-info iq-info"><div class="pre-client"><b>Bill To / العميل</b><div class="doc-client-ajax"><input id="docClientSearch" class="doc-client-search" type="text" autocomplete="off" placeholder="Search client..." value="'+esc(client.company||'')+'" data-doc-type="'+type+'" oninput="docClientAjaxSearch(this)" onfocus="docClientAjaxSearch(this,true)" onkeydown="docClientAjaxKey(event,this)"><input id="docClient" type="hidden" value="'+esc(d.client||'')+'"><div id="docClientResults" class="doc-client-results hidden"></div></div><div class="iq-client-company"><strong>'+esc(client.company||'')+'</strong></div>'+clientRows+'</div>'
 +'<div class="pre-meta"><h3>'+titleIcon+'<span>'+title+'</span></h3><label>No.<input id="docNo" value="'+no+'"></label><label>Date<input id="docDate" type=date value="'+date+'"></label>'+((type==='quote'||type==='proforma')?'<label>'+(type==='quote'?'Valid Until':'Validity / Expiry')+'<input id="docValid" type=date value="'+(d.valid||today())+'"></label>':'')+'</div></div>';
 let continuation=function(page,total){return '<div class="iq-continuation"><b>'+title+'</b><span>No. '+esc(no)+'</span><span>Page '+page+' of '+total+'</span></div>'};
 let tableHead='<table class="pre-table hf-table iq-table"><thead><tr><th>Sl.</th><th>Description</th><th>Type</th><th>Qty</th><th>Rate</th><th>VAT</th><th>Amount</th><th class="no-print"></th></tr></thead><tbody>';
@@ -9541,4 +9541,64 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
  #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
 }
 </style>
+
+<style id="wipko-v20-doc-client-ajax-style">
+/* v20: Quotation / Tax Invoice client AJAX-style searchable selector only. */
+.doc-client-ajax{position:relative;max-width:75%;margin-bottom:2mm}
+.doc-client-search{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#111;font:inherit;outline:none}
+.doc-client-search:focus{border-color:#1597ff;box-shadow:0 0 0 3px rgba(21,151,255,.14)}
+.doc-client-results{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:50;max-height:220px;overflow:auto;background:#fff;border:1px solid #cbd5e1;border-radius:10px;box-shadow:0 12px 28px rgba(15,23,42,.16);padding:5px}
+.doc-client-results.hidden{display:none!important}
+.doc-client-result{display:block;width:100%;border:0;background:#fff;color:#111;text-align:left;padding:8px 10px;border-radius:7px;cursor:pointer;font:inherit;line-height:1.25}
+.doc-client-result:hover,.doc-client-result.active{background:#e8f3ff;color:#0b5ed7}
+.doc-client-result small{display:block;color:#64748b;font-size:10px;margin-top:2px}
+.doc-client-empty{padding:9px 10px;color:#64748b;font-size:11px}
+@media print{.doc-client-ajax{display:none!important}}
+@media(max-width:700px){.doc-client-ajax{max-width:100%}.doc-client-results{max-height:180px}}
+</style>
+<script id="wipko-v20-doc-client-ajax">
+(function(){
+ var ajaxSeq=0;
+ function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+ function normalize(v){return String(v||'').toLowerCase().replace(/\s+/g,' ').trim()}
+ function clientHaystack(c){return normalize([c.company,c.contact,c.mobile,c.phone,c.email,c.trn,c.tlNo].filter(Boolean).join(' '))}
+ window.docClientAjaxSearch=function(input){
+   var box=document.getElementById('docClientResults'); if(!box)return;
+   var seq=++ajaxSeq, q=normalize(input.value), type=input.getAttribute('data-doc-type')||'invoice';
+   clearTimeout(window.__wipkoDocClientAjaxTimer);
+   window.__wipkoDocClientAjaxTimer=setTimeout(function(){
+     if(seq!==ajaxSeq)return;
+     var clients=(window.db&&Array.isArray(db.clients)?db.clients:[]).filter(function(c){return !c.isDeleted});
+     var matches=clients.filter(function(c){return !q||clientHaystack(c).indexOf(q)!==-1}).slice(0,12);
+     box.innerHTML=matches.length?matches.map(function(c,i){
+       var meta=[c.contact,c.mobile||c.phone,c.email].filter(Boolean).join(' • ');
+       return '<button type="button" class="doc-client-result'+(i===0?' active':'')+'" data-client-id="'+escHtml(c.id)+'" data-doc-type="'+escHtml(type)+'" onmousedown="event.preventDefault();docClientAjaxChoose(this)"><strong>'+escHtml(c.company||c.name||'Unnamed Client')+'</strong>'+(meta?'<small>'+escHtml(meta)+'</small>':'')+'</button>';
+     }).join(''):'<div class="doc-client-empty">No matching clients</div>';
+     box.classList.remove('hidden');
+   },80);
+ };
+ window.docClientAjaxChoose=function(btn){
+   var id=btn.getAttribute('data-client-id')||'', type=btn.getAttribute('data-doc-type')||'invoice';
+   var c=(window.db&&db.clients||[]).find(function(x){return String(x.id)===String(id)}); if(!c)return;
+   var hidden=document.getElementById('docClient'); if(hidden)hidden.value=id;
+   var search=document.getElementById('docClientSearch'); if(search)search.value=c.company||c.name||'';
+   var box=document.getElementById('docClientResults'); if(box)box.classList.add('hidden');
+   setDocClient(type,id);
+ };
+ window.docClientAjaxKey=function(ev,input){
+   var box=document.getElementById('docClientResults'); if(!box)return;
+   var items=Array.prototype.slice.call(box.querySelectorAll('.doc-client-result'));
+   if(ev.key==='Escape'){box.classList.add('hidden');return}
+   if(!items.length)return;
+   var idx=items.findIndex(function(x){return x.classList.contains('active')}); if(idx<0)idx=0;
+   if(ev.key==='ArrowDown'||ev.key==='ArrowUp'){
+     ev.preventDefault(); items[idx].classList.remove('active'); idx=(idx+(ev.key==='ArrowDown'?1:-1)+items.length)%items.length; items[idx].classList.add('active'); items[idx].scrollIntoView({block:'nearest'});
+   }else if(ev.key==='Enter'){
+     ev.preventDefault(); docClientAjaxChoose(items[idx]||items[0]);
+   }
+ };
+ document.addEventListener('mousedown',function(ev){var wrap=ev.target.closest&&ev.target.closest('.doc-client-ajax');if(!wrap){var box=document.getElementById('docClientResults');if(box)box.classList.add('hidden')}});
+})();
+</script>
+
 </body></html>
