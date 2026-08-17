@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP_v21</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP_v22</title><style>
 :root{--p:#0b5ed7;--p2:#22c55e;--bg:#eef2f7;--card:#fff;--ink:#0b2a4a;--muted:#64748b;--line:#d9e2ec;--bad:#dc2626;--warn:#f59e0b;--good:#16a34a;--side:#fff}body.theme-blue{--p:#2563eb;--p2:#06b6d4;--bg:#f4f7fb;--side:#08111f;--ink:#111827}body.theme-emerald{--p:#059669;--p2:#2dd4bf;--side:#052e2b}body.theme-purple{--p:#7c3aed;--p2:#c084fc;--side:#26104d}body.theme-dark{--p:#38bdf8;--p2:#818cf8;--bg:#0f172a;--card:#111827;--ink:#f8fafc;--muted:#cbd5e1;--line:#334155;--side:#020617}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#07111f,#123d70);padding:24px}.login-card{width:min(430px,96vw);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:28px;padding:34px;color:#fff;box-shadow:0 40px 90px rgba(0,0,0,.32)}.login-card img{max-width:190px;background:transparent!important;border-radius:0!important;padding:0!important}.login-card input,.login-card button{width:100%;margin-top:8px}.app{display:flex}.side{width:285px;height:100vh;position:fixed;background:linear-gradient(160deg,var(--side),color-mix(in srgb,var(--p) 45%,#07111f));color:#fff;padding:22px;border-right:1px solid var(--line);overflow:auto}body.theme-full-light .side{background:#fff;color:#0b2a4a}.brand{display:flex;gap:12px;align-items:center;margin-bottom:20px}.brand img{width:72px;background:#fff;border-radius:12px;padding:6px}.brand b{font-size:18px}.nav button{display:block;width:100%;text-align:left;margin:3px 0;padding:11px 13px;border-radius:12px;background:transparent;color:inherit;border:0;cursor:pointer}.nav button.active,.nav button:hover{background:color-mix(in srgb,var(--p) 18%,transparent)}.main{margin-left:285px;width:calc(100% - 285px);padding:24px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.top h1{margin:0}.top p{margin:4px 0;color:var(--muted)}button{border:0;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:10px 14px;font-weight:800;cursor:pointer}.ghost{background:#eaf1ff;color:var(--p);box-shadow:none}.danger{background:#fee2e2;color:#991b1b}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 14px 35px rgba(15,23,42,.06)}.grid{display:grid;grid-template-columns:390px 1fr;gap:16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card,.info{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}.card span,.muted{color:var(--muted);font-size:13px}.card b{display:block;font-size:25px;margin-top:6px}.form{display:grid;gap:10px}.form label{font-size:12px;color:var(--muted);font-weight:800}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;margin-top:5px}textarea{min-height:76px}table{width:100%;border-collapse:collapse;font-size:13px}th{background:color-mix(in srgb,var(--p) 12%,var(--card));color:var(--p);text-align:left;padding:10px;border-bottom:1px solid var(--line)}td{padding:9px;border-bottom:1px solid var(--line);vertical-align:top}.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900}.ok{background:#dcfce7;color:#166534}.due{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}.mini{padding:6px 8px;font-size:11px;margin:2px}.doc-a4{max-width:1000px;margin:auto;background:#fff;color:#111;border-radius:18px;overflow:hidden}.doc-head{min-height:74mm;display:grid;grid-template-columns:1fr .8fr 1fr;gap:16px;padding:22px;border-bottom:4px solid var(--p)}.doc-head img{max-width:165px;max-height:65px}.doc-title{text-align:right}.doc-title strong{font-size:32px;color:var(--p);text-transform:uppercase}.doc-bill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px}.doc-items{min-height:148mm;padding:18px 22px}.doc-foot{min-height:74mm;display:grid;grid-template-columns:1fr 320px;gap:18px;padding:18px 22px;border-top:2px solid #e2e8f0}.totals{background:#0b1220;color:#fff;border-radius:14px;padding:16px}.totals p{display:flex;justify-content:space-between}.grand{font-size:20px;border-top:1px solid #ffffff55;padding-top:10px}.toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap}.row-actions{white-space:nowrap}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden}.progress b{height:100%;display:block;background:linear-gradient(90deg,var(--p),var(--p2))}@media(max-width:1100px){.side{position:static;width:100%;height:auto}.main{margin:0;width:100%}.app{display:block}.grid,.grid2,.doc-head,.doc-foot{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}@media print{.side,.top,.toolbar,.no-print,.row-actions,button{display:none!important}.main{margin:0;width:100%;padding:0}.panel{box-shadow:none;border:0}.doc-a4{width:210mm;height:297mm;max-width:none;border-radius:0}.doc-head{height:25%;min-height:0}.doc-items{height:50%;min-height:0}.doc-foot{height:25%;min-height:0}.doc-title input,.doc-head select{border:0}.print-only{display:block!important}body *{visibility:hidden}#workspace .print-target,#workspace .print-target *{visibility:visible}.print-target{position:absolute;left:0;top:0;width:100%}}
 
 /* v6 pre-printed paper layout: no generated header/footer */
@@ -2628,80 +2628,7 @@ function removeSampleData(){if(!confirm('Remove only sample data? Manual entries
 const schemas={assets:[['name','Asset Name'],['category','Category'],['serial','Serial Number'],['assignedTo','Assigned Staff','employee'],['purchaseDate','Purchase Date','date'],['value','Asset Value','number'],['status','Status'],['notes','Notes','textarea']],clients:[['company','Company Name'],['logo','Client Logo','image'],['tlNo','TL No.'],['trn','TRN Number'],['contact','Contact Person'],['mobile','Mobile Number'],['phone','Telephone'],['lastRenewalDate','Last Renewal Date','date'],['email','Email','email'],['address','Address','textarea']],vendors:[['company','Supplier Name'],['logo','Supplier Logo','image'],['trn','TRN Number'],['contact','Contact Person'],['phone','Contact Number'],['email','Email','email'],['address','Address','textarea']],cctv:[['client','Client','client'],['location','Location'],['zamEmail','Zam Portal User Email'],['zamPass','Zam Portal Password'],['lastRenewal','Last Renewal','date'],['amcExpiry','AMC Expiry','date'],['amcAmount','AMC Amount','number'],['clientStatus','Client Status','cctvStatus'],['screens','Screenshots Upload','file'],['diagram','Site Diagram Upload','file'],['clientSign','Upload Client Sign','image'],['clientSeal','Upload Client Seal','image'],['annexureA','Annexure A','annexureA']],accounts:[['date','Date','date'],['type','Type','type'],['category','Category','accountCategory'],['desc','Description'],['billPhoto','Bill Photo Upload','expenseImage'],['amount','Amount','number'],['vat','VAT','number'],['payStatus','Payment Status','pay'],['party','Client / Supplier','accountParty']],projects:[['name','Project Name'],['client','Client','client'],['deadline','Deadline','date'],['status','Status','project'],['progress','Progress %','number'],['income','Income / Budget','number'],['cost','Cost','number'],['paid','Paid Amount','number']],employees:[['photo','Employee Photo','image'],['name','Employee Name'],['designation','Designation'],['department','Department','dept'],['joiningDate','Date of Joining','date'],['phone','Phone'],['email','Email','email'],['visa','Visa Expiry','date'],['eid','Emirates ID Expiry','date'],['passport','Passport Expiry','date'],['status','Status','empStatus']],payroll:[['month','Month','month'],['employee','Employee','emp'],['paymentDate','Salary Payment Date','date'],['basic','Basic','number'],['allowance','Allowance','number'],['deductions','Deductions','number'],['payStatus','Payment Status','pay']],reports:[['month','Month','month'],['summary','Management Summary','textarea'],['actions','Action Items','textarea']]};
 function inputField(f,r={}){let[k,l,t]=f,v=r[k]||'';if(t==='annexureA'){let av='';try{av=Array.isArray(v)?JSON.stringify(v):(v||'')}catch(e){av=''}return '<div class="annexure-card full"><h3>Annexure A</h3><input type="hidden" name="annexureA" value="'+safe(av)+'"><div id="annexureABox"></div><button type="button" class="ghost" onclick="annexAddRow()">+ Add Row</button></div>';}if(t==='file')return '<label>'+l+'<input type=hidden name=\''+k+'\' value=\''+(v||'')+'\'><input type=file onchange=\'fileToData(this)\'><small>'+(v?'File saved':'Stored in browser backup')+'</small></label>';if(t==='image')return '<label>'+l+'<input type=hidden name=\''+k+'\' value=\''+(v||'')+'\'><input type=file accept=\'image/png,image/jpeg,image/webp\' onchange=\'imageToData(this)\'><small>'+(v?'Logo saved':'Upload image/logo')+'</small>'+(v?'<img class=\'client-logo-preview\' src=\''+v+'\'>':'')+'</label>';if(t==='textarea')return'<label>'+l+'<textarea name="'+k+'">'+v+'</textarea></label>';if(t==='client')return'<label>'+l+selectClient(v)+'</label>';if(t==='emp')return'<label>'+l+selectEmp(v)+'</label>';if(t==='project')return'<label>'+l+opt(db.master.projectStatus,v)+'</label>';if(t==='pay')return'<label>'+l+'<select name="'+k+'">'+db.master.paymentStatus.map(x=>'<option '+(x===v?'selected':'')+'>'+x+'</option>').join('')+'</select></label>';if(t==='empStatus')return'<label>'+l+'<select name="'+k+'">'+db.master.employeeStatus.map(x=>'<option '+(x===v?'selected':'')+'>'+x+'</option>').join('')+'</select></label>';if(t==='dept')return'<label>'+l+'<select name="'+k+'">'+db.master.departments.map(x=>'<option '+(x===v?'selected':'')+'>'+x+'</option>').join('')+'</select></label>';if(t==='cctvStatus')return'<label>'+l+'<select name="'+k+'">'+(db.master.cctvClientStatus||['Renewed','Renewal Pending','Client Lost']).map(x=>'<option '+(x===v?'selected':'')+'>'+x+'</option>').join('')+'</select></label>';if(t==='accountCategory')return'<label>'+l+'<select name="'+k+'" data-current="'+(v||'')+'"></select></label>';if(t==='accountParty')return'<label>'+l+'<select name="'+k+'" data-current="'+(v||'')+'"></select><small>Income: Client | Expense: Supplier</small></label>';if(t==='path')return'<label>'+l+'<input name="'+k+'" class="path-input" value="'+(v||'')+'" placeholder="C:\\Folder\\File.pdf" onpaste="handlePathPaste(event,this)"><small>Offline browser mode: use Windows Copy as path, then paste here. Browse cannot give exact path in browser.</small></label>';if(t==='expenseImage')return '<label class="expense-only">'+l+'<input type=hidden name=\''+k+'\' value=\''+(v||'')+'\'><input type=file accept=\'image/png,image/jpeg,image/webp\' onchange=\'imageToData(this)\'><small>Shown for Expense entries. Upload bill photo/image.</small>'+(v?'<img class=\'bill-photo-preview\' src=\''+v+'\'>':'')+'</label>';if(t==='expensePath')return'<label class="expense-only">'+l+'<input name="'+k+'" class="path-input" value="'+(v||'')+'" placeholder="C:\\Folder\\bill.jpg" onpaste="handlePathPaste(event,this)"><small>Shown for Expense entries. Paste bill image path manually.</small></label>';if(t==='type')return'<label>'+l+'<select name="'+k+'" onchange="toggleExpenseFields(this.form)"><option '+(v==='Income'?'selected':'')+'>Income</option><option '+(v==='Expense'?'selected':'')+'>Expense</option></select></label>';return'<label>'+l+'<input name="'+k+'" type="'+(t||'text')+'" value="'+v+'"></label>'}function normalizeCategoryName(type,cat){let inc=db.master.incomeCategory||[],exp=db.master.expenseCategory||[],arr=type==='Expense'?exp:inc;if(!cat)return arr[0]||'Other';if(arr.includes(cat))return cat;let map={CCTV:'CCTV Installation',AMC:'Fujairah Police ZAM AMC','CCTV AMC':'Fujairah Police ZAM AMC',Software:'Software',Website:'Website','IT Support':'IT Support',Hardware:'Hardware',Salary:'Salary',Rent:'Rent',Marketing:'Marketing',Vehicle:'Vehicle'};let v=map[cat]||cat;if(arr.includes(v))return v;return arr.includes('Other')?'Other':(arr[0]||cat)}function normalizeAccountCategories(){(db.accounts||[]).forEach(a=>{a.category=normalizeCategoryName(a.type||'Income',a.category)})}function fillAccountCategory(form){if(!form||!form.elements.category||!form.elements.type)return;let sel=form.elements.category,cur=sel.dataset.current||sel.value||'',type=form.elements.type.value||'Income',arr=type==='Expense'?(db.master.expenseCategory||[]):(db.master.incomeCategory||[]);cur=normalizeCategoryName(type,cur);sel.innerHTML=(arr||[]).map(x=>'<option value="'+safe(x)+'" '+(x===cur?'selected':'')+'>'+safe(x)+'</option>').join('');if(sel.options.length&&!cur)sel.selectedIndex=0}function fillAccountParty(form){if(!form||!form.elements.party||!form.elements.type)return;let sel=form.elements.party,cur=sel.dataset.current||sel.value||'',is=form.elements.type.value==='Expense',arr=is?(db.vendors||[]):(db.clients||[]),label=is?'Supplier':'Client';sel.innerHTML='<option value="">Select '+label+'</option>'+arr.map(x=>'<option value="'+x.id+'" '+(x.id===cur?'selected':'')+'>'+safe(x.company)+'</option>').join('')}function toggleExpenseFields(form){if(!form)return;let is=(form.elements.type&&form.elements.type.value==='Expense');form.querySelectorAll('.expense-only').forEach(x=>x.style.display=is?'block':'none');fillAccountCategory(form);fillAccountParty(form)}
 function crudPage(col,title){let rows=renderTable(col),tools=(col==='clients'||col==='cctv')?listTools(col):'';let head;if(col==='clients'){head='<div class="panel-head client-list-head"><h2>Client List</h2><div class="toolbar client-list-actions"><button onclick="v69OpenDrawer(\'clients\')">+ New Client</button><button class="ghost icon-only-btn" title="Print Client List" aria-label="Print Client List" onclick="printClientList()">🖨️</button></div></div>'}else if(col==='cctv'){head='<div class="panel-head"><h2>'+title+' List</h2><button onclick="window.open(\'https://fs.fujairahpolice.gov.ae/AdminLoginNew.aspx\',\'_blank\')">OPEN ZAM Portal</button></div>'}else{head='<h2>'+title+' List</h2>'}let top=col==='clients'?'':'<div class="ux-page-head"><div><h2>'+title+'</h2><p class="muted">Search, filter and manage '+title.toLowerCase()+' records.</p></div><div class="toolbar"><button onclick="v69OpenDrawer(\''+col+'\')">+ New '+title+'</button><button class="ghost" onclick="window.print()">Print</button></div></div>';return'<div class="ux-page">'+top+'<div class="panel ux-list-panel">'+head+tools+'<table id="'+col+'Table">'+rows+'</table></div><div class="ux-drawer hidden" id="drawer-'+col+'"><div class="ux-drawer-back" onclick="v69CloseDrawer(\''+col+'\')"></div><div class="ux-drawer-panel"><div class="panel-head"><h2 id="drawerTitle-'+col+'">Add / Update '+title+'</h2><button class="ghost" type="button" onclick="v69CloseDrawer(\''+col+'\')">Close</button></div><form class="form" onsubmit="saveCrud(event,\''+col+'\')"><input type="hidden" name="id" id="editId">'+schemas[col].map(f=>inputField(f)).join('')+'<button>Save</button></form></div></div></div>'}
-function printClientList(){const table=document.getElementById('clientsTable');if(!table){alert('Client list is not available.');return}const w=window.open('','_blank','width=1200,height=800');if(!w){alert('Please allow pop-ups to print the client list.');return}w.document.write('<!doctype html><html><head><title>Client List</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h1{font-size:22px;margin:0 0 18px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#f2f5f8}.row-actions,th:last-child,td:last-child{display:none}@page{size:landscape;margin:12mm}</style></head><body><h1>Client List</h1>'+table.outerHTML+'<script>window.onload=()=>{window.print();window.onafterprint=()=>window.close()}<\/script>
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-
-<style id="wipko-v21-doc-client-ajax-style">
-/* v21: Quotation / Tax Invoice searchable client selector only. */
-.doc-client-ajax{position:relative;max-width:75%;margin-bottom:2mm}
-.doc-client-search{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#111;font:inherit;outline:none}
-.doc-client-search:focus{border-color:#1597ff;box-shadow:0 0 0 3px rgba(21,151,255,.14)}
-.doc-client-results{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:100;max-height:220px;overflow:auto;background:#fff;border:1px solid #cbd5e1;border-radius:10px;box-shadow:0 12px 28px rgba(15,23,42,.16);padding:5px}
-.doc-client-results.hidden{display:none!important}
-.doc-client-result{display:block;width:100%;border:0;background:#fff;color:#111;text-align:left;padding:8px 10px;border-radius:7px;cursor:pointer;font:inherit;line-height:1.25}
-.doc-client-result:hover,.doc-client-result.active{background:#e8f3ff;color:#0b5ed7}
-.doc-client-result small{display:block;color:#64748b;font-size:10px;margin-top:2px}
-.doc-client-empty{padding:9px 10px;color:#64748b;font-size:11px}
-@media print{.doc-client-ajax{display:none!important}}
-@media(max-width:700px){.doc-client-ajax{max-width:100%}.doc-client-results{max-height:180px}}
-</style>
-<script id="wipko-v21-doc-client-ajax">
-(function(){
- var timer=null;
- function html(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
- function norm(v){return String(v||'').toLowerCase().replace(/\s+/g,' ').trim()}
- function searchable(c){return norm([c.company,c.name,c.contact,c.mobile,c.phone,c.email,c.trn,c.tlNo].filter(Boolean).join(' '))}
- window.docClientAjaxSearch=function(input){
-   var box=document.getElementById('docClientResults'); if(!box)return;
-   clearTimeout(timer);
-   timer=setTimeout(function(){
-     var q=norm(input.value), type=input.getAttribute('data-doc-type')||'invoice';
-     var clients=(typeof db!=='undefined'&&Array.isArray(db.clients)?db.clients:[]).filter(function(c){return !c.isDeleted});
-     var matches=clients.filter(function(c){return !q||searchable(c).indexOf(q)!==-1}).slice(0,15);
-     box.innerHTML=matches.length?matches.map(function(c,i){
-       var meta=[c.contact,c.mobile||c.phone,c.email].filter(Boolean).join(' • ');
-       return '<button type="button" class="doc-client-result'+(i===0?' active':'')+'" data-client-id="'+html(c.id)+'" data-doc-type="'+html(type)+'"><strong>'+html(c.company||c.name||'Unnamed Client')+'</strong>'+(meta?'<small>'+html(meta)+'</small>':'')+'</button>';
-     }).join(''):'<div class="doc-client-empty">No matching clients</div>';
-     box.classList.remove('hidden');
-   },60);
- };
- window.docClientAjaxChoose=function(btn){
-   var id=btn.getAttribute('data-client-id')||'', type=btn.getAttribute('data-doc-type')||'invoice';
-   var c=(typeof db!=='undefined'&&Array.isArray(db.clients)?db.clients:[]).find(function(x){return String(x.id)===String(id)}); if(!c)return;
-   var hidden=document.getElementById('docClient'); if(hidden)hidden.value=id;
-   var search=document.getElementById('docClientSearch'); if(search)search.value=c.company||c.name||'';
-   var box=document.getElementById('docClientResults'); if(box)box.classList.add('hidden');
-   setDocClient(type,id);
- };
- window.docClientAjaxKey=function(ev){
-   var box=document.getElementById('docClientResults'); if(!box)return;
-   var items=Array.prototype.slice.call(box.querySelectorAll('.doc-client-result'));
-   if(ev.key==='Escape'){box.classList.add('hidden');return}
-   if(!items.length)return;
-   var idx=items.findIndex(function(x){return x.classList.contains('active')}); if(idx<0)idx=0;
-   if(ev.key==='ArrowDown'||ev.key==='ArrowUp'){
-     ev.preventDefault(); items[idx].classList.remove('active'); idx=(idx+(ev.key==='ArrowDown'?1:-1)+items.length)%items.length; items[idx].classList.add('active'); items[idx].scrollIntoView({block:'nearest'});
-   }else if(ev.key==='Enter'){ev.preventDefault();docClientAjaxChoose(items[idx]||items[0])}
- };
- document.addEventListener('mousedown',function(ev){
-   var result=ev.target.closest&&ev.target.closest('.doc-client-result');
-   if(result){ev.preventDefault();docClientAjaxChoose(result);return}
-   if(!(ev.target.closest&&ev.target.closest('.doc-client-ajax'))){var box=document.getElementById('docClientResults');if(box)box.classList.add('hidden')}
- });
-})();
-</script>
-
-</body></html>');w.document.close()}
+function printClientList(){const table=document.getElementById('clientsTable');if(!table){alert('Client list is not available.');return}const w=window.open('','_blank','width=1200,height=800');if(!w){alert('Please allow pop-ups to print the client list.');return}w.document.write('<!doctype html><html><head><title>Client List</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h1{font-size:22px;margin:0 0 18px}table{width:100%;border-collapse:collapse;font-size:11px}th,td{border:1px solid #ccc;padding:7px;text-align:left}th{background:#f2f5f8}.row-actions,th:last-child,td:last-child{display:none}@page{size:landscape;margin:12mm}</style></head><body><h1>Client List</h1>'+table.outerHTML+'<script>window.onload=()=>{window.print();window.onafterprint=()=>window.close()}<\/script></body></html>');w.document.close()}
 function listTools(col){let opts=col==='clients'?[['lastRenewalDate','Last Renewal Date'],['company','Company Name'],['trn','TRN Number'],['contact','Contact'],['mobile','Mobile'],['phone','Telephone']]:[['client','Client'],['location','Location'],['amcExpiry','AMC Expiry'],['clientStatus','Client Status'],['amcAmount','AMC Amount']];return'<div class="list-tools"><input id="'+col+'Search" placeholder="Search '+(col==='clients'?'clients':'CCTV / AMC')+'..." oninput="filterSortTable(\''+col+'\')"><select id="'+col+'Sort" onchange="filterSortTable(\''+col+'\')">'+opts.map(o=>'<option value="'+o[0]+'">Sort by '+o[1]+'</option>').join('')+'</select></div>'}
 function filterSortTable(col){let q=(($(col+'Search')||{}).value||'').toLowerCase(),sort=(($(col+'Sort')||{}).value||''),tb=$(col+'Table');if(!tb)return;let body=tb.tBodies[0],rows=[...body.rows];rows.forEach(r=>{r.style.display=(r.dataset.search||'').includes(q)?'':'none'});rows.sort((a,b)=>(a.dataset[sort]||'').localeCompare(b.dataset[sort]||'',undefined,{numeric:true}));rows.forEach(r=>body.appendChild(r))}
 function saveCrud(e,col){e.preventDefault();let o=Object.fromEntries(new FormData(e.target).entries());['amount','vat','progress','income','cost','paid','basic','allowance','deductions','cameras'].forEach(k=>{if(o[k]!==undefined)o[k]=+o[k]||0});if(col==='accounts'){o.partyType=o.type==='Expense'?'vendor':'client'; if(o.partyType==='client')o.client=o.party; else o.vendor=o.party;}if(col==='cctv'&&!o.clientStatus)o.clientStatus='Renewal Pending';if(o.id){let i=db[col].findIndex(x=>x.id===o.id);db[col][i]={...db[col][i],...o,sample:db[col][i]?.sample};log('Updated '+col,o.id)}else{o.id=uid(col.slice(0,3).toUpperCase());o.sample=false;db[col].push(o);log('Created '+col,o.id)}save();render()}
@@ -2797,36 +2724,12 @@ function normalizePathLink(p){if(!p)return'';p=cleanWindowsPathText(p);if(/^http
 function openPathPopup(label,path){let src=normalizePathLink(path);if(!src)return alert('File path/link missing');let safeLabel=safe(label),box=$('filePathModal');if(!box){box=document.createElement('div');box.id='filePathModal';document.body.appendChild(box)}box.innerHTML='<div class="record-modal-back" onclick="closePathPopup()"></div><div class="record-modal file-path-modal"><div class="record-modal-head"><h2>'+safeLabel+'</h2><div><button onclick="window.open(\''+src.replaceAll('\\','\\\\').replaceAll("'","%27")+'\',\'_blank\')">Open New Tab</button><button class="danger" onclick="closePathPopup()">X</button></div></div><div class="record-modal-body"><p class="muted">'+src+'</p><iframe class="file-frame" src="'+src+'"></iframe></div></div>';box.classList.remove('hidden')}
 function closePathPopup(){let b=$('filePathModal');if(b){b.innerHTML='';b.classList.add('hidden')}}
 function pathPreviewButton(label,path){return path?'<button class="mini" onclick="openPathPopup(\''+label+'\',\''+String(path).replaceAll('\\','\\\\').replaceAll("'","%27")+'\')">Open '+label+'</button>':'<span class="muted">'+label+' not added</span>'}
-function printRecordModal(){let m=document.querySelector('#recordModal .record-modal-body');if(!m)return;let w=window.open('','_blank');w.document.write('<html><head><title>Print Details</title><style>body{font-family:Segoe UI,Arial;padding:24px;color:#0b2a4a}table{width:100%;border-collapse:collapse}td,th{border:1px solid #d9e2ec;padding:8px;text-align:left}h2{margin-top:0}.pill{padding:4px 8px;border-radius:12px;background:#eef6ff}<\/style></head><body>'+m.innerHTML+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>');w.document.close();w.print()}
+function printRecordModal(){let m=document.querySelector('#recordModal .record-modal-body');if(!m)return;let w=window.open('','_blank');w.document.write('<html><head><title>Print Details</title><style>body{font-family:Segoe UI,Arial;padding:24px;color:#0b2a4a}table{width:100%;border-collapse:collapse}td,th{border:1px solid #d9e2ec;padding:8px;text-align:left}h2{margin-top:0}.pill{padding:4px 8px;border-radius:12px;background:#eef6ff}<\/style></head><body>'+m.innerHTML+'</body></html>');w.document.close();w.print()}
 function closeRecordModal(){let b=$('recordModal');if(b){b.innerHTML='';b.classList.add('hidden')}}
 
 function viewProject(id){let p=db.projects.find(x=>x.id===id);if(!p)return;let c=db.clients.find(x=>x.id===p.client)||{},logo=c.logo?'<img class="client-detail-logo" src="'+c.logo+'">':'';let mats=(db.projectMaterials||[]).filter(m=>m.project===id),matCost=sum(mats,'totalCost');let html=logo+detailTable([['Project Name',p.name],['Client',clientName(p.client)],['Category',p.category||'General'],['Deadline',p.deadline],['Status',p.status],['Progress',(p.progress||0)+'%'],['Income / Budget',money(p.income)],['Project Cost',money(p.cost)],['Material Cost',money(matCost)],['Paid',money(p.paid)],['Profit',money((+p.income||0)-(+p.cost||0)-matCost)]])+'<h3>Materials Used</h3>'+anaTable(['Item','Quantity','Unit Cost','Total Cost','Used Date','Staff','Notes'],mats.map(m=>[stockItemName(m.item),m.qty,money(m.unitCost),money(m.totalCost),m.usedDate,empName(m.staff),m.notes||'']));showRecordModal('Project Full Details',html)}
 function viewEmployee(id){let e=db.employees.find(x=>x.id===id);if(!e)return;let pays=db.payroll.filter(p=>p.employee===id);let photo=e.photo?'<img class="employee-photo big" src="'+e.photo+'">':'';let html=photo+detailTable([['Name',e.name],['Designation',e.designation],['Department',e.department],['Date of Joining',e.joiningDate],['Phone',e.phone],['Email',e.email],['Visa Expiry',e.visa],['Emirates ID Expiry',e.eid],['Passport Expiry',e.passport],['Status',e.status]])+'<h3>Salary / Payroll History</h3>'+anaTable(['Month','Payment Date','Basic','Allowance','Deductions','Net','Status'],pays.map(p=>[p.month,p.paymentDate||'',money(p.basic),money(p.allowance),money(p.deductions),money((+p.basic||0)+(+p.allowance||0)-(+p.deductions||0)),p.payStatus]));showRecordModal('Employee Full Details',html)}
-function printAnaModal(){let m=document.querySelector('#anaModal .ana-modal-body');if(!m)return;let w=window.open('','_blank');w.document.write('<html><head><title>Print KPI Details</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ddd;padding:8px}</style></head><body>'+m.innerHTML+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>');w.document.close();w.print()}
+function printAnaModal(){let m=document.querySelector('#anaModal .ana-modal-body');if(!m)return;let w=window.open('','_blank');w.document.write('<html><head><title>Print KPI Details</title><style>body{font-family:Arial;padding:20px}table{width:100%;border-collapse:collapse}td,th{border:1px solid #ddd;padding:8px}</style></head><body>'+m.innerHTML+'</body></html>');w.document.close();w.print()}
 function currentDocClient(type){let d=type==='quote'?quoteDraft:(type==='proforma'?proformaDraft:invoiceDraft);return db.clients.find(c=>c.id===d.client)||{}}
 function saveCurrentDoc(type){if(type==='quote')saveQuote();else if(type==='proforma')saveProforma();else saveInvoice()}
 function saveAndSendEmail(type){let d=type==='quote'?quoteDraft:invoiceDraft,c=currentDocClient(type);saveCurrentDoc(type);let subject=(type==='quote'?'Quotation ':'Invoice ')+(d.no||'');let body='Dear '+(c.contact||c.company||'Client')+',%0D%0A%0D%0APlease find the '+(type==='quote'?'quotation':'invoice')+' from Wipko Technologies LLC.%0D%0A%0D%0ARegards,%0D%0AWipko Technologies LLC';window.open('https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(c.email||'')+'&su='+encodeURIComponent(subject)+'&body='+body,'_blank');setTimeout(()=>window.print(),300)}
@@ -3281,19 +3184,7 @@ const WIPKO_MODULE_REGISTRY=[
 function exportTableExcel(tableId,filename='export.xls'){
   let table=$(tableId)||document.querySelector('#workspace table');
   if(!table){alert('No table available to export');return}
-  let html='<!doctype html><html><head><meta charset="utf-8"></head><body>'+table.outerHTML+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>';
+  let html='<!doctype html><html><head><meta charset="utf-8"></head><body>'+table.outerHTML+'</body></html>';
   let blob=new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
   let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);
 }
@@ -4058,19 +3949,7 @@ function amcPrintContract(id){
 }
 function amcDownloadWord(id){
   let x=(db.cctv||[]).find(a=>a.id===id); if(!x) return;
-  let htmlDoc='<!doctype html><html><head><meta charset="utf-8"></head><body>'+amcContractHtml(x)+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>';
+  let htmlDoc='<!doctype html><html><head><meta charset="utf-8"></head><body>'+amcContractHtml(x)+'</body></html>';
   let blob=new Blob(['\ufeff',htmlDoc],{type:'application/msword'});
   let a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
@@ -4134,19 +4013,7 @@ function v81CurrentAmcFromDrawer(){
 function amcContractModalObj(x){amcContractModal(x)}
 function amcOpenContractFromDrawer(){let x=v81CurrentAmcFromDrawer();if(!x)return alert('AMC form not found');amcContractModalObj(x)}
 function amcPrintContractFromDrawer(){let x=v81CurrentAmcFromDrawer();if(!x)return alert('AMC form not found');amcContractModalObj(x);setTimeout(()=>window.print(),200)}
-function amcDownloadWordFromDrawer(){let x=v81CurrentAmcFromDrawer();if(!x)return alert('AMC form not found');let htmlDoc='<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif}.contract-sheet{width:210mm;min-height:297mm}.contract-header img,.contract-footer img{width:100%}.contract-body{padding:20px 45px;font-size:12px;line-height:1.45}.contract-annex table{width:100%;border-collapse:collapse}.contract-annex th,.contract-annex td{border:1px solid #999;padding:6px}.contract-sign-row{display:table;width:100%;margin-top:25px}.contract-sign-box{display:table-cell;width:50%;vertical-align:bottom}.contract-sign-box img,.contract-center-seal img{max-height:70px;max-width:180px}.contract-sign-line{border-top:1px solid #111;padding-top:6px}</style></head><body>'+amcContractHtml(x)+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>';let blob=new Blob(['\ufeff',htmlDoc],{type:'application/msword'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=((amcClientName(x.client)||'AMC')+'_'+(x.id||'Contract')+'.doc').replace(/[^\w\-]+/g,'_');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function amcDownloadWordFromDrawer(){let x=v81CurrentAmcFromDrawer();if(!x)return alert('AMC form not found');let htmlDoc='<!doctype html><html><head><meta charset="utf-8"><style>body{font-family:Arial,sans-serif}.contract-sheet{width:210mm;min-height:297mm}.contract-header img,.contract-footer img{width:100%}.contract-body{padding:20px 45px;font-size:12px;line-height:1.45}.contract-annex table{width:100%;border-collapse:collapse}.contract-annex th,.contract-annex td{border:1px solid #999;padding:6px}.contract-sign-row{display:table;width:100%;margin-top:25px}.contract-sign-box{display:table-cell;width:50%;vertical-align:bottom}.contract-sign-box img,.contract-center-seal img{max-height:70px;max-width:180px}.contract-sign-line{border-top:1px solid #111;padding-top:6px}</style></head><body>'+amcContractHtml(x)+'</body></html>';let blob=new Blob(['\ufeff',htmlDoc],{type:'application/msword'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=((amcClientName(x.client)||'AMC')+'_'+(x.id||'Contract')+'.doc').replace(/[^\w\-]+/g,'_');a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function v81InjectDrawerContractActions(){
   if(page!=='cctv')return;
   let form=document.querySelector('#drawer-cctv form');
@@ -4623,19 +4490,7 @@ document.addEventListener('change',e=>{try{if(e.target&&e.target.matches('input[
    '</div>';
  }
  function printDocumentHTML(x){
-   return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+printCSS()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+contractBody(x,false)+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>';
+   return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+printCSS()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+contractBody(x,false)+'</body></html>';
  }
  function openPrintWindow(id){
    var x=findAMC(id);
@@ -4800,19 +4655,7 @@ document.addEventListener('change',e=>{try{if(e.target&&e.target.matches('input[
    '</div>';
  }
  function fullPrintDoc(x){
-   return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>';
+   return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>';
  }
  function openPrint(idOrObj){
    var x=getRecord(idOrObj);
@@ -4926,19 +4769,7 @@ window.__v90AMCReadabilityPadding=true;
        '<div class="sign-box"><div class="client-assets">'+sign+seal2+'</div><b>Client Signature & Seal</b><br>Authorized Signatory</div>'+
      '</div></div>'+footer()+'</section></div>';
  }
- function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'}
+ function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>'}
  function openPrint(idOrObj){
    var x=getRecord(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
@@ -5027,19 +4858,7 @@ window.__v90AMCReadabilityPadding=true;
        '<div class="sign-box"><div class="client-assets">'+sign+seal2+'</div><b>Client Signature & Seal</b><br>Authorized Signatory</div>'+
      '</div></div>'+footer()+'</section></div>';
  }
- function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'}
+ function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>'}
  function openPrint(idOrObj){
    var x=getRecord(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
@@ -5158,19 +4977,7 @@ window.__v90AMCReadabilityPadding=true;
        '<div class="sign-box"><div class="client-assets">'+sign+seal2+'</div><b>Client Signature & Seal</b><br>Authorized Signatory</div>'+
      '</div></div>'+footer()+'</section></div>';
  }
- function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'}
+ function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>'}
  function openPrint(idOrObj){
    var x=getRecord(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
@@ -5261,19 +5068,7 @@ window.__v90AMCReadabilityPadding=true;
        '<div class="sign-box"><div class="client-assets">'+sign+seal2+'</div><b>Client Signature & Seal</b><br>Authorized Signatory</div>'+
      '</div></div>'+footer()+'</section></div>';
  }
- function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'}
+ function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>'}
  function openPrint(idOrObj){
    var x=getRecord(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
@@ -5365,19 +5160,7 @@ window.__v90AMCReadabilityPadding=true;
        '<div class="sign-box"><div class="client-assets">'+sign+seal2+'</div><b>Client Signature & Seal</b><br>Authorized Signatory</div>'+
      '</div></div>'+footer()+'</section></div>';
  }
- function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'}
+ function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>'}
  function openPrint(idOrObj){
    var x=getRecord(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
@@ -5469,19 +5252,7 @@ window.__v90AMCReadabilityPadding=true;
        '<div class="sign-box no-line"><div class="client-assets">'+sign+seal2+'</div><span class="client-party-label">for and on behalf of '+esc(client)+'</span><br>Authorized Signatory</div>'+
      '</div></div>'+footer()+'</section></div>';
  }
- function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'}
+ function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>'}
  function openPrint(idOrObj){
    var x=getRecord(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
@@ -5616,19 +5387,7 @@ window.__v90AMCReadabilityPadding=true;
        '<div class="sign-box no-line"><div class="client-assets">'+sign+seal2+'</div><span class="client-party-label">for and on behalf of '+esc(client)+'</span><br>Authorized Signatory</div>'+
      '</div></div>'+footer()+'</section></div>';
  }
- function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'}
+ function fullPrintDoc(x){return '<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+twoPageContractHTML(x,'page')+'</body></html>'}
  function openPrint(idOrObj){
    var x=getRecord(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
@@ -5705,19 +5464,7 @@ window.__v90AMCReadabilityPadding=true;
  function openAmcPrint(idOrObj){
    var x=getAmc(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
-   w.document.open(); w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'); w.document.close(); w.focus(); setTimeout(function(){try{w.print()}catch(e){}},700);
+   w.document.open(); w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'</body></html>'); w.document.close(); w.focus(); setTimeout(function(){try{w.print()}catch(e){}},700);
  }
  function viewAmc(idOrObj){
    var x=getAmc(idOrObj);
@@ -5799,37 +5546,13 @@ window.__v90AMCReadabilityPadding=true;
  function openAmcPrint(idOrObj){
    var x=getAmc(idOrObj), w=window.open('', '_blank', 'width=950,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
-   w.document.open(); w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>'); w.document.close(); w.focus(); setTimeout(function(){try{w.print()}catch(e){}},700);
+   w.document.open(); w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'</body></html>'); w.document.close(); w.focus(); setTimeout(function(){try{w.print()}catch(e){}},700);
  }
  function viewAmc(idOrObj){
    var x=getAmc(idOrObj), w=window.open('', '_blank', 'width=1050,height=900');
    if(!w){alert('Popup blocked. Please allow popups for this app.');return}
    w.document.open();
-   w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>');
+   w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Annual Maintenance Contract</title>'+cssDoc()+'</head><body><div class="printbar"><button onclick="window.print()">Print / Save PDF</button></div>'+amcHtml(x,'page')+'</body></html>');
    w.document.close();w.focus();
  }
  window.amcContractHtml=amcHtml;
@@ -9407,19 +9130,7 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
    clone.querySelectorAll('.no-print,button').forEach(function(x){x.remove()});
    var styles=Array.from(document.querySelectorAll('link[rel="stylesheet"],style')).map(function(x){return x.outerHTML}).join('');
    var w=window.open('','_blank','width=1200,height=900');if(!w){alert('Popup blocked. Please allow popups to export the Dashboard report.');return}
-   w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Wipko ERP Dashboard Report</title>'+styles+'<style>body{background:#fff!important;padding:12mm!important}.v36-dashboard{max-width:100%!important}.v36-profile{display:none!important}@page{size:A4 landscape;margin:8mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){setTimeout(function(){window.print()},250)}<\/script>
-<style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
-#workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
-@media print{
- #workspace .iq-bottom .company-sign .sign-img,
- #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
-}
-</style>
-</body></html>');w.document.close();
+   w.document.open();w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Wipko ERP Dashboard Report</title>'+styles+'<style>body{background:#fff!important;padding:12mm!important}.v36-dashboard{max-width:100%!important}.v36-profile{display:none!important}@page{size:A4 landscape;margin:8mm}</style></head><body>'+clone.outerHTML+'<script>window.onload=function(){setTimeout(function(){window.print()},250)}<\/script></body></html>');w.document.close();
  };
 
  // Client ↔ Diagram Maker cloud bridge. Saves diagrams only inside the selected client record.
@@ -9449,7 +9160,7 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
 <script id="wipko-v5-sidebar-consistency">
 (function(){
  'use strict';
- window.__WIPKO_UI_VERSION__='WipkoERP_v16';
+ window.__WIPKO_UI_VERSION__='WipkoERP_v22';
  var MENU=[
    ['analytics','Dashboard'],['clients','Clients'],['accounts','Ledger'],['quotation','Quotations'],['proforma','Proforma Invoice'],['invoice','Invoices'],
    ['cctv','AMC / Renewals'],['diagram','Diagram Maker'],['reports','Reports'],['users','User Management'],
@@ -9592,14 +9303,60 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
 </style>
 
 <style id="wipko-v19-signature-footer-visible-only">
-/* v19: ONLY move Quotation/Tax Invoice company signature upward so it stays above footer. */
+/* v19 carry-forward: move only Quotation/Tax Invoice company signature upward above footer. */
 #workspace .iq-bottom .company-sign .sign-img,
-#workspace .doc-signatures .company-sign .sign-img{
-  transform:translateY(-6mm)!important;
-}
+#workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
 @media print{
  #workspace .iq-bottom .company-sign .sign-img,
  #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
 }
 </style>
+<style id="wipko-v22-doc-client-ajax-style">
+/* v22: Quotation / Tax Invoice client AJAX-style search only. */
+.doc-client-ajax{position:relative;max-width:75%;margin-bottom:2mm}
+.doc-client-search{width:100%;box-sizing:border-box}
+.doc-client-results{position:absolute;left:0;right:0;top:calc(100% + 3px);z-index:9999;max-height:240px;overflow:auto;background:#fff;border:1px solid #cbd5e1;border-radius:10px;box-shadow:0 12px 30px rgba(15,23,42,.16);padding:4px}
+.doc-client-results.hidden{display:none!important}
+.doc-client-result{display:block;width:100%;text-align:left;background:#fff;color:#111;border:0;border-radius:7px;padding:8px 9px;margin:0;cursor:pointer}
+.doc-client-result:hover,.doc-client-result.active{background:#eaf5ff}
+.doc-client-result strong{display:block;font-size:12px}.doc-client-result small{display:block;color:#64748b;font-size:10px;margin-top:2px}
+.doc-client-empty{padding:9px;color:#64748b;font-size:11px}
+@media print{.doc-client-ajax{display:none!important}}
+@media(max-width:700px){.doc-client-ajax{max-width:100%}.doc-client-results{max-height:180px}}
+</style>
+<script id="wipko-v22-doc-client-ajax">
+(function(){
+ 'use strict';
+ var timer=null,activeIndex=0;
+ function escHtml(v){return String(v==null?'':v).replace(/[&<>\"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]})}
+ function clients(){try{return (typeof db!=='undefined'&&Array.isArray(db.clients)?db.clients:[]).filter(function(c){return !c.isDeleted})}catch(e){return []}}
+ function hay(c){return [c.company,c.name,c.contact,c.mobile,c.phone,c.email,c.trn,c.tlNo,c.address].join(' ').toLowerCase()}
+ window.docClientAjaxSearch=function(input){
+   clearTimeout(timer);timer=setTimeout(function(){
+     var q=String(input.value||'').trim().toLowerCase(), box=document.getElementById('docClientResults');if(!box)return;
+     var type=input.getAttribute('data-doc-type')||'invoice';
+     var rows=clients().filter(function(c){return !q||hay(c).includes(q)}).slice(0,20);
+     activeIndex=0;
+     box.innerHTML=rows.length?rows.map(function(c,i){var meta=[c.contact,c.mobile||c.phone,c.email,c.trn?('TRN '+c.trn):''].filter(Boolean).join(' • ');return '<button type="button" class="doc-client-result'+(i===0?' active':'')+'" data-client-id="'+escHtml(c.id)+'" data-doc-type="'+escHtml(type)+'"><strong>'+escHtml(c.company||c.name||'Client')+'</strong>'+(meta?'<small>'+escHtml(meta)+'</small>':'')+'</button>'}).join(''):'<div class="doc-client-empty">No matching clients</div>';
+     box.classList.remove('hidden');
+   },70);
+ };
+ window.docClientAjaxChoose=function(btn){
+   if(!btn)return;var id=btn.getAttribute('data-client-id')||'',type=btn.getAttribute('data-doc-type')||'invoice';
+   var c=clients().find(function(x){return String(x.id)===String(id)});if(!c)return;
+   var hidden=document.getElementById('docClient');if(hidden)hidden.value=id;
+   var search=document.getElementById('docClientSearch');if(search)search.value=c.company||c.name||'';
+   var box=document.getElementById('docClientResults');if(box)box.classList.add('hidden');
+   if(typeof setDocClient==='function')setDocClient(type,id);
+ };
+ window.docClientAjaxKey=function(ev,input){
+   var box=document.getElementById('docClientResults');if(!box)return;
+   var items=Array.prototype.slice.call(box.querySelectorAll('.doc-client-result'));if(ev.key==='Escape'){box.classList.add('hidden');return}if(!items.length)return;
+   var idx=items.findIndex(function(x){return x.classList.contains('active')});if(idx<0)idx=0;
+   if(ev.key==='ArrowDown'||ev.key==='ArrowUp'){ev.preventDefault();items[idx].classList.remove('active');idx=(idx+(ev.key==='ArrowDown'?1:-1)+items.length)%items.length;items[idx].classList.add('active');activeIndex=idx;items[idx].scrollIntoView({block:'nearest'})}
+   else if(ev.key==='Enter'){ev.preventDefault();window.docClientAjaxChoose(items[idx]||items[0])}
+ };
+ document.addEventListener('mousedown',function(ev){var result=ev.target.closest&&ev.target.closest('.doc-client-result');if(result){ev.preventDefault();window.docClientAjaxChoose(result);return}if(!(ev.target.closest&&ev.target.closest('.doc-client-ajax'))){var box=document.getElementById('docClientResults');if(box)box.classList.add('hidden')}});
+})();
+</script>
 </body></html>
