@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP_v18</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP_v21</title><style>
 :root{--p:#0b5ed7;--p2:#22c55e;--bg:#eef2f7;--card:#fff;--ink:#0b2a4a;--muted:#64748b;--line:#d9e2ec;--bad:#dc2626;--warn:#f59e0b;--good:#16a34a;--side:#fff}body.theme-blue{--p:#2563eb;--p2:#06b6d4;--bg:#f4f7fb;--side:#08111f;--ink:#111827}body.theme-emerald{--p:#059669;--p2:#2dd4bf;--side:#052e2b}body.theme-purple{--p:#7c3aed;--p2:#c084fc;--side:#26104d}body.theme-dark{--p:#38bdf8;--p2:#818cf8;--bg:#0f172a;--card:#111827;--ink:#f8fafc;--muted:#cbd5e1;--line:#334155;--side:#020617}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#07111f,#123d70);padding:24px}.login-card{width:min(430px,96vw);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:28px;padding:34px;color:#fff;box-shadow:0 40px 90px rgba(0,0,0,.32)}.login-card img{max-width:190px;background:transparent!important;border-radius:0!important;padding:0!important}.login-card input,.login-card button{width:100%;margin-top:8px}.app{display:flex}.side{width:285px;height:100vh;position:fixed;background:linear-gradient(160deg,var(--side),color-mix(in srgb,var(--p) 45%,#07111f));color:#fff;padding:22px;border-right:1px solid var(--line);overflow:auto}body.theme-full-light .side{background:#fff;color:#0b2a4a}.brand{display:flex;gap:12px;align-items:center;margin-bottom:20px}.brand img{width:72px;background:#fff;border-radius:12px;padding:6px}.brand b{font-size:18px}.nav button{display:block;width:100%;text-align:left;margin:3px 0;padding:11px 13px;border-radius:12px;background:transparent;color:inherit;border:0;cursor:pointer}.nav button.active,.nav button:hover{background:color-mix(in srgb,var(--p) 18%,transparent)}.main{margin-left:285px;width:calc(100% - 285px);padding:24px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.top h1{margin:0}.top p{margin:4px 0;color:var(--muted)}button{border:0;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:10px 14px;font-weight:800;cursor:pointer}.ghost{background:#eaf1ff;color:var(--p);box-shadow:none}.danger{background:#fee2e2;color:#991b1b}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 14px 35px rgba(15,23,42,.06)}.grid{display:grid;grid-template-columns:390px 1fr;gap:16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card,.info{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}.card span,.muted{color:var(--muted);font-size:13px}.card b{display:block;font-size:25px;margin-top:6px}.form{display:grid;gap:10px}.form label{font-size:12px;color:var(--muted);font-weight:800}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;margin-top:5px}textarea{min-height:76px}table{width:100%;border-collapse:collapse;font-size:13px}th{background:color-mix(in srgb,var(--p) 12%,var(--card));color:var(--p);text-align:left;padding:10px;border-bottom:1px solid var(--line)}td{padding:9px;border-bottom:1px solid var(--line);vertical-align:top}.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900}.ok{background:#dcfce7;color:#166534}.due{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}.mini{padding:6px 8px;font-size:11px;margin:2px}.doc-a4{max-width:1000px;margin:auto;background:#fff;color:#111;border-radius:18px;overflow:hidden}.doc-head{min-height:74mm;display:grid;grid-template-columns:1fr .8fr 1fr;gap:16px;padding:22px;border-bottom:4px solid var(--p)}.doc-head img{max-width:165px;max-height:65px}.doc-title{text-align:right}.doc-title strong{font-size:32px;color:var(--p);text-transform:uppercase}.doc-bill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px}.doc-items{min-height:148mm;padding:18px 22px}.doc-foot{min-height:74mm;display:grid;grid-template-columns:1fr 320px;gap:18px;padding:18px 22px;border-top:2px solid #e2e8f0}.totals{background:#0b1220;color:#fff;border-radius:14px;padding:16px}.totals p{display:flex;justify-content:space-between}.grand{font-size:20px;border-top:1px solid #ffffff55;padding-top:10px}.toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap}.row-actions{white-space:nowrap}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden}.progress b{height:100%;display:block;background:linear-gradient(90deg,var(--p),var(--p2))}@media(max-width:1100px){.side{position:static;width:100%;height:auto}.main{margin:0;width:100%}.app{display:block}.grid,.grid2,.doc-head,.doc-foot{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}@media print{.side,.top,.toolbar,.no-print,.row-actions,button{display:none!important}.main{margin:0;width:100%;padding:0}.panel{box-shadow:none;border:0}.doc-a4{width:210mm;height:297mm;max-width:none;border-radius:0}.doc-head{height:25%;min-height:0}.doc-items{height:50%;min-height:0}.doc-foot{height:25%;min-height:0}.doc-title input,.doc-head select{border:0}.print-only{display:block!important}body *{visibility:hidden}#workspace .print-target,#workspace .print-target *{visibility:visible}.print-target{position:absolute;left:0;top:0;width:100%}}
 
 /* v6 pre-printed paper layout: no generated header/footer */
@@ -2640,6 +2640,67 @@ function printClientList(){const table=document.getElementById('clientsTable');i
  #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
 }
 </style>
+
+<style id="wipko-v21-doc-client-ajax-style">
+/* v21: Quotation / Tax Invoice searchable client selector only. */
+.doc-client-ajax{position:relative;max-width:75%;margin-bottom:2mm}
+.doc-client-search{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#111;font:inherit;outline:none}
+.doc-client-search:focus{border-color:#1597ff;box-shadow:0 0 0 3px rgba(21,151,255,.14)}
+.doc-client-results{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:100;max-height:220px;overflow:auto;background:#fff;border:1px solid #cbd5e1;border-radius:10px;box-shadow:0 12px 28px rgba(15,23,42,.16);padding:5px}
+.doc-client-results.hidden{display:none!important}
+.doc-client-result{display:block;width:100%;border:0;background:#fff;color:#111;text-align:left;padding:8px 10px;border-radius:7px;cursor:pointer;font:inherit;line-height:1.25}
+.doc-client-result:hover,.doc-client-result.active{background:#e8f3ff;color:#0b5ed7}
+.doc-client-result small{display:block;color:#64748b;font-size:10px;margin-top:2px}
+.doc-client-empty{padding:9px 10px;color:#64748b;font-size:11px}
+@media print{.doc-client-ajax{display:none!important}}
+@media(max-width:700px){.doc-client-ajax{max-width:100%}.doc-client-results{max-height:180px}}
+</style>
+<script id="wipko-v21-doc-client-ajax">
+(function(){
+ var timer=null;
+ function html(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+ function norm(v){return String(v||'').toLowerCase().replace(/\s+/g,' ').trim()}
+ function searchable(c){return norm([c.company,c.name,c.contact,c.mobile,c.phone,c.email,c.trn,c.tlNo].filter(Boolean).join(' '))}
+ window.docClientAjaxSearch=function(input){
+   var box=document.getElementById('docClientResults'); if(!box)return;
+   clearTimeout(timer);
+   timer=setTimeout(function(){
+     var q=norm(input.value), type=input.getAttribute('data-doc-type')||'invoice';
+     var clients=(typeof db!=='undefined'&&Array.isArray(db.clients)?db.clients:[]).filter(function(c){return !c.isDeleted});
+     var matches=clients.filter(function(c){return !q||searchable(c).indexOf(q)!==-1}).slice(0,15);
+     box.innerHTML=matches.length?matches.map(function(c,i){
+       var meta=[c.contact,c.mobile||c.phone,c.email].filter(Boolean).join(' • ');
+       return '<button type="button" class="doc-client-result'+(i===0?' active':'')+'" data-client-id="'+html(c.id)+'" data-doc-type="'+html(type)+'"><strong>'+html(c.company||c.name||'Unnamed Client')+'</strong>'+(meta?'<small>'+html(meta)+'</small>':'')+'</button>';
+     }).join(''):'<div class="doc-client-empty">No matching clients</div>';
+     box.classList.remove('hidden');
+   },60);
+ };
+ window.docClientAjaxChoose=function(btn){
+   var id=btn.getAttribute('data-client-id')||'', type=btn.getAttribute('data-doc-type')||'invoice';
+   var c=(typeof db!=='undefined'&&Array.isArray(db.clients)?db.clients:[]).find(function(x){return String(x.id)===String(id)}); if(!c)return;
+   var hidden=document.getElementById('docClient'); if(hidden)hidden.value=id;
+   var search=document.getElementById('docClientSearch'); if(search)search.value=c.company||c.name||'';
+   var box=document.getElementById('docClientResults'); if(box)box.classList.add('hidden');
+   setDocClient(type,id);
+ };
+ window.docClientAjaxKey=function(ev){
+   var box=document.getElementById('docClientResults'); if(!box)return;
+   var items=Array.prototype.slice.call(box.querySelectorAll('.doc-client-result'));
+   if(ev.key==='Escape'){box.classList.add('hidden');return}
+   if(!items.length)return;
+   var idx=items.findIndex(function(x){return x.classList.contains('active')}); if(idx<0)idx=0;
+   if(ev.key==='ArrowDown'||ev.key==='ArrowUp'){
+     ev.preventDefault(); items[idx].classList.remove('active'); idx=(idx+(ev.key==='ArrowDown'?1:-1)+items.length)%items.length; items[idx].classList.add('active'); items[idx].scrollIntoView({block:'nearest'});
+   }else if(ev.key==='Enter'){ev.preventDefault();docClientAjaxChoose(items[idx]||items[0])}
+ };
+ document.addEventListener('mousedown',function(ev){
+   var result=ev.target.closest&&ev.target.closest('.doc-client-result');
+   if(result){ev.preventDefault();docClientAjaxChoose(result);return}
+   if(!(ev.target.closest&&ev.target.closest('.doc-client-ajax'))){var box=document.getElementById('docClientResults');if(box)box.classList.add('hidden')}
+ });
+})();
+</script>
+
 </body></html>');w.document.close()}
 function listTools(col){let opts=col==='clients'?[['lastRenewalDate','Last Renewal Date'],['company','Company Name'],['trn','TRN Number'],['contact','Contact'],['mobile','Mobile'],['phone','Telephone']]:[['client','Client'],['location','Location'],['amcExpiry','AMC Expiry'],['clientStatus','Client Status'],['amcAmount','AMC Amount']];return'<div class="list-tools"><input id="'+col+'Search" placeholder="Search '+(col==='clients'?'clients':'CCTV / AMC')+'..." oninput="filterSortTable(\''+col+'\')"><select id="'+col+'Sort" onchange="filterSortTable(\''+col+'\')">'+opts.map(o=>'<option value="'+o[0]+'">Sort by '+o[1]+'</option>').join('')+'</select></div>'}
 function filterSortTable(col){let q=(($(col+'Search')||{}).value||'').toLowerCase(),sort=(($(col+'Sort')||{}).value||''),tb=$(col+'Table');if(!tb)return;let body=tb.tBodies[0],rows=[...body.rows];rows.forEach(r=>{r.style.display=(r.dataset.search||'').includes(q)?'':'none'});rows.sort((a,b)=>(a.dataset[sort]||'').localeCompare(b.dataset[sort]||'',undefined,{numeric:true}));rows.forEach(r=>body.appendChild(r))}
@@ -2793,7 +2854,7 @@ let clientRows=(type==='quote'||type==='invoice')
 ?'<div class="iq-client-details"><div><b>Address</b><span>'+esc(client.address||client.location||'-')+'</span></div><div><b>Tel. &amp; Email</b><span>'+esc(client.phone||'-')+' &nbsp; | &nbsp; '+esc(client.email||'-')+'</span></div><div><b>Contact Person</b><span>'+esc(client.contact||'-')+' &nbsp; | &nbsp; '+esc(client.mobile||'-')+'</span></div><div><b>TRN Number</b><span>'+esc(client.trn||'-')+'</span></div></div>'
 :'<p><strong>'+esc(client.company||'')+'</strong><br><span class="iq-contact-line">Address: '+esc(client.address||client.location||'-')+' &nbsp; | &nbsp; Tel: '+esc(client.phone||client.contact||'-')+' &nbsp; | &nbsp; Email: '+esc(client.email||'-')+'</span><br><span>TRN: '+esc(client.trn||'-')+'</span></p>';
 let titleIcon=(type==='invoice'||type==='quote')?'<span class="iq-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M6 2.75h8.8L19 6.95V21.25H6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M14.5 2.9v4.4h4.3M9 11h7M9 14.5h7M9 18h5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>':'';
-let info='<div class="pre-info iq-info"><div class="pre-client"><b>Bill To / العميل</b><div class="doc-client-ajax"><input id="docClientSearch" class="doc-client-search" type="text" autocomplete="off" placeholder="Search client..." value="'+esc(client.company||'')+'" data-doc-type="'+type+'" oninput="docClientAjaxSearch(this)" onfocus="docClientAjaxSearch(this,true)" onkeydown="docClientAjaxKey(event,this)"><input id="docClient" type="hidden" value="'+esc(d.client||'')+'"><div id="docClientResults" class="doc-client-results hidden"></div></div><div class="iq-client-company"><strong>'+esc(client.company||'')+'</strong></div>'+clientRows+'</div>'
+let info='<div class="pre-info iq-info"><div class="pre-client"><b>Bill To / العميل</b><div class="doc-client-ajax"><input id="docClientSearch" class="doc-client-search" type="text" autocomplete="off" placeholder="Search client..." value="'+esc(client.company||'')+'" data-doc-type="'+type+'" oninput="docClientAjaxSearch(this)" onfocus="docClientAjaxSearch(this)" onkeydown="docClientAjaxKey(event,this)"><input id="docClient" type="hidden" value="'+esc(d.client||'')+'"><div id="docClientResults" class="doc-client-results hidden"></div></div><div class="iq-client-company"><strong>'+esc(client.company||'')+'</strong></div>'+clientRows+'</div>'
 +'<div class="pre-meta"><h3>'+titleIcon+'<span>'+title+'</span></h3><label>No.<input id="docNo" value="'+no+'"></label><label>Date<input id="docDate" type=date value="'+date+'"></label>'+((type==='quote'||type==='proforma')?'<label>'+(type==='quote'?'Valid Until':'Validity / Expiry')+'<input id="docValid" type=date value="'+(d.valid||today())+'"></label>':'')+'</div></div>';
 let continuation=function(page,total){return '<div class="iq-continuation"><b>'+title+'</b><span>No. '+esc(no)+'</span><span>Page '+page+' of '+total+'</span></div>'};
 let tableHead='<table class="pre-table hf-table iq-table"><thead><tr><th>Sl.</th><th>Description</th><th>Type</th><th>Qty</th><th>Rate</th><th>VAT</th><th>Amount</th><th class="no-print"></th></tr></thead><tbody>';
@@ -9541,64 +9602,4 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
  #workspace .doc-signatures .company-sign .sign-img{transform:translateY(-6mm)!important}
 }
 </style>
-
-<style id="wipko-v20-doc-client-ajax-style">
-/* v20: Quotation / Tax Invoice client AJAX-style searchable selector only. */
-.doc-client-ajax{position:relative;max-width:75%;margin-bottom:2mm}
-.doc-client-search{width:100%;box-sizing:border-box;padding:8px 10px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#111;font:inherit;outline:none}
-.doc-client-search:focus{border-color:#1597ff;box-shadow:0 0 0 3px rgba(21,151,255,.14)}
-.doc-client-results{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:50;max-height:220px;overflow:auto;background:#fff;border:1px solid #cbd5e1;border-radius:10px;box-shadow:0 12px 28px rgba(15,23,42,.16);padding:5px}
-.doc-client-results.hidden{display:none!important}
-.doc-client-result{display:block;width:100%;border:0;background:#fff;color:#111;text-align:left;padding:8px 10px;border-radius:7px;cursor:pointer;font:inherit;line-height:1.25}
-.doc-client-result:hover,.doc-client-result.active{background:#e8f3ff;color:#0b5ed7}
-.doc-client-result small{display:block;color:#64748b;font-size:10px;margin-top:2px}
-.doc-client-empty{padding:9px 10px;color:#64748b;font-size:11px}
-@media print{.doc-client-ajax{display:none!important}}
-@media(max-width:700px){.doc-client-ajax{max-width:100%}.doc-client-results{max-height:180px}}
-</style>
-<script id="wipko-v20-doc-client-ajax">
-(function(){
- var ajaxSeq=0;
- function escHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
- function normalize(v){return String(v||'').toLowerCase().replace(/\s+/g,' ').trim()}
- function clientHaystack(c){return normalize([c.company,c.contact,c.mobile,c.phone,c.email,c.trn,c.tlNo].filter(Boolean).join(' '))}
- window.docClientAjaxSearch=function(input){
-   var box=document.getElementById('docClientResults'); if(!box)return;
-   var seq=++ajaxSeq, q=normalize(input.value), type=input.getAttribute('data-doc-type')||'invoice';
-   clearTimeout(window.__wipkoDocClientAjaxTimer);
-   window.__wipkoDocClientAjaxTimer=setTimeout(function(){
-     if(seq!==ajaxSeq)return;
-     var clients=(window.db&&Array.isArray(db.clients)?db.clients:[]).filter(function(c){return !c.isDeleted});
-     var matches=clients.filter(function(c){return !q||clientHaystack(c).indexOf(q)!==-1}).slice(0,12);
-     box.innerHTML=matches.length?matches.map(function(c,i){
-       var meta=[c.contact,c.mobile||c.phone,c.email].filter(Boolean).join(' • ');
-       return '<button type="button" class="doc-client-result'+(i===0?' active':'')+'" data-client-id="'+escHtml(c.id)+'" data-doc-type="'+escHtml(type)+'" onmousedown="event.preventDefault();docClientAjaxChoose(this)"><strong>'+escHtml(c.company||c.name||'Unnamed Client')+'</strong>'+(meta?'<small>'+escHtml(meta)+'</small>':'')+'</button>';
-     }).join(''):'<div class="doc-client-empty">No matching clients</div>';
-     box.classList.remove('hidden');
-   },80);
- };
- window.docClientAjaxChoose=function(btn){
-   var id=btn.getAttribute('data-client-id')||'', type=btn.getAttribute('data-doc-type')||'invoice';
-   var c=(window.db&&db.clients||[]).find(function(x){return String(x.id)===String(id)}); if(!c)return;
-   var hidden=document.getElementById('docClient'); if(hidden)hidden.value=id;
-   var search=document.getElementById('docClientSearch'); if(search)search.value=c.company||c.name||'';
-   var box=document.getElementById('docClientResults'); if(box)box.classList.add('hidden');
-   setDocClient(type,id);
- };
- window.docClientAjaxKey=function(ev,input){
-   var box=document.getElementById('docClientResults'); if(!box)return;
-   var items=Array.prototype.slice.call(box.querySelectorAll('.doc-client-result'));
-   if(ev.key==='Escape'){box.classList.add('hidden');return}
-   if(!items.length)return;
-   var idx=items.findIndex(function(x){return x.classList.contains('active')}); if(idx<0)idx=0;
-   if(ev.key==='ArrowDown'||ev.key==='ArrowUp'){
-     ev.preventDefault(); items[idx].classList.remove('active'); idx=(idx+(ev.key==='ArrowDown'?1:-1)+items.length)%items.length; items[idx].classList.add('active'); items[idx].scrollIntoView({block:'nearest'});
-   }else if(ev.key==='Enter'){
-     ev.preventDefault(); docClientAjaxChoose(items[idx]||items[0]);
-   }
- };
- document.addEventListener('mousedown',function(ev){var wrap=ev.target.closest&&ev.target.closest('.doc-client-ajax');if(!wrap){var box=document.getElementById('docClientResults');if(box)box.classList.add('hidden')}});
-})();
-</script>
-
 </body></html>
