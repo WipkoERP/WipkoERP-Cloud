@@ -45,22 +45,12 @@ async function initDb() {
       source TEXT
     )
   `);
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS wipko_attachments (
-      id TEXT PRIMARY KEY,
-      file_name TEXT NOT NULL,
-      mime_type TEXT,
-      file_size BIGINT NOT NULL DEFAULT 0,
-      data BYTEA NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    )
-  `);
 }
 
 app.get('/api/health', async (_req,res) => {
   try {
     const r = await pool.query('SELECT NOW() AS now');
-    res.json({ ok:true, app:'WipkoERP Cloud v1', build:'persistence-fix-v3-attachments-v1', database:true, time:r.rows[0].now });
+    res.json({ ok:true, app:'WipkoERP Cloud v1', build:'persistence-fix-v3-v24', database:true, time:r.rows[0].now });
   } catch (e) {
     res.status(500).json({ ok:false, database:false, message:e.message });
   }
@@ -106,20 +96,20 @@ function mergeArray(existing, incoming) {
   return out;
 }
 
+function tombstoneMap(db) { const m=new Map(); for(const t of (db&&Array.isArray(db._deleted)?db._deleted:[])){if(!t||!t.col||!t.id)continue;const k=`${t.col}|${t.id}`,o=m.get(k);if(!o||Number(t.at||0)>=Number(o.at||0))m.set(k,t)} return m; }
+function unionStrings(a,b){const out=[],seen=new Set();for(const v of [...(Array.isArray(a)?a:[]),...(Array.isArray(b)?b:[])]){const s=String(v==null?'':v).trim(),k=s.toLowerCase();if(!s||seen.has(k))continue;seen.add(k);out.push(s)}return out}
+function pruneTombstones(db){if(!db||typeof db!=='object')return db;const tomb=tombstoneMap(db);for(const k of Object.keys(db)){if(!Array.isArray(db[k])||k==='_deleted')continue;db[k]=db[k].filter(r=>!r||!r.id||!tomb.has(`${k}|${r.id}`))}return db}
 function mergeDb(current, incoming) {
-  if (!current || typeof current !== 'object' || Array.isArray(current)) return incoming;
-  if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) return current;
+  if (!current || typeof current !== 'object' || Array.isArray(current)) return pruneTombstones(incoming);
+  if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) return pruneTombstones(current);
   const merged = { ...current };
   for (const [key, value] of Object.entries(incoming)) {
-    if (Array.isArray(value)) {
-      merged[key] = mergeArray(current[key], value);
-    } else if (value && typeof value === 'object' && !Array.isArray(value)) {
-      merged[key] = { ...(current[key] && typeof current[key] === 'object' ? current[key] : {}), ...value };
-    } else {
-      merged[key] = value;
-    }
+    if (Array.isArray(value)) merged[key] = mergeArray(current[key], value);
+    else if (value && typeof value === 'object' && !Array.isArray(value)) { merged[key] = { ...(current[key] && typeof current[key] === 'object' ? current[key] : {}), ...value }; if(key==='master'){merged[key].incomeCategory=unionStrings(current.master&&current.master.incomeCategory,value.incomeCategory);merged[key].expenseCategory=unionStrings(current.master&&current.master.expenseCategory,value.expenseCategory)} }
+    else merged[key] = value;
   }
-  return merged;
+  merged._deleted=mergeArray(current._deleted,incoming._deleted).slice(-5000);
+  return pruneTombstones(merged);
 }
 
 app.post('/api/db', async (req,res) => {
@@ -130,7 +120,7 @@ app.post('/api/db', async (req,res) => {
     await client.query('BEGIN');
     const cur=await client.query('SELECT version, data FROM wipko_app_state WHERE id=1 FOR UPDATE');
     let nextVersion=1;
-    let finalDb=incoming;
+    let finalDb=pruneTombstones(incoming);
     let merged=false;
     if (cur.rowCount) {
       const currentVersion=Number(cur.rows[0].version||0);
@@ -155,35 +145,6 @@ app.post('/api/db', async (req,res) => {
     console.error('Database save failed:',e);
     res.status(500).json({message:'Database save failed',detail:e.message});
   } finally { client.release(); }
-});
-
-
-// Cloud attachment storage: keep binary files outside the ERP JSON snapshot.
-app.post('/api/attachments', express.raw({type:'application/octet-stream',limit:'30mb'}), async (req,res) => {
-  try {
-    const data=Buffer.isBuffer(req.body)?req.body:Buffer.alloc(0);
-    if(!data.length)return res.status(400).json({message:'Empty attachment'});
-    const max=25*1024*1024;
-    if(data.length>max)return res.status(413).json({message:'Attachment is too large. Maximum file size is 25 MB.'});
-    const id='ATT-'+Date.now().toString(36).toUpperCase()+'-'+Math.random().toString(36).slice(2,10).toUpperCase();
-    const fileName=decodeURIComponent(String(req.headers['x-file-name']||'attachment')).slice(0,255);
-    const mime=String(req.headers['x-file-type']||'application/octet-stream').slice(0,150);
-    await pool.query('INSERT INTO wipko_attachments(id,file_name,mime_type,file_size,data) VALUES($1,$2,$3,$4,$5)',[id,fileName,mime,data.length,data]);
-    res.json({ok:true,id,name:fileName,type:mime,size:data.length,url:'/api/attachments/'+encodeURIComponent(id)});
-  } catch(e){console.error('Attachment upload failed:',e);res.status(500).json({message:'Attachment upload failed',detail:e.message});}
-});
-
-app.get('/api/attachments/:id', async (req,res) => {
-  try {
-    const r=await pool.query('SELECT file_name,mime_type,file_size,data FROM wipko_attachments WHERE id=$1',[String(req.params.id||'')]);
-    if(!r.rowCount)return res.status(404).send('Attachment not found');
-    const row=r.rows[0];
-    res.setHeader('Content-Type',row.mime_type||'application/octet-stream');
-    res.setHeader('Content-Length',String(row.file_size||row.data.length));
-    res.setHeader('Content-Disposition',`inline; filename*=UTF-8''${encodeURIComponent(row.file_name||'attachment')}`);
-    res.setHeader('Cache-Control','private, max-age=3600');
-    res.send(row.data);
-  } catch(e){console.error('Attachment read failed:',e);res.status(500).send('Attachment read failed');}
 });
 
 // Admin-friendly cloud backup download of the central state.
