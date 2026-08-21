@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP v001</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP v002</title><style>
 :root{--p:#0b5ed7;--p2:#22c55e;--bg:#eef2f7;--card:#fff;--ink:#0b2a4a;--muted:#64748b;--line:#d9e2ec;--bad:#dc2626;--warn:#f59e0b;--good:#16a34a;--side:#fff}body.theme-blue{--p:#2563eb;--p2:#06b6d4;--bg:#f4f7fb;--side:#08111f;--ink:#111827}body.theme-emerald{--p:#059669;--p2:#2dd4bf;--side:#052e2b}body.theme-purple{--p:#7c3aed;--p2:#c084fc;--side:#26104d}body.theme-dark{--p:#38bdf8;--p2:#818cf8;--bg:#0f172a;--card:#111827;--ink:#f8fafc;--muted:#cbd5e1;--line:#334155;--side:#020617}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#07111f,#123d70);padding:24px}.login-card{width:min(430px,96vw);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:28px;padding:34px;color:#fff;box-shadow:0 40px 90px rgba(0,0,0,.32)}.login-card img{width:190px;height:120px;max-width:190px;object-fit:contain;display:block;margin:0 0 8px 0;background:transparent!important;border-radius:0!important;padding:0!important}.login-card{min-height:452px}.login-card>p:first-of-type{margin-top:0}.login-card form button{margin-top:16px}.login-card input,.login-card button{width:100%;margin-top:8px}.app{display:flex}.side{width:285px;height:100vh;position:fixed;background:linear-gradient(160deg,var(--side),color-mix(in srgb,var(--p) 45%,#07111f));color:#fff;padding:22px;border-right:1px solid var(--line);overflow:auto}body.theme-full-light .side{background:#fff;color:#0b2a4a}.brand{display:flex;gap:12px;align-items:center;margin-bottom:20px}.brand img{width:72px;background:#fff;border-radius:12px;padding:6px}.brand b{font-size:18px}.nav button{display:block;width:100%;text-align:left;margin:3px 0;padding:11px 13px;border-radius:12px;background:transparent;color:inherit;border:0;cursor:pointer}.nav button.active,.nav button:hover{background:color-mix(in srgb,var(--p) 18%,transparent)}.main{margin-left:285px;width:calc(100% - 285px);padding:24px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.top h1{margin:0}.top p{margin:4px 0;color:var(--muted)}button{border:0;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:10px 14px;font-weight:800;cursor:pointer}.ghost{background:#eaf1ff;color:var(--p);box-shadow:none}.danger{background:#fee2e2;color:#991b1b}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 14px 35px rgba(15,23,42,.06)}.grid{display:grid;grid-template-columns:390px 1fr;gap:16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card,.info{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}.card span,.muted{color:var(--muted);font-size:13px}.card b{display:block;font-size:25px;margin-top:6px}.form{display:grid;gap:10px}.form label{font-size:12px;color:var(--muted);font-weight:800}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;margin-top:5px}textarea{min-height:76px}table{width:100%;border-collapse:collapse;font-size:13px}th{background:color-mix(in srgb,var(--p) 12%,var(--card));color:var(--p);text-align:left;padding:10px;border-bottom:1px solid var(--line)}td{padding:9px;border-bottom:1px solid var(--line);vertical-align:top}.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900}.ok{background:#dcfce7;color:#166534}.due{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}.mini{padding:6px 8px;font-size:11px;margin:2px}.doc-a4{max-width:1000px;margin:auto;background:#fff;color:#111;border-radius:18px;overflow:hidden}.doc-head{min-height:74mm;display:grid;grid-template-columns:1fr .8fr 1fr;gap:16px;padding:22px;border-bottom:4px solid var(--p)}.doc-head img{max-width:165px;max-height:65px}.doc-title{text-align:right}.doc-title strong{font-size:32px;color:var(--p);text-transform:uppercase}.doc-bill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px}.doc-items{min-height:148mm;padding:18px 22px}.doc-foot{min-height:74mm;display:grid;grid-template-columns:1fr 320px;gap:18px;padding:18px 22px;border-top:2px solid #e2e8f0}.totals{background:#0b1220;color:#fff;border-radius:14px;padding:16px}.totals p{display:flex;justify-content:space-between}.grand{font-size:20px;border-top:1px solid #ffffff55;padding-top:10px}.toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap}.row-actions{white-space:nowrap}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden}.progress b{height:100%;display:block;background:linear-gradient(90deg,var(--p),var(--p2))}@media(max-width:1100px){.side{position:static;width:100%;height:auto}.main{margin:0;width:100%}.app{display:block}.grid,.grid2,.doc-head,.doc-foot{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}@media print{.side,.top,.toolbar,.no-print,.row-actions,button{display:none!important}.main{margin:0;width:100%;padding:0}.panel{box-shadow:none;border:0}.doc-a4{width:210mm;height:297mm;max-width:none;border-radius:0}.doc-head{height:25%;min-height:0}.doc-items{height:50%;min-height:0}.doc-foot{height:25%;min-height:0}.doc-title input,.doc-head select{border:0}.print-only{display:block!important}body *{visibility:hidden}#workspace .print-target,#workspace .print-target *{visibility:visible}.print-target{position:absolute;left:0;top:0;width:100%}}
 
 /* v6 pre-printed paper layout: no generated header/footer */
@@ -9984,7 +9984,7 @@ var TITLES={
  profit:'Net Profit',
  pending:'Pending Invoices',
  overdue:'Overdue Invoices',
- amc:'__LEGACY_AMC_DISABLED__'
+ amc:'AMC Due Soon'
 };
 var TITLE_TO_KEY={};
 Object.keys(TITLES).forEach(function(k){TITLE_TO_KEY[TITLES[k].toLowerCase()]=k});
@@ -10055,24 +10055,6 @@ function invStatus(i){return norm(i.payStatus||i.paymentStatus||i.status||'Pendi
 function cancelled(i){return /^(cancelled|canceled|void|deleted)$/.test(invStatus(i))}
 function fullyPaid(i){return invStatus(i)==='paid'||invBalance(i)<=0.005}
 
-function renderedAmcRows(){
- var panel=document.getElementById('v36RenewalPanel');
- if(!panel)return [];
-
- /* Use the first/main table in the renewal panel only.
-    Archived/postponed rows are intentionally not counted. */
- var table=panel.querySelector('table');
- if(!table||!table.tBodies||!table.tBodies[0])return [];
- return [].slice.call(table.tBodies[0].rows).filter(function(tr){
-   if(!tr.getClientRects().length)return false;
-   var cells=[].slice.call(tr.cells||[]);
-   if(!cells.length)return false;
-   if(cells.length===1&&cells[0].hasAttribute('colspan'))return false;
-   var txt=norm(tr.textContent);
-   if(!txt||/No AMC renewal follow-ups/i.test(txt))return false;
-   return cells.length>1
- })
-}
 function amcSourceRows(){
  try{
    if(typeof window.v36GetActiveRows==='function'){
@@ -10189,9 +10171,7 @@ function valueNode(card,key){
 function patchCards(){
  if(typeof page!=='undefined'&&page!=='analytics'&&page!=='dashboard')return;
  var x=data(),cards=findCards();
- var exactAmcCount=(typeof window.v36GetActiveRows==='function'&&Array.isArray(window.v36GetActiveRows()))
-   ? window.v36GetActiveRows().length
-   : x.amc.length;
+ var exactAmcCount=x.amc.length;
  var vals={
    income:moneyV(x.income),
    expense:moneyV(x.expense),
@@ -10215,16 +10195,6 @@ function patchCards(){
    c.setAttribute('aria-label',TITLES[k]+' — open details')
  });
 
- /* AMC-specific final fallback: if a legacy card structure still hid the visible number
-    from generic targeting, search that card's visible numeric leaf and overwrite it. */
- var amcCard=cards.amc;
- if(amcCard){
-   var amcNode=valueNode(amcCard,'amc');
-   if(amcNode){
-     amcNode.textContent=String(exactAmcCount);
-     amcNode.setAttribute('data-v46-kpi-value','amc');
-   }
- }
  window.__v46KpiLast=x;
  window.__v46KpiCardsFound=Object.keys(cards);
  window.__v46AmcExactCount=exactAmcCount;
@@ -10357,238 +10327,5 @@ setInterval(function(){
 })();
 </script>
 
-<style id="wipko-v46-amc-kpi-card">
-#v46AmcDueSoonCard{
-  cursor:pointer!important;
-  transition:transform .15s ease,box-shadow .15s ease!important;
-  outline:none!important
-}
-#v46AmcDueSoonCard:hover{
-  transform:translateY(-2px)!important;
-  box-shadow:0 18px 42px rgba(15,23,42,.16)!important
-}
-#v46AmcDueSoonCard:focus-visible{
-  box-shadow:0 0 0 3px rgba(37,99,235,.25),0 18px 42px rgba(15,23,42,.16)!important
-}
-</style>
 
-<script id="wipko-v46-amc-kpi-card">
-(function(){
-'use strict';
-if(window.__wipkoV46AmcCard)return;
-window.__wipkoV46AmcCard=true;
-
-function norm(v){return String(v==null?'':v).replace(/\s+/g,' ').trim()}
-
-function dashboardReady(){
-  try{return typeof page==='undefined'||page==='analytics'||page==='dashboard'}catch(e){return true}
-}
-
-function findOldAmcCard(){
-  var ws=document.getElementById('workspace');
-  if(!ws)return null;
-
-  /* Exact title search first, then climb to the smallest card-like wrapper. */
-  var nodes=[].slice.call(ws.querySelectorAll('span,small,h1,h2,h3,h4,div,p'));
-  var titleNode=nodes.find(function(el){
-    return norm(el.textContent)==='AMC Due Soon';
-  });
-  if(!titleNode)return null;
-
-  var cur=titleNode,steps=0;
-  while(cur&&cur!==ws&&steps++<8){
-    var txt=norm(cur.textContent);
-    var cls=String(cur.className||'');
-    var cardish=/card|kpi|stat|metric/i.test(cls);
-    if(cardish && txt.indexOf('AMC Due Soon')>=0 && txt.length<500)return cur;
-    cur=cur.parentElement;
-  }
-
-  /* Fallback: smallest ancestor containing the title and a short KPI-sized text payload. */
-  cur=titleNode.parentElement;steps=0;
-  while(cur&&cur!==ws&&steps++<8){
-    var t=norm(cur.textContent);
-    if(t.indexOf('AMC Due Soon')>=0 && t.length<500)return cur;
-    cur=cur.parentElement;
-  }
-  return null;
-}
-
-function countVisibleActiveRows(){
-  /* Use the exact same active-row source that renders AMC Renewal Follow-up.
-     DOM visibility checks can report zero during render/layout even when rows exist. */
-  try{
-    if(typeof window.v36GetActiveRows==='function'){
-      var rows=window.v36GetActiveRows();
-      if(Array.isArray(rows))return rows.length;
-    }
-  }catch(e){}
-  var panel=document.getElementById('v36RenewalPanel');
-  if(!panel)return 0;
-  var table=panel.querySelector('table');
-  if(!table||!table.tBodies||!table.tBodies[0])return 0;
-  return [].slice.call(table.tBodies[0].rows).filter(function(tr){
-    var cells=[].slice.call(tr.cells||[]);
-    var txt=norm(tr.textContent);
-    return cells.length>1 && txt && !/No AMC renewal follow-ups/i.test(txt);
-  }).length;
-}
-
-function findNumericLeaf(card){
-  if(!card)return null;
-  var all=[].slice.call(card.querySelectorAll('*'));
-  var exact=all.find(function(el){
-    if(el.children.length)return false;
-    var t=norm(el.textContent);
-    return /^(?:AED\s*)?-?[\d,.]+$/i.test(t)||/^-?\d+$/.test(t);
-  });
-  return exact||null;
-}
-
-function cloneWithoutLegacyBindings(oldCard){
-  var clone=oldCard.cloneNode(true);
-
-  /* New isolated identity. */
-  clone.id='v46AmcDueSoonCard';
-  clone.removeAttribute('onclick');
-  clone.removeAttribute('onkeydown');
-  clone.removeAttribute('data-v46-kpi');
-  clone.removeAttribute('data-v44-kpi');
-  clone.removeAttribute('data-v43-kpi');
-  clone.removeAttribute('data-v42-kpi');
-  clone.removeAttribute('data-v41-kpi');
-  clone.classList.remove(
-    'v46-kpi-card-active',
-    'v45-kpi-card-active',
-    'v44-kpi-card-active',
-    'v43-kpi-card-active',
-    'v41-kpi-active'
-  );
-
-  /* Clear old descendant event attributes/data markers. */
-  clone.querySelectorAll('*').forEach(function(el){
-    el.removeAttribute('onclick');
-    el.removeAttribute('onkeydown');
-    el.removeAttribute('data-v46-kpi');
-    el.removeAttribute('data-v45-kpi');
-    el.removeAttribute('data-v44-kpi');
-    el.removeAttribute('data-v43-kpi');
-    el.removeAttribute('data-v42-kpi');
-    el.removeAttribute('data-v41-kpi');
-    el.removeAttribute('data-v46-kpi-value');
-    el.removeAttribute('data-v45-kpi-value');
-    el.removeAttribute('data-v44-kpi-value');
-  });
-
-  clone.setAttribute('role','button');
-  clone.setAttribute('tabindex','0');
-  clone.setAttribute('aria-label','AMC Due Soon — open AMC Renewal Follow-up');
-  return clone;
-}
-
-function ensureReplacementCard(){
-  if(!dashboardReady())return null;
-
-  var existing=document.getElementById('v46AmcDueSoonCard');
-  if(existing)return existing;
-
-  var oldCard=findOldAmcCard();
-  if(!oldCard)return null;
-
-  var replacement=cloneWithoutLegacyBindings(oldCard);
-  oldCard.replaceWith(replacement);
-
-  replacement.addEventListener('click',function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    scrollToFollowup();
-  });
-  replacement.addEventListener('keydown',function(e){
-    if(e.key!=='Enter'&&e.key!==' ')return;
-    e.preventDefault();
-    e.stopPropagation();
-    scrollToFollowup();
-  });
-
-  return replacement;
-}
-
-function writeCount(){
-  if(!dashboardReady())return;
-  var card=ensureReplacementCard();
-  if(!card)return;
-
-  var count=countVisibleActiveRows();
-  var valueNode=findNumericLeaf(card);
-
-  if(valueNode){
-    valueNode.textContent=String(count);
-  }else{
-    /* If legacy markup has no standalone number element, inject one after title. */
-    var title=[].slice.call(card.querySelectorAll('*')).find(function(el){
-      return norm(el.textContent)==='AMC Due Soon';
-    });
-    var val=document.createElement('strong');
-    val.id='v46AmcDueSoonValue';
-    val.textContent=String(count);
-    if(title&&title.parentNode){
-      title.parentNode.insertBefore(val,title.nextSibling);
-    }else{
-      card.appendChild(val);
-    }
-  }
-
-  card.dataset.v46AmcCount=String(count);
-  window.__v46AmcVisibleRowCount=count;
-}
-
-function scrollToFollowup(){
-  var p=document.getElementById('v36RenewalPanel');
-  if(p){
-    var topbar=document.querySelector('.topbar,.top');
-    var offset=(topbar?topbar.getBoundingClientRect().height:0)+30;
-    p.style.scrollMarginTop=Math.max(30,offset)+'px';
-    p.scrollIntoView({behavior:'smooth',block:'start',inline:'nearest'});
-    p.style.boxShadow='0 0 0 3px rgba(37,99,235,.22)';
-    setTimeout(function(){p.style.boxShadow=''},1800);
-  }
-}
-
-window.v46RefreshAmcDueSoon=function(){
-  writeCount();
-};
-
-var oldRender=window.render;
-if(typeof oldRender==='function'){
-  window.render=function(){
-    var r=oldRender.apply(this,arguments);
-    setTimeout(writeCount,60);
-    setTimeout(writeCount,260);
-    setTimeout(writeCount,800);
-    return r;
-  };
-  try{render=window.render}catch(e){}
-}
-
-document.addEventListener('DOMContentLoaded',function(){
-  setTimeout(writeCount,400);
-  setTimeout(writeCount,1000);
-},{once:true});
-
-var ws=document.getElementById('workspace'),timer=null;
-if(ws&&window.MutationObserver){
-  new MutationObserver(function(){
-    if(!dashboardReady())return;
-    clearTimeout(timer);
-    timer=setTimeout(writeCount,120);
-  }).observe(ws,{childList:true,subtree:true});
-}
-
-/* Keep the displayed value synchronized with the actually visible table rows. */
-setInterval(function(){
-  try{if(dashboardReady())writeCount()}catch(e){}
-},1500);
-
-})();
-</script>
 </body></html>
