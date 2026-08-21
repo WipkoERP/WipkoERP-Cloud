@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP v004</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP v006</title><style>
 :root{--p:#0b5ed7;--p2:#22c55e;--bg:#eef2f7;--card:#fff;--ink:#0b2a4a;--muted:#64748b;--line:#d9e2ec;--bad:#dc2626;--warn:#f59e0b;--good:#16a34a;--side:#fff}body.theme-blue{--p:#2563eb;--p2:#06b6d4;--bg:#f4f7fb;--side:#08111f;--ink:#111827}body.theme-emerald{--p:#059669;--p2:#2dd4bf;--side:#052e2b}body.theme-purple{--p:#7c3aed;--p2:#c084fc;--side:#26104d}body.theme-dark{--p:#38bdf8;--p2:#818cf8;--bg:#0f172a;--card:#111827;--ink:#f8fafc;--muted:#cbd5e1;--line:#334155;--side:#020617}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#07111f,#123d70);padding:24px}.login-card{width:min(430px,96vw);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:28px;padding:34px;color:#fff;box-shadow:0 40px 90px rgba(0,0,0,.32)}.login-card img{width:190px;height:120px;max-width:190px;object-fit:contain;display:block;margin:0 0 8px 0;background:transparent!important;border-radius:0!important;padding:0!important}.login-card{min-height:452px}.login-card>p:first-of-type{margin-top:0}.login-card form button{margin-top:16px}.login-card input,.login-card button{width:100%;margin-top:8px}.app{display:flex}.side{width:285px;height:100vh;position:fixed;background:linear-gradient(160deg,var(--side),color-mix(in srgb,var(--p) 45%,#07111f));color:#fff;padding:22px;border-right:1px solid var(--line);overflow:auto}body.theme-full-light .side{background:#fff;color:#0b2a4a}.brand{display:flex;gap:12px;align-items:center;margin-bottom:20px}.brand img{width:72px;background:#fff;border-radius:12px;padding:6px}.brand b{font-size:18px}.nav button{display:block;width:100%;text-align:left;margin:3px 0;padding:11px 13px;border-radius:12px;background:transparent;color:inherit;border:0;cursor:pointer}.nav button.active,.nav button:hover{background:color-mix(in srgb,var(--p) 18%,transparent)}.main{margin-left:285px;width:calc(100% - 285px);padding:24px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.top h1{margin:0}.top p{margin:4px 0;color:var(--muted)}button{border:0;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:10px 14px;font-weight:800;cursor:pointer}.ghost{background:#eaf1ff;color:var(--p);box-shadow:none}.danger{background:#fee2e2;color:#991b1b}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 14px 35px rgba(15,23,42,.06)}.grid{display:grid;grid-template-columns:390px 1fr;gap:16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card,.info{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}.card span,.muted{color:var(--muted);font-size:13px}.card b{display:block;font-size:25px;margin-top:6px}.form{display:grid;gap:10px}.form label{font-size:12px;color:var(--muted);font-weight:800}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;margin-top:5px}textarea{min-height:76px}table{width:100%;border-collapse:collapse;font-size:13px}th{background:color-mix(in srgb,var(--p) 12%,var(--card));color:var(--p);text-align:left;padding:10px;border-bottom:1px solid var(--line)}td{padding:9px;border-bottom:1px solid var(--line);vertical-align:top}.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900}.ok{background:#dcfce7;color:#166534}.due{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}.mini{padding:6px 8px;font-size:11px;margin:2px}.doc-a4{max-width:1000px;margin:auto;background:#fff;color:#111;border-radius:18px;overflow:hidden}.doc-head{min-height:74mm;display:grid;grid-template-columns:1fr .8fr 1fr;gap:16px;padding:22px;border-bottom:4px solid var(--p)}.doc-head img{max-width:165px;max-height:65px}.doc-title{text-align:right}.doc-title strong{font-size:32px;color:var(--p);text-transform:uppercase}.doc-bill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px}.doc-items{min-height:148mm;padding:18px 22px}.doc-foot{min-height:74mm;display:grid;grid-template-columns:1fr 320px;gap:18px;padding:18px 22px;border-top:2px solid #e2e8f0}.totals{background:#0b1220;color:#fff;border-radius:14px;padding:16px}.totals p{display:flex;justify-content:space-between}.grand{font-size:20px;border-top:1px solid #ffffff55;padding-top:10px}.toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap}.row-actions{white-space:nowrap}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden}.progress b{height:100%;display:block;background:linear-gradient(90deg,var(--p),var(--p2))}@media(max-width:1100px){.side{position:static;width:100%;height:auto}.main{margin:0;width:100%}.app{display:block}.grid,.grid2,.doc-head,.doc-foot{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}@media print{.side,.top,.toolbar,.no-print,.row-actions,button{display:none!important}.main{margin:0;width:100%;padding:0}.panel{box-shadow:none;border:0}.doc-a4{width:210mm;height:297mm;max-width:none;border-radius:0}.doc-head{height:25%;min-height:0}.doc-items{height:50%;min-height:0}.doc-foot{height:25%;min-height:0}.doc-title input,.doc-head select{border:0}.print-only{display:block!important}body *{visibility:hidden}#workspace .print-target,#workspace .print-target *{visibility:visible}.print-target{position:absolute;left:0;top:0;width:100%}}
 
 /* v6 pre-printed paper layout: no generated header/footer */
@@ -2532,9 +2532,9 @@ function requestStoragePersist(){try{if(navigator.storage&&navigator.storage.per
   if(!db){try{load()}catch(_e){db=blank();migrateDb();save()}}
   if(!Array.isArray(db.users))db.users=[];
   var v39s=window.__wipkoV39LoginState||{};
-  if(v39s.ready===false)return false;
+  if(v39s.ready!==true)return false;
   let un=String($('u').value||'').trim().toLowerCase(),pw=String($('p').value||'');
-  let loginUsers=(v39s.cloudReady?((db&&Array.isArray(db.users))?db.users:[]):(Array.isArray(v39s.cachedUsers)?v39s.cachedUsers:((db&&Array.isArray(db.users))?db.users:[])));
+  let loginUsers=(db&&Array.isArray(db.users))?db.users:[];
   let found=loginUsers.find(x=>String(x.username||'').trim().toLowerCase()===un&&String(x.password||'')===pw&&String(x.status||'Active').toLowerCase()!=='inactive');
   if(!found){alert('Invalid username or password');return false}
   if(!roleEnabled(found.role)){alert('This user role is disabled by Super Admin');return false}
@@ -9289,7 +9289,7 @@ const oldReport=window.reportPage||reportPage;window.reportPage=reportPage=funct
 function post(){ensureCategories();pruneDeleted();ensureDashShortcut();patchDashboard();patchInvoiceDelete()}const oldRender=window.render||render;window.render=render=function(){let r=oldRender.apply(this,arguments);setTimeout(post,0);setTimeout(post,200);return r};document.addEventListener('DOMContentLoaded',()=>setTimeout(post,250));setTimeout(post,500);ensureCategories();pruneDeleted();
 })();
 </script>
-\n<script id="wipko-v25-phase-a-accounting-amc-linking">
+<script id="wipko-v25-phase-a-accounting-amc-linking">
 (function(){
 'use strict';
 if(window.__wipkoV25PhaseA)return;window.__wipkoV25PhaseA=true;
@@ -9664,38 +9664,25 @@ window.__WIPKO_UI_VERSION__='WipkoERP_v46';
 <script id="wipko-v39-login-resilience">
 (function(){
  'use strict';
- var state=window.__wipkoV39LoginState={ready:false,cloudReady:false,cachedUsers:[],fallbackReady:false};
- var CLOUD_CACHE='wipko_cloud_v1_cache';
- var reconnectTimer=null,fallbackTimer=null;
+ var state=window.__wipkoV39LoginState={ready:false,cloudReady:false};
+ var reconnectTimer=null;
 
- function cloneUsers(a){try{return JSON.parse(JSON.stringify(Array.isArray(a)?a:[]))}catch(e){return []}}
- function readSyncedCache(){
-   try{
-     var raw=localStorage.getItem(CLOUD_CACHE);if(!raw)return null;
-     var d=JSON.parse(raw);if(!d||!Array.isArray(d.users)||!d.users.length)return null;
-     return d;
-   }catch(e){return null}
- }
  function button(){return document.getElementById('loginButton')||document.querySelector('#loginForm button[type="submit"],#loginForm button:not([type])')}
- function showConnecting(){var b=button();if(!b)return;b.disabled=true;b.setAttribute('aria-disabled','true');b.textContent='Connecting…'}
- function enableLogin(){var b=button();if(!b)return;state.ready=true;b.disabled=false;b.setAttribute('aria-disabled','false');b.textContent='Login'}
+ function showConnecting(){var b=button();if(!b)return;state.ready=false;b.disabled=true;b.setAttribute('aria-disabled','true');b.textContent='Connecting…'}
+ function usersReady(){return !!(window.db&&Array.isArray(db.users))}
+ function enableLogin(){if(!usersReady())return false;var b=button();if(!b)return false;state.ready=true;state.cloudReady=true;b.disabled=false;b.setAttribute('aria-disabled','false');b.textContent='Login';return true}
  function acceptCloudPayload(p){
    try{
-     var d=p&&p.db;if(!d||typeof d!=='object')return false;
-     state.cloudReady=true;state.cachedUsers=cloneUsers(d.users);
-     state.fallbackReady=false;
-     // The cloud adapter writes the full authoritative DB cache. This users-only write is just a safe early mirror.
-     try{localStorage.setItem('wipko_v39_last_cloud_users',JSON.stringify(state.cachedUsers))}catch(e){}
-     enableLogin();
+     var d=p&&p.db;if(!d||typeof d!=='object'||!Array.isArray(d.users))return false;
+     // The cloud adapter applies the authoritative payload to db. Enable only after db.users exists.
+     setTimeout(enableLogin,0);
      return true;
    }catch(e){return false}
  }
 
- var cached=readSyncedCache();
- if(cached)state.cachedUsers=cloneUsers(cached.users);
  showConnecting();
 
- // Observe the existing cloud adapter's GET /api/db without replacing its behavior.
+ // Observe the authoritative cloud GET without changing the cloud adapter.
  var priorFetch=window.fetch.bind(window);
  window.fetch=function(input,init){
    var method=String((init&&init.method)||'GET').toUpperCase();
@@ -9710,32 +9697,27 @@ window.__WIPKO_UI_VERSION__='WipkoERP_v46';
    return p;
  };
 
- function allowCachedFallback(){
-   if(state.cloudReady||state.ready)return;
-   if(Array.isArray(state.cachedUsers)&&state.cachedUsers.length){state.fallbackReady=true;enableLogin()}
- }
  function reconnect(){
-   if(state.cloudReady)return;
+   if(state.ready&&usersReady())return;
+   showConnecting();
    try{
      if(typeof window.loadFromServer==='function'){
        Promise.resolve(window.loadFromServer()).then(function(ok){
-         // Successful cloud GET is normally caught by the fetch observer. This handles wrappers that return after applying db.
-         if(ok&&db&&Array.isArray(db.users)){state.cloudReady=true;state.cachedUsers=cloneUsers(db.users);enableLogin()}
+         if(ok&&usersReady())enableLogin();
        }).catch(function(){})
      }
    }catch(e){}
  }
  function boot(){
    showConnecting();
-   clearTimeout(fallbackTimer);
-   // Give PostgreSQL the first opportunity, while the verified cloud cache is already prepared silently.
-   fallbackTimer=setTimeout(allowCachedFallback,1200);
+   // Never enable from local/cloud cache. Wait for the current cloud load to populate db.users.
+   if(usersReady()&&window.__WIPKO_CLOUD_V1__){
+     // Do not trust pre-boot cached db.users; the cloud GET observer/reconnect will enable after load.
+   }
    clearInterval(reconnectTimer);reconnectTimer=setInterval(reconnect,8000);
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
- window.addEventListener('online',function(){reconnect()});
-
- // Expose only for diagnostics; no visible offline/cached status is shown.
+ window.addEventListener('online',reconnect);
  window.__wipkoV39ReconnectCloud=reconnect;
 })();
 </script>
@@ -10344,5 +10326,62 @@ setInterval(function(){
 })();
 </script>
 
+
+<style id="wipko-v006-police-fee-style">
+.v006-police-box{grid-column:1/-1;border:1px solid #dbe4ee;border-radius:14px;padding:12px;background:#f8fbff;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.v006-police-box h3{grid-column:1/-1;margin:0;font-size:15px;color:#0b2a4a}.v006-police-box label{margin:0}.v006-police-box .v006-full{grid-column:1/-1}.v006-police-box small{display:block;margin-top:4px;color:#64748b}.v006-police-hidden{display:none!important}.v006-police-mode .ledger-unpaid-wrap{display:none!important}
+@media(max-width:760px){.v006-police-box{grid-template-columns:1fr}.v006-police-box h3,.v006-police-box .v006-full{grid-column:1}}
+</style>
+<script id="wipko-v006-police-certificate-ledger">
+(function(){
+'use strict';
+if(window.__wipkoV006PoliceCertificate)return;window.__wipkoV006PoliceCertificate=true;
+var CAT='Fujairah Police Certificate Fee';
+function S(v){return String(v==null?'':v)}
+function N(v){return Number(v)||0}
+function R(v){return Math.round((N(v)+Number.EPSILON)*100)/100}
+function esc(v){return S(v).replace(/[&<>"']/g,function(c){return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]})}
+function isPolice(form){return !!(form&&form.elements&&form.elements.category&&S(form.elements.category.value).trim()===CAT)}
+function formNow(){var d=document.getElementById('drawer-accounts');return d&&d.querySelector('form')}
+function ensureCategory(){try{db.master=db.master||{};db.master.expenseCategory=Array.isArray(db.master.expenseCategory)?db.master.expenseCategory:[];if(!db.master.expenseCategory.includes(CAT))db.master.expenseCategory.push(CAT)}catch(e){}}
+function clientLabel(c){return S(c.company||c.name||c.id)}
+function clientSearchLabel(c){var x=clientLabel(c),tl=S(c.tlNo||c.code||'').trim();return tl?x+' · '+tl:x}
+function invoiceNo(i){return S(i.no||i.invoiceNo||i.id)}
+function invoiceTotal(i){return R(i.total||i.grandTotal||0)}
+function nextInvoiceNo(){var max=0;(db.invoices||[]).forEach(function(i){var m=invoiceNo(i).match(/(\d+)$/);if(m)max=Math.max(max,parseInt(m[1],10)||0)});return 'INV-'+String(max+1).padStart(6,'0')}
+function clientFromParty(form){return form&&form.elements.party?S(form.elements.party.value):''}
+function setLabelText(el,text){var lab=el&&el.closest&&el.closest('label');if(!lab)return;for(var i=0;i<lab.childNodes.length;i++){var n=lab.childNodes[i];if(n.nodeType===3&&S(n.nodeValue).trim()){n.nodeValue=text;return}}lab.insertBefore(document.createTextNode(text),lab.firstChild)}
+function setFieldHidden(form,name,hide){var el=form&&form.elements&&form.elements[name];if(!el)return;var lab=el.closest('label');if(lab)lab.classList.toggle('v006-police-hidden',!!hide)}
+function fillClientParty(form,current){var sel=form.elements.party;if(!sel)return;var cur=S(current!==undefined?current:sel.value);sel.innerHTML='<option value="">Select Client</option>'+(db.clients||[]).map(function(c){return '<option value="'+esc(c.id)+'" '+(S(c.id)===cur?'selected':'')+'>'+esc(clientLabel(c))+'</option>'}).join('');sel.required=true;setLabelText(sel,'Client');var sm=sel.closest('label')&&sel.closest('label').querySelector('small');if(sm)sm.textContent='Search/select the client for this police certificate fee.'}
+function invoiceOptions(clientId,selected){var arr=(db.invoices||[]).filter(function(i){return S(i.client)===S(clientId)}).sort(function(a,b){return S(b.date).localeCompare(S(a.date))});return '<option value="">Select Existing Invoice</option>'+arr.map(function(i){return '<option value="'+esc(i.id)+'" '+(S(i.id)===S(selected)?'selected':'')+'>'+esc(invoiceNo(i)+' · '+(i.date||'-')+' · '+(typeof money==='function'?money(invoiceTotal(i)):'AED '+invoiceTotal(i).toFixed(2)))+'</option>'}).join('')+'<option value="__new__" '+(selected==='__new__'?'selected':'')+'>+ Create New Invoice</option>'}
+function renderPoliceBox(form,rec){var old=form.querySelector('.v006-police-box');if(old)old.remove();var party=form.elements.party,amount=form.elements.amount;if(!party||!amount)return;var listId='v006ClientList';var box=document.createElement('div');box.className='v006-police-box';box.innerHTML='<h3>Fujairah Police Certificate Fee</h3><label>Client<input type="search" name="policeClientSearch" list="'+listId+'" autocomplete="off" placeholder="Search client..." required><datalist id="'+listId+'">'+(db.clients||[]).map(function(c){return '<option value="'+esc(clientSearchLabel(c))+'" data-id="'+esc(c.id)+'"></option>'}).join('')+'</datalist></label><label>Month & Year<input type="month" name="policeMonth" required></label><label>Client Invoice<select name="policeInvoiceChoice" required></select><small>Select an existing invoice or create a new one.</small></label><label class="v006-invoice-amount">New Invoice Amount<input type="number" name="policeInvoiceAmount" min="0.01" step="0.01" inputmode="decimal" placeholder="0.00"></label>';
+var submit=form.querySelector('button[type="submit"],button:not([type])');form.insertBefore(box,submit||null);
+var clientSearch=box.querySelector('[name="policeClientSearch"]'),month=box.querySelector('[name="policeMonth"]'),choice=box.querySelector('[name="policeInvoiceChoice"]'),invAmt=box.querySelector('[name="policeInvoiceAmount"]');
+var currentClient=(db.clients||[]).find(function(c){return S(c.id)===clientFromParty(form)});if(currentClient)clientSearch.value=clientSearchLabel(currentClient);
+var date=S((rec&&rec.date)||(form.elements.date&&form.elements.date.value)||(typeof today==='function'?today():new Date().toISOString().slice(0,10)));month.value=S((rec&&rec.policeMonth)||date.slice(0,7)||new Date().toISOString().slice(0,7));
+var linked=S((rec&&(rec.policeInvoiceId||rec.invoiceId))||'');choice.innerHTML=invoiceOptions(clientFromParty(form),linked);if(linked&&!(db.invoices||[]).some(function(i){return S(i.id)===linked}))choice.value='';
+invAmt.value=rec&&rec.policeInvoiceAmount?R(rec.policeInvoiceAmount).toFixed(2):'';
+function toggleAmount(){var isNew=choice.value==='__new__';box.querySelector('.v006-invoice-amount').classList.toggle('v006-police-hidden',!isNew);invAmt.required=isNew}
+function resolveClient(){var val=S(clientSearch.value).trim(),c=(db.clients||[]).find(function(x){return clientSearchLabel(x)===val||clientLabel(x)===val||S(x.id)===val});party.value=c?c.id:'';choice.innerHTML=invoiceOptions(c?c.id:'','');choice.dispatchEvent(new Event('change',{bubbles:false}))}
+clientSearch.addEventListener('change',resolveClient);clientSearch.addEventListener('blur',resolveClient);choice.addEventListener('change',toggleAmount);toggleAmount();
+}
+function currentRecord(form){var id=S(form&&form.elements.id&&form.elements.id.value);return id?(db.accounts||[]).find(function(a){return S(a.id)===id}):null}
+function activatePolice(form){if(!form)return;form.classList.add('v006-police-mode');var rec=currentRecord(form);fillClientParty(form,rec&&(rec.client||rec.party));setFieldHidden(form,'party',true);setLabelText(form.elements.amount,'Police Fee');setFieldHidden(form,'date',true);setFieldHidden(form,'desc',true);setFieldHidden(form,'billPhoto',true);setFieldHidden(form,'vat',true);setFieldHidden(form,'payStatus',true);if(form.elements.desc)form.elements.desc.value=CAT;if(form.elements.vat)form.elements.vat.value='0';if(form.elements.payStatus)form.elements.payStatus.value='Paid';if(form.elements.date&&!form.elements.date.value)form.elements.date.value=(typeof today==='function'?today():new Date().toISOString().slice(0,10));renderPoliceBox(form,rec)}
+function deactivatePolice(form){if(form)form.classList.remove('v006-police-mode');var b=form&&form.querySelector('.v006-police-box');if(b)b.remove();['party','date','desc','billPhoto','vat','payStatus'].forEach(function(n){setFieldHidden(form,n,false)});if(form&&form.elements.amount)setLabelText(form.elements.amount,'Amount');try{if(typeof fillAccountParty==='function')fillAccountParty(form)}catch(e){}}
+function sync(form){if(!form||form!==formNow())return;ensureCategory();if(isPolice(form))activatePolice(form);else deactivatePolice(form)}
+function linkInvoice(inv,ledger){if(!inv||!ledger)return;inv.policeLedgerIds=Array.isArray(inv.policeLedgerIds)?inv.policeLedgerIds:[];if(!inv.policeLedgerIds.some(function(x){return S(x)===S(ledger.id)}))inv.policeLedgerIds.push(ledger.id);ledger.policeInvoiceId=inv.id;ledger.invoiceId=inv.id;ledger.invoiceIds=[inv.id]}
+function unlinkOld(ledger,newId){var old=S(ledger&&ledger.policeInvoiceId);if(!old||old===S(newId))return;var inv=(db.invoices||[]).find(function(i){return S(i.id)===old});if(inv&&Array.isArray(inv.policeLedgerIds))inv.policeLedgerIds=inv.policeLedgerIds.filter(function(x){return S(x)!==S(ledger.id)})}
+function createOrUpdateInvoice(ledger,total){var inv=(db.invoices||[]).find(function(i){return S(i.sourceLedgerId)===S(ledger.id)&&S(i.sourceType)===CAT});var grand=R(total),net=R(grand/1.05),vat=R(grand-net),date=ledger.date||(typeof today==='function'?today():new Date().toISOString().slice(0,10));var item={desc:CAT,type:'Service',qty:1,rate:net};if(!inv){inv={id:(typeof uid==='function'?uid('INV'):'INV-'+Date.now()),no:nextInvoiceNo(),date:date,dueDate:date,client:ledger.client,items:[item],subtotal:net,vatTotal:vat,total:grand,payStatus:'Pending',paymentStatus:'Pending',amountPaid:0,balanceAmount:grand,payments:[],sourceLedgerId:ledger.id,sourceType:CAT,policeMonth:ledger.policeMonth,sample:false};db.invoices.push(inv)}else{inv.date=date;inv.client=ledger.client;inv.items=[item];inv.subtotal=net;inv.vatTotal=vat;inv.total=grand;inv.balanceAmount=Math.max(R(grand-N(inv.amountPaid)),0);inv.payStatus=inv.paymentStatus=inv.balanceAmount<=.009?'Paid':N(inv.amountPaid)>0?'Partial':'Pending';inv.policeMonth=ledger.policeMonth}return inv}
+function savePolice(e,form){e.preventDefault();var clientId=clientFromParty(form),month=S(form.elements.policeMonth&&form.elements.policeMonth.value),fee=R(form.elements.amount&&form.elements.amount.value),choice=S(form.elements.policeInvoiceChoice&&form.elements.policeInvoiceChoice.value),newAmount=R(form.elements.policeInvoiceAmount&&form.elements.policeInvoiceAmount.value);if(!clientId){alert('Please select a Client.');return false}if(!month){alert('Please select Month & Year.');return false}if(fee<=0){alert('Please enter Police Fee.');return false}if(!choice){alert('Please select an existing invoice or + Create New Invoice.');return false}if(choice==='__new__'&&newAmount<=0){alert('Please enter New Invoice Amount.');return false}
+var id=S(form.elements.id&&form.elements.id.value),ledger=id?(db.accounts||[]).find(function(a){return S(a.id)===id}):null;if(!ledger){ledger={id:(typeof uid==='function'?uid('ACC'):'ACC-'+Date.now()),sample:false};db.accounts.push(ledger)}var wasNew=!id;ledger.date=(form.elements.date&&form.elements.date.value)||(typeof today==='function'?today():new Date().toISOString().slice(0,10));ledger.type='Expense';ledger.category=CAT;ledger.desc=CAT;ledger.amount=fee;ledger.vat=0;ledger.payStatus='Paid';ledger.party=clientId;ledger.partyType='client';ledger.client=clientId;delete ledger.vendor;ledger.policeMonth=month;ledger.policeFee=fee;ledger.policeInvoiceAmount=choice==='__new__'?newAmount:0;
+var inv;if(choice==='__new__'){inv=createOrUpdateInvoice(ledger,newAmount)}else{inv=(db.invoices||[]).find(function(i){return S(i.id)===choice});if(!inv){alert('Selected invoice was not found.');return false}}unlinkOld(ledger,inv.id);linkInvoice(inv,ledger);try{if(typeof log==='function')log((wasNew?'Created ':'Updated ')+CAT,(inv.no||inv.id)+' · '+month)}catch(x){}try{save()}catch(x){}try{render()}catch(x){}return false}
+ensureCategory();
+var oldSave=window.saveCrud;if(typeof oldSave==='function'){window.saveCrud=function(e,col){var form=e&&e.target;if(col==='accounts'&&isPolice(form))return savePolice(e,form);return oldSave.apply(this,arguments)};try{saveCrud=window.saveCrud}catch(e){}}
+var oldOpen=window.v69OpenDrawer;if(typeof oldOpen==='function'){window.v69OpenDrawer=function(col){var r=oldOpen.apply(this,arguments);if(col==='accounts')setTimeout(function(){var f=formNow();ensureCategory();try{if(typeof fillAccountCategory==='function')fillAccountCategory(f)}catch(e){}sync(f)},90);return r};try{v69OpenDrawer=window.v69OpenDrawer}catch(e){}}
+document.addEventListener('change',function(e){var f=e.target&&e.target.form;if(!f||f!==formNow())return;if(e.target.name==='type'){setTimeout(function(){ensureCategory();try{if(typeof fillAccountCategory==='function')fillAccountCategory(f)}catch(x){}sync(f)},0);return}if(e.target.name==='category'){setTimeout(function(){sync(f)},0);return}if(e.target.name==='party'&&isPolice(f)){var ch=f.elements.policeInvoiceChoice;if(ch){ch.innerHTML=invoiceOptions(clientFromParty(f),'');ch.dispatchEvent(new Event('change',{bubbles:false}))}}});
+document.addEventListener('focusin',function(e){var f=e.target&&e.target.form;if(f&&f===formNow()&&isPolice(f))setTimeout(function(){sync(f)},0)});
+var oldRender=window.render;if(typeof oldRender==='function'){window.render=function(){ensureCategory();var r=oldRender.apply(this,arguments);setTimeout(function(){var f=formNow();if(f)sync(f)},80);return r};try{render=window.render}catch(e){}}
+})();
+</script>
 
 </body></html>
