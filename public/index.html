@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP v024</title><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>WipkoERP v026</title><style>
 :root{--p:#0b5ed7;--p2:#22c55e;--bg:#eef2f7;--card:#fff;--ink:#0b2a4a;--muted:#64748b;--line:#d9e2ec;--bad:#dc2626;--warn:#f59e0b;--good:#16a34a;--side:#fff}body.theme-blue{--p:#2563eb;--p2:#06b6d4;--bg:#f4f7fb;--side:#08111f;--ink:#111827}body.theme-emerald{--p:#059669;--p2:#2dd4bf;--side:#052e2b}body.theme-purple{--p:#7c3aed;--p2:#c084fc;--side:#26104d}body.theme-dark{--p:#38bdf8;--p2:#818cf8;--bg:#0f172a;--card:#111827;--ink:#f8fafc;--muted:#cbd5e1;--line:#334155;--side:#020617}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Arial,sans-serif}body:has(#login:not(.hidden)){overflow:hidden}.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#07111f,#123d70);padding:24px}.login-card{width:min(430px,96vw);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:28px;padding:34px;color:#fff;box-shadow:0 40px 90px rgba(0,0,0,.32)}.login-card img{width:190px;height:120px;max-width:190px;object-fit:contain;display:block;margin:0 0 8px 0;background:transparent!important;border-radius:0!important;padding:0!important}.login-card{min-height:452px}.login-card>p:first-of-type{margin-top:0}.login-card form button{margin-top:16px}.login-card input,.login-card button{width:100%;margin-top:8px}.app{display:flex}.side{width:285px;height:100vh;position:fixed;background:linear-gradient(160deg,var(--side),color-mix(in srgb,var(--p) 45%,#07111f));color:#fff;padding:22px;border-right:1px solid var(--line);overflow:auto}body.theme-full-light .side{background:#fff;color:#0b2a4a}.brand{display:flex;gap:12px;align-items:center;margin-bottom:20px}.brand img{width:72px;background:#fff;border-radius:12px;padding:6px}.brand b{font-size:18px}.nav button{display:block;width:100%;text-align:left;margin:3px 0;padding:11px 13px;border-radius:12px;background:transparent;color:inherit;border:0;cursor:pointer}.nav button.active,.nav button:hover{background:color-mix(in srgb,var(--p) 18%,transparent)}.main{margin-left:285px;width:calc(100% - 285px);padding:24px}.top{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}.top h1{margin:0}.top p{margin:4px 0;color:var(--muted)}button{border:0;border-radius:12px;background:linear-gradient(135deg,var(--p),var(--p2));color:#fff;padding:10px 14px;font-weight:800;cursor:pointer}.ghost{background:#eaf1ff;color:var(--p);box-shadow:none}.danger{background:#fee2e2;color:#991b1b}.panel{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px;box-shadow:0 14px 35px rgba(15,23,42,.06)}.grid{display:grid;grid-template-columns:390px 1fr;gap:16px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.cards{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}.card,.info{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}.card span,.muted{color:var(--muted);font-size:13px}.card b{display:block;font-size:25px;margin-top:6px}.form{display:grid;gap:10px}.form label{font-size:12px;color:var(--muted);font-weight:800}input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font:inherit;margin-top:5px}textarea{min-height:76px}table{width:100%;border-collapse:collapse;font-size:13px}th{background:color-mix(in srgb,var(--p) 12%,var(--card));color:var(--p);text-align:left;padding:10px;border-bottom:1px solid var(--line)}td{padding:9px;border-bottom:1px solid var(--line);vertical-align:top}.pill{display:inline-block;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:900}.ok{background:#dcfce7;color:#166534}.due{background:#fef3c7;color:#92400e}.bad{background:#fee2e2;color:#991b1b}.mini{padding:6px 8px;font-size:11px;margin:2px}.doc-a4{max-width:1000px;margin:auto;background:#fff;color:#111;border-radius:18px;overflow:hidden}.doc-head{min-height:74mm;display:grid;grid-template-columns:1fr .8fr 1fr;gap:16px;padding:22px;border-bottom:4px solid var(--p)}.doc-head img{max-width:165px;max-height:65px}.doc-title{text-align:right}.doc-title strong{font-size:32px;color:var(--p);text-transform:uppercase}.doc-bill{background:#f8fafc;border:1px solid #e2e8f0;border-radius:14px;padding:14px}.doc-items{min-height:148mm;padding:18px 22px}.doc-foot{min-height:74mm;display:grid;grid-template-columns:1fr 320px;gap:18px;padding:18px 22px;border-top:2px solid #e2e8f0}.totals{background:#0b1220;color:#fff;border-radius:14px;padding:16px}.totals p{display:flex;justify-content:space-between}.grand{font-size:20px;border-top:1px solid #ffffff55;padding-top:10px}.toolbar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:12px;flex-wrap:wrap}.row-actions{white-space:nowrap}.progress{height:8px;background:#e5e7eb;border-radius:99px;overflow:hidden}.progress b{height:100%;display:block;background:linear-gradient(90deg,var(--p),var(--p2))}@media(max-width:1100px){.side{position:static;width:100%;height:auto}.main{margin:0;width:100%}.app{display:block}.grid,.grid2,.doc-head,.doc-foot{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}@media print{.side,.top,.toolbar,.no-print,.row-actions,button{display:none!important}.main{margin:0;width:100%;padding:0}.panel{box-shadow:none;border:0}.doc-a4{width:210mm;height:297mm;max-width:none;border-radius:0}.doc-head{height:25%;min-height:0}.doc-items{height:50%;min-height:0}.doc-foot{height:25%;min-height:0}.doc-title input,.doc-head select{border:0}.print-only{display:block!important}body *{visibility:hidden}#workspace .print-target,#workspace .print-target *{visibility:visible}.print-target{position:absolute;left:0;top:0;width:100%}}
 
 /* v6 pre-printed paper layout: no generated header/footer */
@@ -2474,7 +2474,7 @@ img,svg,canvas,video{max-width:100%}
 </style>
 <link id="wipko-v28-logo-preload" rel="preload" href="assets/logo.svg" as="image" fetchpriority="high">
 </head><!-- WipkoERP_v4: approved feature update; backend persistence unchanged -->
-<body class="theme-full-light"><section id="login" class="login"><div class="login-card"><img src="assets/logo.svg" width="190" height="120" fetchpriority="high" alt="Wipko Technologies"><h1>Wipko ERP</h1><p>WipkoERP v024</p><form id="loginForm"><label>Username<input id="u" autocomplete="username"></label><label>Password<input id="p" type="password" autocomplete="current-password"></label><button id="loginButton" type="submit" disabled aria-disabled="true">Connecting…</button></form></div></section><section id="app" class="app hidden">
+<body class="theme-full-light"><section id="login" class="login"><div class="login-card"><img src="assets/logo.svg" width="190" height="120" fetchpriority="high" alt="Wipko Technologies"><h1>Wipko ERP</h1><p>WipkoERP v026</p><form id="loginForm"><label>Username<input id="u" autocomplete="username"></label><label>Password<input id="p" type="password" autocomplete="current-password"></label><button id="loginButton" type="submit" disabled aria-disabled="true">Connecting…</button></form></div></section><section id="app" class="app hidden">
   <aside class="side saas-side">
     <div class="brand saas-brand" role="button" tabindex="0" title="Dashboard" aria-label="Open Dashboard" onclick="openPage('analytics')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openPage('analytics')}"><img src="assets/logo.svg"><div><b>WIPKO</b><br><span>TECHNOLOGIES</span></div></div>
     <div id="nav" class="nav saas-nav"></div>
@@ -2545,7 +2545,10 @@ async function saveToServer(){if(!apiMode()||!db)return false;try{db.__client=lo
 function startServerSyncLoop(){if(serverSyncTimer||!apiMode())return;serverSyncTimer=setInterval(syncFromServer,8000)}
 async function syncFromServer(){if(!apiMode())return;let active=document.activeElement,editing=active&&['INPUT','TEXTAREA','SELECT'].includes(active.tagName);if(editing)return;try{let r=await fetch('/api/db',{cache:'no-store'});if(!r.ok)return;let payload=await r.json();let v=payload.version||payload.__serverVersion||0;if(v&&v!==serverVersion){applyServerPayload(payload);save();render();setServerStatus('Local Database Server: Synced latest changes',true,true)}}catch(e){}}
 function markDeleted(col,id){db._deleted=db._deleted||[];db._deleted.push({col,id,at:Date.now(),user:user?.username||'system'});db._deleted=db._deleted.slice(-1000)}
-function requestStoragePersist(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}}function readSavedDb(){let keys=[KEY,'wipko_persistent_db','wipko_latest_db'];for(let k of keys){try{let v=localStorage.getItem(k)||sessionStorage.getItem(k);if(v)return JSON.parse(v)}catch(e){}}return null}function load(){requestStoragePersist();db=readSavedDb()||blank();migrateDb();save()}function migrateDb(){let base=blank();db.theme=normalizeTheme?normalizeTheme(db.theme||'blue'):(db.theme||'blue');db.master=db.master||base.master;db.master.roles=db.master.roles&&db.master.roles.length?db.master.roles:base.master.roles;db.master.stockCategory=db.master.stockCategory&&db.master.stockCategory.length?db.master.stockCategory:base.master.stockCategory;db.master.stockUnit=db.master.stockUnit&&db.master.stockUnit.length?db.master.stockUnit:base.master.stockUnit;if(!Array.isArray(db.master.incomeCategory)||!db.master.incomeCategory.length)db.master.incomeCategory=[...base.master.incomeCategory];else db.master.incomeCategory=[...new Set(db.master.incomeCategory.map(x=>String(x||'').trim()).filter(Boolean).map(x=>x==='AMC'?'Fujairah Police ZAM AMC':x))];db.roleSettings=db.roleSettings||{};db.master.roles.forEach(r=>{if(db.roleSettings[r]===undefined)db.roleSettings[r]=true});db.roleSettings['Super Admin']=true;['clients','vendors','suppliers','stockItems','purchaseBills','stockIn','stockOut','projectMaterials','tasks','assets','importHistory','cctv','accounts','projects','employees','companyDocuments','companyVehicles','payroll','reports','quotations','proformas','invoices','logs'].forEach(k=>{if(!Array.isArray(db[k]))db[k]=[]});db.clients.forEach(c=>{if(c.tlNo===undefined)c.tlNo='';if(c.zamPass===undefined)c.zamPass='';if(c.lastRenewalDate===undefined)c.lastRenewalDate='';if(c.contact===undefined)c.contact='';if(c.keyPersonName===undefined)c.keyPersonName='';if(c.keyPersonMobile===undefined)c.keyPersonMobile='';if(c.phone===undefined)c.phone='';if(c.mobile===undefined)c.mobile='';if(c.mapLocation===undefined)c.mapLocation='';});db.company=db.company||base.company;db.template=db.template||base.template;normalizeAccountCategories();(db.accounts||[]).forEach(a=>{if(!a.party&&a.client)a.party=a.client;if(!a.partyType)a.partyType=(a.type==='Expense'?'vendor':'client');});if(!Array.isArray(db.users))db.users=[];db.users.forEach(u=>{if(!u.status)u.status='Active';if(!u.permissions)u.permissions={};Object.keys(pages).forEach(k=>{if(u.permissions[k]===undefined)u.permissions[k]=true});if(u.permissions.invoiceEditSaved===undefined)u.permissions.invoiceEditSaved=(u.role==='Super Admin'||u.role==='Admin');if(u.permissions.invoiceDeleteSaved===undefined)u.permissions.invoiceDeleteSaved=(u.role==='Super Admin'||u.role==='Admin')})}function save(){let data=JSON.stringify(db);try{localStorage.setItem(KEY,data);localStorage.setItem('wipko_persistent_db',data);localStorage.setItem('wipko_latest_db',data)}catch(e){} try{sessionStorage.setItem(KEY,data);sessionStorage.setItem('wipko_persistent_db',data);sessionStorage.setItem('wipko_latest_db',data)}catch(e){} scheduleServerSave()}function log(a,d=''){db.logs.unshift({time:new Date().toLocaleString(),user:user?.username||'system',role:user?.role||'-',action:a,details:d});db.logs=db.logs.slice(0,500);save()}function superAdmin(){return user?.role==='Super Admin'}function roleEnabled(r){return r==='Super Admin'||db.roleSettings?.[r]!==false}function activeRoles(current=''){let roles=(db.master.roles||[]).filter(r=>roleEnabled(r)||r===current);if(current&&!roles.includes(current))roles.push(current);return roles}function normalizeTheme(t){t=String(t||'blue').toLowerCase();if(t.includes('gold')||t.includes('black')||t.includes('grey'))return 'gold';if(t.includes('royal')||t.includes('purple'))return 'royal';if(t.includes('amber')||t.includes('orange')||t.includes('business'))return 'amber';return 'blue'}function applyTheme(t){t=normalizeTheme(t);document.body.className='theme-'+t;if($('theme'))$('theme').value=t;document.querySelectorAll('.theme-dot').forEach(x=>x.classList.remove('active'));let dot=document.querySelector('.theme-dot.'+t);if(dot)dot.classList.add('active')}function setTheme(t){db.theme=normalizeTheme(t);save();applyTheme(db.theme);log('Theme changed',db.theme)}function login(e){
+function requestStoragePersist(){try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}}function readSavedDb(){let keys=[KEY,'wipko_persistent_db','wipko_latest_db'];for(let k of keys){try{let v=localStorage.getItem(k)||sessionStorage.getItem(k);if(v)return JSON.parse(v)}catch(e){}}return null}function load(){requestStoragePersist();db=readSavedDb()||blank();migrateDb();save()}function migrateDb(){let base=blank();db.theme=normalizeTheme?normalizeTheme(db.theme||'blue'):(db.theme||'blue');db.master=db.master||base.master;db.master.roles=db.master.roles&&db.master.roles.length?db.master.roles:base.master.roles;db.master.stockCategory=db.master.stockCategory&&db.master.stockCategory.length?db.master.stockCategory:base.master.stockCategory;db.master.stockUnit=db.master.stockUnit&&db.master.stockUnit.length?db.master.stockUnit:base.master.stockUnit;if(!Array.isArray(db.master.incomeCategory)||!db.master.incomeCategory.length)db.master.incomeCategory=[...base.master.incomeCategory];else db.master.incomeCategory=[...new Set(db.master.incomeCategory.map(x=>String(x||'').trim()).filter(Boolean).map(x=>x==='AMC'?'Fujairah Police ZAM AMC':x))];db.roleSettings=db.roleSettings||{};db.master.roles.forEach(r=>{if(db.roleSettings[r]===undefined)db.roleSettings[r]=true});db.roleSettings['Super Admin']=true;['clients','vendors','suppliers','stockItems','purchaseBills','stockIn','stockOut','projectMaterials','tasks','assets','importHistory','cctv','accounts','projects','employees','companyDocuments','companyVehicles','payroll','reports','quotations','proformas','invoices','logs'].forEach(k=>{if(!Array.isArray(db[k]))db[k]=[]});db.clients.forEach(c=>{if(c.tlNo===undefined)c.tlNo='';if(c.zamPass===undefined)c.zamPass='';if(c.lastRenewalDate===undefined)c.lastRenewalDate='';if(c.contact===undefined)c.contact='';if(c.keyPersonName===undefined)c.keyPersonName='';if(c.keyPersonMobile===undefined)c.keyPersonMobile='';if(c.phone===undefined)c.phone='';if(c.mobile===undefined)c.mobile='';if(c.mapLocation===undefined)c.mapLocation='';});db.company=db.company||base.company;db.template=db.template||base.template;normalizeAccountCategories();(db.accounts||[]).forEach(a=>{if(!a.party&&a.client)a.party=a.client;if(!a.partyType)a.partyType=(a.type==='Expense'?'vendor':'client');});if(!Array.isArray(db.users))db.users=[];db.users.forEach(u=>{if(!u.status)u.status='Active';if(!u.permissions)u.permissions={};Object.keys(pages).forEach(k=>{if(u.permissions[k]===undefined)u.permissions[k]=true});if(u.permissions.invoiceEditSaved===undefined)u.permissions.invoiceEditSaved=(u.role==='Super Admin'||u.role==='Admin');if(u.permissions.invoiceDeleteSaved===undefined)u.permissions.invoiceDeleteSaved=(u.role==='Super Admin'||u.role==='Admin')})}function save(){let data=JSON.stringify(db);try{localStorage.setItem(KEY,data);localStorage.setItem('wipko_persistent_db',data);localStorage.setItem('wipko_latest_db',data)}catch(e){} try{sessionStorage.setItem(KEY,data);sessionStorage.setItem('wipko_persistent_db',data);sessionStorage.setItem('wipko_latest_db',data)}catch(e){} scheduleServerSave()}function log(a,d=''){db.logs.unshift({time:new Date().toLocaleString(),user:user?.username||'system',role:user?.role||'-',action:a,details:d});db.logs=db.logs.slice(0,500);save()}function superAdmin(){return user?.role==='Super Admin'}function roleEnabled(r){return r==='Super Admin'||db.roleSettings?.[r]!==false}function activeRoles(current=''){let roles=(db.master.roles||[]).filter(r=>roleEnabled(r)||r===current);if(current&&!roles.includes(current))roles.push(current);return roles}function normalizeTheme(t){t=String(t||'blue').toLowerCase();if(t.includes('gold')||t.includes('black')||t.includes('grey'))return 'gold';if(t.includes('royal')||t.includes('purple'))return 'royal';if(t.includes('amber')||t.includes('orange')||t.includes('business'))return 'amber';return 'blue'}function applyTheme(t){t=normalizeTheme(t);document.body.className='theme-'+t;if($('theme'))$('theme').value=t;document.querySelectorAll('.theme-dot').forEach(x=>x.classList.remove('active'));let dot=document.querySelector('.theme-dot.'+t);if(dot)dot.classList.add('active')}function setTheme(t){db.theme=normalizeTheme(t);save();applyTheme(db.theme);log('Theme changed',db.theme)}
+function v025PreloadDiagramMaker(){if(window.__v025DiagramPreloaded)return;window.__v025DiagramPreloaded=true;var urls=['/diagram-maker.html?v=26','/diagram-maker.css?v=26','/diagram-maker.js?v=26','/diagram-header.png','/diagram-footer.png','/diagram-watermark-logo.svg'];try{Promise.allSettled(urls.map(function(u){return fetch(u,{cache:'force-cache'}).catch(function(){})}))}catch(e){}}
+window.v025PreloadDiagramMaker=v025PreloadDiagramMaker;
+function login(e){
  e&&e.preventDefault();
  try{
   if(!db){try{load()}catch(_e){db=blank();migrateDb();save()}}
@@ -2561,6 +2564,7 @@ function requestStoragePersist(){try{if(navigator.storage&&navigator.storage.per
   localStorage.setItem(SESSION,JSON.stringify(user));try{sessionStorage.setItem(SESSION,JSON.stringify(user))}catch(_e){}
   $('login').classList.add('hidden');$('app').classList.remove('hidden');
   try{start()}catch(err){console.error('ERP start error',err);try{applyTheme(db.theme||'blue');render()}catch(_e){}}
+  try{setTimeout(v025PreloadDiagramMaker,50)}catch(_e){}
   try{log('Login')}catch(_e){}
   return false;
  }catch(err){console.error('Login error',err);alert('Login failed: '+(err.message||err));return false}
@@ -6985,7 +6989,7 @@ body.floor-planner-active #workspace{padding:0!important;overflow:hidden!importa
   if(typeof page!=='undefined'&&page==='diagram'){
    document.body.classList.add('floor-planner-active');
    const w=document.getElementById('workspace');
-   if(w)w.innerHTML='<iframe id="cctv-floor-planner-frame" title="Diagram Maker" src="/diagram-maker.html?v=24"></iframe>';
+   if(w)w.innerHTML='<iframe id="cctv-floor-planner-frame" title="Diagram Maker" src="/diagram-maker.html?v=26"></iframe>';
    return;
   }
   document.body.classList.remove('floor-planner-active');
@@ -7692,11 +7696,11 @@ body.erp-sidebar-collapsed .side-bottom{align-items:center!important}
      var r=await fetch('/api/db',{cache:'no-store',headers:{'Accept':'application/json'}});
      if(!r.ok)throw new Error('Cloud database HTTP '+r.status);
      var p=await r.json();cloudVersion=Number(p.version||0);
-     if(p.db&&typeof p.db==='object'&&Object.keys(p.db).length){applyCloudDb(p);cloudReady=true;status('Cloud Database: Connected',true);return true}
+     if(p.db&&typeof p.db==='object'&&Object.keys(p.db).length){applyCloudDb(p);cloudReady=true;status('Cloud Database: Connected',true);try{if(typeof window.__wipkoLoginCloudReady==='function')window.__wipkoLoginCloudReady()}catch(e){}return true}
      if(!db)db=typeof blank==='function'?blank():{};if(typeof migrateDb==='function')migrateDb();
      // The server is genuinely empty, so this browser may seed it once.
      cloudReady=true;
-     var ok=await cloudSave(true);cloudReady=!!ok;status(ok?'Cloud Database: Initialized':'Cloud Database: Initialization failed',!!ok);return !!ok;
+     var ok=await cloudSave(true);cloudReady=!!ok;status(ok?'Cloud Database: Initialized':'Cloud Database: Initialization failed',!!ok);if(ok){try{if(typeof window.__wipkoLoginCloudReady==='function')window.__wipkoLoginCloudReady()}catch(e){}}return !!ok;
    }catch(err){console.error('Cloud load failed',err);cloudReady=false;status('Cloud Database: Connection failed',false);return false}
  }
 
@@ -8440,57 +8444,13 @@ window.__WIPKO_UI_VERSION__='WipkoERP v011';
 (function(){
  'use strict';
  var state=window.__wipkoV39LoginState={ready:false,cloudReady:false};
- var reconnectTimer=null;
-
  function button(){return document.getElementById('loginButton')||document.querySelector('#loginForm button[type="submit"],#loginForm button:not([type])')}
  function showConnecting(){var b=button();if(!b)return;state.ready=false;b.disabled=true;b.setAttribute('aria-disabled','true');b.textContent='Connecting…'}
  function usersReady(){return !!(window.db&&Array.isArray(db.users))}
  function enableLogin(){if(!usersReady())return false;var b=button();if(!b)return false;state.ready=true;state.cloudReady=true;b.disabled=false;b.setAttribute('aria-disabled','false');b.textContent='Login';return true}
- function acceptCloudPayload(p){
-   try{
-     var d=p&&p.db;if(!d||typeof d!=='object'||!Array.isArray(d.users))return false;
-     // The cloud adapter applies the authoritative payload to db. Enable only after db.users exists.
-     setTimeout(enableLogin,0);
-     return true;
-   }catch(e){return false}
- }
-
- showConnecting();
-
- // Observe the authoritative cloud GET without changing the cloud adapter.
- var priorFetch=window.fetch.bind(window);
- window.fetch=function(input,init){
-   var method=String((init&&init.method)||'GET').toUpperCase();
-   var url=typeof input==='string'?input:((input&&input.url)||'');
-   var p=priorFetch(input,init);
-   if(method==='GET'&&String(url).indexOf('/api/db')!==-1){
-     p.then(function(resp){
-       if(!resp||!resp.ok)return;
-       try{resp.clone().json().then(acceptCloudPayload).catch(function(){})}catch(e){}
-     }).catch(function(){});
-   }
-   return p;
- };
-
- function reconnect(){
-   if(state.ready&&usersReady())return;
-   showConnecting();
-   try{
-     if(typeof window.loadFromServer==='function'){
-       Promise.resolve(window.loadFromServer()).then(function(ok){
-         if(ok&&usersReady())enableLogin();
-       }).catch(function(){})
-     }
-   }catch(e){}
- }
- function boot(){
-   showConnecting();
-   // Never enable from local/cloud cache. Wait for the current cloud load to populate db.users.
-   if(usersReady()&&window.__WIPKO_CLOUD_V1__){
-     // Do not trust pre-boot cached db.users; the cloud GET observer/reconnect will enable after load.
-   }
-   clearInterval(reconnectTimer);reconnectTimer=setInterval(reconnect,8000);
- }
+ window.__wipkoLoginCloudReady=function(){return enableLogin()};
+ function reconnect(){if(state.ready&&usersReady())return;showConnecting();try{if(typeof window.loadFromServer==='function'){Promise.resolve(window.loadFromServer()).then(function(ok){if(ok&&usersReady())enableLogin()}).catch(function(){})}}catch(e){}}
+ function boot(){showConnecting()}
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
  window.addEventListener('online',reconnect);
  window.__wipkoV39ReconnectCloud=reconnect;

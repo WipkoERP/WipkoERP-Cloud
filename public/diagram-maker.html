@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WipkoERP v024 - Diagram Maker</title>
-  <link rel="stylesheet" href="diagram-maker.css?v=24" />
+  <title>WipkoERP v025 - Diagram Maker</title>
+  <link rel="preload" href="diagram-header.png" as="image" />
+  <link rel="preload" href="diagram-footer.png" as="image" />
+  <link rel="preload" href="diagram-watermark-logo.svg" as="image" />
+  <link rel="stylesheet" href="diagram-maker.css?v=25" />
 </head>
 <body>
   <header class="topbar topbar-v34">
-    <div class="brand">Diagram Maker <small>v024</small></div>
+    <div class="brand">Diagram Maker <small>v025</small></div>
     <div class="toolbar toolbar-v34">
       <div class="tool-group">
         <button id="newBtn">New</button>
@@ -117,12 +120,12 @@
         <label>Line colour <input id="lineColor" type="color" value="#333333"></label>
       </div>
       <div id="measureProps" class="properties hidden">
-        <label>Length Text <input id="measureText" placeholder="e.g. 5.2 m"></label>
+        <label>Length Text <input id="measureText" placeholder="Type length, e.g. 5.2 m"></label>
         <label>Line width <input id="measureWidth" type="number" min="1" max="15" value="3"></label>
         <label>Line colour <input id="measureColor" type="color" value="#111111"></label>
       </div>
       <div id="roadProps" class="properties hidden">
-        <label>Road width <input id="roadWidth" type="number" min="20" max="200" value="70"></label>
+        <label>Road width <input id="roadWidth" type="number" min="4" max="200" value="14"></label>
       </div>
 
 
@@ -140,6 +143,6 @@
     </aside>
   </main>
 
-  <script src="diagram-maker.js?v=24"></script>
+  <script src="diagram-maker.js?v=25"></script>
 </body>
 </html>
