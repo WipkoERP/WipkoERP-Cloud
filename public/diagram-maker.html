@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WipkoERP_v35 - Diagram Maker</title>
-  <link rel="stylesheet" href="diagram-maker.css?v=35" />
+  <title>WipkoERP v024 - Diagram Maker</title>
+  <link rel="stylesheet" href="diagram-maker.css?v=24" />
 </head>
 <body>
   <header class="topbar topbar-v34">
-    <div class="brand">Diagram Maker <small>v34</small></div>
+    <div class="brand">Diagram Maker <small>v024</small></div>
     <div class="toolbar toolbar-v34">
       <div class="tool-group">
         <button id="newBtn">New</button>
@@ -40,6 +40,8 @@
       <button class="tool" data-tool="wall">／ Draw Wall</button>
       <button class="tool" data-tool="square">▭ Insert Square</button>
       <button class="tool" data-tool="door"><svg class="tool-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V4h10v16M5 20h14M15 20V7M15 7c3 0 5 2 5 5"/><path class="door-arc" d="M15 20a7 7 0 0 0 7-7"/></svg> Insert Door</button>
+      <button class="tool" data-tool="measure"><svg class="tool-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18M3 8v8M21 8v8M7 9l-4 3 4 3M17 9l4 3-4 3"/></svg> Insert Length Arrow</button>
+      <button class="tool" data-tool="road"><svg class="tool-svg-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v14H4z" fill="currentColor" stroke="none"/><path d="M5 8h14M5 16h14M6 12h3M11 12h3M16 12h2" stroke="#fff"/></svg> Insert Road Line</button>
       <button class="tool" data-tool="text">T Add Text</button>
       <button id="duplicateBtnSide">⧉ Duplicate Selected</button>
       <button id="deleteBtn" class="danger">Delete Selected</button>
@@ -114,6 +116,14 @@
         <label>Line width <input id="lineWidth" type="number" min="1" max="15" value="3"></label>
         <label>Line colour <input id="lineColor" type="color" value="#333333"></label>
       </div>
+      <div id="measureProps" class="properties hidden">
+        <label>Length Text <input id="measureText" placeholder="e.g. 5.2 m"></label>
+        <label>Line width <input id="measureWidth" type="number" min="1" max="15" value="3"></label>
+        <label>Line colour <input id="measureColor" type="color" value="#111111"></label>
+      </div>
+      <div id="roadProps" class="properties hidden">
+        <label>Road width <input id="roadWidth" type="number" min="20" max="200" value="70"></label>
+      </div>
 
 
       <div class="panel layers-panel">
@@ -130,6 +140,6 @@
     </aside>
   </main>
 
-  <script src="diagram-maker.js?v=35"></script>
+  <script src="diagram-maker.js?v=24"></script>
 </body>
 </html>
