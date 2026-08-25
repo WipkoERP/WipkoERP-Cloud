@@ -3,15 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>WipkoERP v025 - Diagram Maker</title>
+  <title>WipkoERP v028 - Diagram Maker</title>
   <link rel="preload" href="diagram-header.png" as="image" />
   <link rel="preload" href="diagram-footer.png" as="image" />
   <link rel="preload" href="diagram-watermark-logo.svg" as="image" />
-  <link rel="stylesheet" href="diagram-maker.css?v=25" />
+  <link rel="stylesheet" href="diagram-maker.css?v=28" />
+
+  <style id="v028-layout">
+    .diagram-bottom-schedule{grid-column:1/-1;margin:12px 14px 16px!important;padding:12px 16px!important}
+    .diagram-bottom-schedule h3{margin:0 0 8px!important}
+    .diagram-bottom-schedule #cameraSchedule table{width:100%;border-collapse:collapse;font-size:15px;font-weight:700}
+    .diagram-bottom-schedule #cameraSchedule th,.diagram-bottom-schedule #cameraSchedule td{padding:8px 12px;border-bottom:1px solid #dbe4ef;text-align:left}
+    .diagram-bottom-schedule .camera-totals{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:16px;font-weight:800;color:#0b2238}
+    .layer-select-box{width:16px;height:16px;margin-right:6px;vertical-align:middle}
+    .layer-actions.v028-group-actions{margin-top:8px}
+    .v028-group-tag{font-size:10px;font-weight:800;color:#1769ff;margin-left:5px}
+  </style>
 </head>
 <body>
   <header class="topbar topbar-v34">
-    <div class="brand">Diagram Maker <small>v025</small></div>
+    <div class="brand">Diagram Maker <small>v028</small></div>
     <div class="toolbar toolbar-v34">
       <div class="tool-group">
         <button id="newBtn">New</button>
@@ -50,31 +61,13 @@
       <button id="deleteBtn" class="danger">Delete Selected</button>
 
       <div class="panel">
-        <h3>Artboard</h3>
-        <label>Paper size
-          <select id="paperSize">
-            <option value="A4">A4 Landscape</option>
-            <option value="A3" selected>A3 Landscape</option>
-            <option value="A2">A2 Landscape</option>
-          </select>
-        </label>
-      </div>
-
-      <div class="panel">
         <h3>View</h3>
         <label><input id="gridToggle" type="checkbox" checked> Show grid</label>
         <label><input id="snapToggle" type="checkbox" checked> Snap to grid</label>
         <label>Grid size <input id="gridSize" type="number" value="20" min="5" max="100"></label>
       </div>
 
-      <div class="panel">
-        <h3>Project</h3>
-        <label>Project <input id="projectName" placeholder="Project title"></label>
-        <label>Site / Location <input id="siteLocation" placeholder="Site location"></label>
-        <label>Drawing No. <input id="drawingNo" placeholder="CCTV-001"></label>
-        <label>Prepared By <input id="preparedBy" placeholder="Prepared by"></label>
-        <label>Date <input id="drawingDate" type="date"></label>
-      </div>
+      <div hidden><select id="paperSize"><option value="A3" selected>A3 Landscape</option></select><input id="projectName"><input id="siteLocation"><input id="drawingNo"><input id="preparedBy"><input id="drawingDate" type="date"></div>
     </aside>
 
     <section class="workspace-wrap">
@@ -92,7 +85,7 @@
             <option>Bullet</option><option>Dome</option><option>PTZ</option><option>Fisheye</option><option>ANPR</option>
           </select>
         </label>
-        <label>Location <input id="camLocation"></label>
+        <input id="camLocation" type="hidden">
         <label>Resolution <input id="camResolution" value="4 MP"></label>
         <label>Lens <input id="camLens" value="2.8 mm"></label>
         <label>Direction <input id="camAngle" type="range" min="0" max="359"><span id="camAngleVal"></span></label>
@@ -131,18 +124,15 @@
 
       <div class="panel layers-panel">
         <h3>Layers</h3>
-        <div class="layer-actions"><button id="bringFrontBtn" type="button">Front</button><button id="bringForwardBtn" type="button">Forward</button><button id="sendBackwardBtn" type="button">Backward</button><button id="sendBackBtn" type="button">Back</button></div>
-        <div class="muted layer-help">Click a layer to select it. Alt + click the canvas to cycle through overlapping objects.</div>
+        <div class="layer-actions"><button id="bringFrontBtn" type="button">Front</button><button id="bringForwardBtn" type="button">Forward</button><button id="sendBackwardBtn" type="button">Backward</button><button id="sendBackBtn" type="button">Back</button></div><div class="layer-actions v028-group-actions"><button id="groupSelectedBtn" type="button">Group Selected</button><button id="ungroupSelectedBtn" type="button">Ungroup</button></div>
+        <div class="muted layer-help">Tick two or more layers, then Group Selected. Grouped items move together. Alt + click cycles overlapping objects.</div>
         <div id="layersList"></div>
       </div>
 
-      <div class="panel schedule">
-        <h3>Camera Schedule</h3>
-        <div id="cameraSchedule"></div>
-      </div>
     </aside>
+    <section class="panel schedule diagram-bottom-schedule"><h3>Camera Schedule</h3><div id="cameraSchedule"></div></section>
   </main>
 
-  <script src="diagram-maker.js?v=25"></script>
+  <script src="diagram-maker.js?v=28"></script>
 </body>
 </html>
