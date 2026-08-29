@@ -1,4 +1,4 @@
-// WipkoERP v029: compact layers + canvas cleanup.
+// WipkoERP v032: AMC-linked diagram view + 4-column camera schedule.
 (() => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
@@ -92,7 +92,7 @@
     const titleX=L.margin;
     ctx.fillStyle='#0b2238';ctx.font=`bold ${Math.max(17,Math.round(canvas.height*.026))}px Segoe UI`;
     ctx.fillText('CCTV SURVEILLANCE PROPOSAL DIAGRAM',titleX,Math.round(L.headerH*.45));
-    ctx.font=`bold ${Math.max(12,Math.round(canvas.height*.0135))}px Segoe UI`;ctx.fillStyle='#334e68';
+    ctx.font=`bold ${Math.max(15,Math.round(canvas.height*.0169))}px Segoe UI`;ctx.fillStyle='#334e68';
     ctx.fillText(`Client: ${$('clientName').value||''}`,titleX,Math.round(L.headerH*.73));
     if(brandImg.complete&&brandImg.naturalWidth){
       const maxW=canvas.width*.39,maxH=L.headerH*.82;
@@ -116,13 +116,35 @@
     }
     ctx.restore();}
   function drawInfoPanel(){
-    const L=layoutMetrics(),x=L.scheduleX,y=L.scheduleY,w=L.scheduleW,h=L.scheduleH,m=Math.max(14,Math.round(w*.018));
-    const cams=state.objects.filter(o=>o.type==='camera'&&!o.hidden), counts={};cams.forEach(c=>{const t=String(c.cameraType||'Camera');counts[t]=(counts[t]||0)+1});
-    ctx.save();ctx.beginPath();roundRectPath(x,y,w,h,16);ctx.clip();ctx.fillStyle='#0b2238';ctx.fillRect(x,y,w,Math.max(36,Math.round(h*.28)));ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(17,Math.round(canvas.height*.014))}px Segoe UI`;ctx.fillText('CAMERA SCHEDULE',x+m,y+Math.max(25,Math.round(h*.19)));
-    const headY=y+Math.round(h*.45), rowY=y+Math.round(h*.67);ctx.fillStyle='#334e68';ctx.font=`bold ${Math.max(14,Math.round(canvas.height*.011))}px Segoe UI`;ctx.fillText('CAMERA ID',x+m,headY);ctx.fillText('TYPE',x+w*.24,headY);
-    ctx.strokeStyle='#d4dee7';ctx.beginPath();ctx.moveTo(x+m,headY+8);ctx.lineTo(x+w-m,headY+8);ctx.stroke();
-    ctx.fillStyle='#17283a';ctx.font=`bold ${Math.max(14,Math.round(canvas.height*.0105))}px Segoe UI`;let cx=x+m,cy=rowY;const colW=Math.max(150,w*.18);cams.slice(0,12).forEach((c,i)=>{ctx.fillText(String(c.id||''),cx,cy);ctx.fillText(String(c.cameraType||''),cx+Math.min(105,colW*.48),cy);cx+=colW;if(cx+colW>x+w-m){cx=x+m;cy+=Math.max(21,Math.round(h*.18))}});
-    const totals=Object.entries(counts).map(([t,n])=>`Total ${t} Camera: ${n}`);totals.push(`Total Cameras: ${cams.length}`);ctx.fillStyle='#0b2238';ctx.font=`bold ${Math.max(15,Math.round(canvas.height*.0115))}px Segoe UI`;let tx=x+w*.52,ty=headY;totals.forEach((t,i)=>{ctx.fillText(t,tx,ty+i*Math.max(22,Math.round(h*.19)))});ctx.restore();
+    const L=layoutMetrics(),x=L.scheduleX,y=L.scheduleY,w=L.scheduleW,h=L.scheduleH;
+    const cams=state.objects.filter(o=>o.type==='camera'&&!o.hidden),counts={};
+    cams.forEach(c=>{const t=String(c.cameraType||'Camera');counts[t]=(counts[t]||0)+1});
+    const headerH=Math.max(28,Math.round(h*.22)),bodyY=y+headerH,bodyH=h-headerH,colW=w/4,rowH=bodyH/3;
+    ctx.save();ctx.beginPath();roundRectPath(x,y,w,h,16);ctx.clip();
+    ctx.fillStyle='#0b2238';ctx.fillRect(x,y,w,headerH);
+    ctx.fillStyle='#fff';ctx.font=`bold ${Math.max(16,Math.round(canvas.height*.0135))}px Segoe UI`;ctx.textBaseline='middle';ctx.fillText('CAMERA SCHEDULE',x+16,y+headerH/2);
+    ctx.fillStyle='#ffffff';ctx.fillRect(x,bodyY,w,bodyH);
+    ctx.fillStyle='#eaf4ff';ctx.fillRect(x+colW*3,bodyY,colW,bodyH);
+    ctx.strokeStyle='#c8d4df';ctx.lineWidth=1.25;
+    for(let c=1;c<4;c++){ctx.beginPath();ctx.moveTo(x+colW*c,bodyY);ctx.lineTo(x+colW*c,y+h);ctx.stroke()}
+    for(let r=1;r<3;r++){ctx.beginPath();ctx.moveTo(x,bodyY+rowH*r);ctx.lineTo(x+w,bodyY+rowH*r);ctx.stroke()}
+    const entryFont=Math.max(13,Math.round(canvas.height*.0105));
+    cams.slice(0,9).forEach((cam,i)=>{
+      const c=Math.floor(i/3),r=i%3,cx=x+colW*c,cy=bodyY+rowH*r+rowH/2;
+      ctx.fillStyle='#17283a';ctx.textBaseline='middle';ctx.font=`bold ${entryFont}px Segoe UI`;
+      ctx.fillText(String(cam.id||`CAM-${String(i+1).padStart(2,'0')}`),cx+10,cy);
+      const iconX=cx+colW*.48,iconY=cy;drawCameraIcon({x:iconX,y:iconY,angle:0,cameraType:cam.cameraType||'Bullet'});
+      ctx.fillStyle='#17283a';ctx.font=`bold ${entryFont}px Segoe UI`;ctx.fillText(String(cam.cameraType||'Camera'),cx+colW*.62,cy);
+    });
+    const totals=Object.entries(counts).map(([t,n])=>`Total Number of ${t} Camera: ${n}`);
+    const totalX=x+colW*3+12,totalW=colW-24;
+    let totalFont=Math.max(15,Math.round(entryFont*1.25));
+    if(totals.length>4)totalFont=Math.max(12,Math.round(totalFont*.82));
+    const totalLine=Math.max(18,Math.min(rowH*.72,bodyH/Math.max(1,totals.length)));
+    ctx.fillStyle='#0b3a66';ctx.font=`bold ${totalFont}px Segoe UI`;ctx.textBaseline='middle';
+    totals.forEach((t,i)=>{const ty=bodyY+Math.min(bodyH-totalLine/2,totalLine*(i+.55));let label=t;while(ctx.measureText(label).width>totalW&&totalFont>10){totalFont--;ctx.font=`bold ${totalFont}px Segoe UI`;}ctx.fillText(label,totalX,ty)});
+    if(!totals.length){ctx.fillText('Total Cameras: 0',totalX,bodyY+bodyH/2)}
+    ctx.restore();
   }
   function wrapText(text,x,y,maxWidth,lineHeight){const words=String(text).split(' ');let line='';for(const word of words){const test=line+word+' ';if(ctx.measureText(test).width>maxWidth&&line){ctx.fillText(line,x,y);line=word+' ';y+=lineHeight;}else line=test;}ctx.fillText(line,x,y);}
   function drawWatermark(){
@@ -225,6 +247,7 @@
 
   if(!$('drawingDate').value)$('drawingDate').value=new Date().toISOString().slice(0,10);
   state.pages=[capturePage()];state.currentPage=0;updatePageUI();refreshClients();resizePaper(false);applyZoom(1,false);draw();updateSchedule();syncToolButtons();
+  (function openRequestedDiagram(){try{const q=new URLSearchParams(location.search),cid=q.get('clientId')||'',did=q.get('diagramId')||'';if(!cid)return;const b=bridge(),cl=b?b.clients().find(c=>String(c.id)===String(cid)):null;if(!cl)return;$('clientName').value=cl.name||'';refreshClients();state.clientId=cid;refreshSavedDiagrams(did);if(did){const d=b.load(cid,did);if(d){state.diagramId=did;loadProjectObject(d);refreshSavedDiagrams(did);$('savedDiagramSelect').value=did}}}catch(e){console.warn('Diagram open target skipped',e)}})();
 
   // v34 compact toolbar: More menu on smaller screens only.
   const moreToolbarBtn = document.getElementById('moreToolbarBtn');
