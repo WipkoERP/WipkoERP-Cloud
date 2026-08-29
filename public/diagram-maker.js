@@ -1,4 +1,4 @@
-// WipkoERP v032: AMC-linked diagram view + 4-column camera schedule.
+// WipkoERP v034: fast preload bridge refresh + existing AMC-linked diagram layout.
 (() => {
   const canvas = document.getElementById('canvas');
   const ctx = canvas.getContext('2d'); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high';
@@ -248,7 +248,7 @@
   if(!$('drawingDate').value)$('drawingDate').value=new Date().toISOString().slice(0,10);
   state.pages=[capturePage()];state.currentPage=0;updatePageUI();refreshClients();resizePaper(false);applyZoom(1,false);draw();updateSchedule();syncToolButtons();
   function openRequestedDiagramTarget(cid,did){try{cid=String(cid||'');did=String(did||'');if(!cid)return;const b=bridge(),cl=b?b.clients().find(c=>String(c.id)===cid):null;if(!cl)return;$('clientName').value=cl.name||'';refreshClients();state.clientId=cid;refreshSavedDiagrams(did);if(did){const d=b.load(cid,did);if(d){state.diagramId=did;loadProjectObject(d);refreshSavedDiagrams(did);$('savedDiagramSelect').value=did}}else{state.diagramId='';$('savedDiagramSelect').value='';draw()}}catch(e){console.warn('Diagram open target skipped',e)}}
-  window.addEventListener('message',function(e){try{if(e.origin!==location.origin)return;const m=e.data||{};if(m.type==='wipko-open-diagram')openRequestedDiagramTarget(m.clientId,m.diagramId)}catch(_e){}});
+  window.addEventListener('message',function(e){try{if(e.origin!==location.origin)return;const m=e.data||{};if(m.type==='wipko-open-diagram')openRequestedDiagramTarget(m.clientId,m.diagramId);else if(m.type==='wipko-db-ready'){refreshClients();draw()}}catch(_e){}});
   (function openRequestedDiagram(){try{const q=new URLSearchParams(location.search);openRequestedDiagramTarget(q.get('clientId')||'',q.get('diagramId')||'')}catch(e){console.warn('Diagram open target skipped',e)}})();
 
   // v34 compact toolbar: More menu on smaller screens only.
