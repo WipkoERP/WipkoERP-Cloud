@@ -1,0 +1,13 @@
+GitHub setup — simple
+=====================
+
+1. Create a PRIVATE GitHub repository, for example: WipkoERP.
+2. Upload/push all files from this folder to the repository root.
+3. Do NOT upload any .env file or ERP backup JSON.
+4. In GoDaddy Node.js Hosting choose Connect GitHub.
+5. Select the WipkoERP repository + main branch and deploy.
+
+After that, future software updates are simple:
+GitHub update -> GoDaddy Node.js Hosting -> Pull from GitHub / deploy -> Preview -> Publish.
+
+The live ERP database is NOT stored in GitHub. It stays in GoDaddy Managed MySQL.

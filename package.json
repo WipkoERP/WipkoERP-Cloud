@@ -1,19 +1,21 @@
 {
-  "name": "wipkoerp-cloud",
-  "version": "1.0.0",
+  "name": "wipkoerp-godaddy",
+  "version": "1.0.44",
   "private": true,
-  "description": "WipkoERP Cloud v1 for Railway",
+  "description": "WipkoERP Cloud v044 - GitHub + GoDaddy Node.js Hosting + Managed MySQL",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "build": "echo \"No build step required\"",
+    "start": "node server.js",
+    "validate:hosting": "node scripts/validate-hosting.mjs"
   },
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   },
   "dependencies": {
     "compression": "^1.7.4",
     "express": "^4.21.2",
     "helmet": "^8.0.0",
-    "pg": "^8.13.1"
+    "mysql2": "^3.15.3"
   }
 }

@@ -1,0 +1,40 @@
+Railway -> GoDaddy migration
+============================
+
+A. BEFORE MOVING
+1. Keep current Railway WipkoERP v044 running.
+2. Login to WipkoERP.
+3. Download a fresh full cloud backup using Backup / Download Backup.
+   The v044 backup contains:
+   - core ERP database
+   - user/client/AMC media stored outside the core JSON
+   - Diagram Maker projects
+4. Keep this backup in a safe local folder.
+
+B. DEPLOY GODADDY COPY
+1. Deploy this GitHub repository to GoDaddy Node.js Hosting.
+2. Publish/attach the GoDaddy plan so Managed MySQL is available.
+3. Set temporary WIPKO_BOOTSTRAP_PASSWORD in GoDaddy secrets.
+4. Restart.
+5. Check /api/health -> database:true.
+
+C. RESTORE DATA
+1. Login to the new GoDaddy ERP with temporary admin credentials.
+2. Open Restore Data File.
+3. Select the Railway v044 backup JSON.
+4. Wait for Restore Completed.
+5. Logout.
+6. Login using a normal existing ERP user.
+7. Confirm clients, invoices, ledger, AMC, media/profile photo and Diagram Maker.
+
+D. LIVE-SYNC TEST
+1. Open the GoDaddy ERP on PC-A and PC-B.
+2. Edit one harmless client field on PC-A and save.
+3. Confirm PC-B receives the live update without a full database reload.
+4. Save a Diagram Maker test and confirm it opens from the other PC.
+
+E. SWITCH PRODUCTION
+1. Point erp.wipko.com to the GoDaddy published app.
+2. Keep Railway for a short safety period.
+3. Download another GoDaddy backup.
+4. Only after all checks pass, cancel Railway.

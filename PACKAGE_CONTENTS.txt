@@ -1,0 +1,24 @@
+WipkoERP v044 — GitHub + GoDaddy package
+=========================================
+
+Runtime
+- server.js                         WipkoERP Node.js application/API
+- mysql-pg-adapter.js               GoDaddy Managed MySQL compatibility layer
+- package.json                      Node.js runtime configuration
+- .npmrc                            public npm registry
+
+Application
+- public/index.html                 Main ERP UI
+- public/diagram-maker.*            Diagram Maker
+- public/assets/*                   Wipko logo, seal, invoice assets and UI assets
+- public/addons/*                   Existing packaged add-ons/reference components
+
+Setup
+- README.md                         Main instructions
+- GODADDY_SETUP.txt                 Short GoDaddy checklist
+- MIGRATION_FROM_RAILWAY.txt        One-time data migration steps
+- .env.example                      Variable names only; contains no secrets
+- .gitignore                        Prevents secrets/backups/node_modules entering GitHub
+
+Validation
+- scripts/validate-hosting.mjs      Local GoDaddy package sanity check

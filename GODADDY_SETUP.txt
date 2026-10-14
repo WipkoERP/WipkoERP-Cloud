@@ -1,0 +1,29 @@
+WipkoERP v044 — GoDaddy setup
+==============================
+
+1. GoDaddy > Node.js Hosting > Connect GitHub.
+2. Select the private WipkoERP GitHub repository and branch.
+3. Import & Deploy.
+4. Attach/publish to your GoDaddy Web Hosting plan.
+5. GoDaddy Managed MySQL supplies these automatically:
+   DB_HOST
+   DB_PORT
+   DB_NAME
+   DB_USER
+   DB_PASSWORD
+6. For first migration only, add secret:
+   WIPKO_BOOTSTRAP_PASSWORD = your temporary strong password
+7. Restart app.
+8. Open /api/health and confirm database=true.
+9. Login as:
+   username: admin  (unless WIPKO_BOOTSTRAP_USER was set)
+   password: value of WIPKO_BOOTSTRAP_PASSWORD
+10. Restore the full WipkoERP v044 Railway backup JSON from ERP > Restore Data File.
+11. Logout/login with your normal restored WipkoERP account.
+12. Remove WIPKO_BOOTSTRAP_PASSWORD from GoDaddy secrets and restart.
+13. Test everything before cancelling Railway.
+
+IMPORTANT:
+- Do not put DB passwords or .env files in GitHub.
+- GoDaddy preview and production can share the same managed database; avoid test data changes on preview after migration.
+- Keep Railway online until GoDaddy production is fully verified.
