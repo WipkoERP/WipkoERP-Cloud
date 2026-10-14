@@ -6880,7 +6880,7 @@ window.__v162InvoiceActionsNoFlickerFixAdded=true;
            if(ok){
              if(typeof window.loadFromServer==='function')await window.loadFromServer(true);
              restoreUi('Restore completed: '+fileName,true);
-             alert('Restore completed and saved to PostgreSQL.');
+             alert('Restore completed and saved to the cloud database.');
            }else{
              restoreUi('Restore kept locally but cloud restore failed: '+fileName,false);
              alert('Restore is kept locally, but the cloud restore did not complete. '+(rp.message||'Please try again.'));
@@ -8301,7 +8301,7 @@ stampMissing();document.addEventListener('DOMContentLoaded',function(){setTimeou
      try{window.db=saved;db=saved}catch(e){}
      cache(saved);
      localStorage.removeItem(BACKUP_FLAG);
-     alert('Complete Reset finished. Business records were cleared from PostgreSQL. User accounts and roles were preserved.');
+     alert('Complete Reset finished. Business records were cleared from the cloud database. User accounts and roles were preserved.');
      location.reload();
    }catch(e){
      var btn=document.getElementById('v136ResetBtn');if(btn){btn.disabled=false;btn.textContent='2. Reset All Data'}
@@ -8311,7 +8311,7 @@ stampMissing();document.addEventListener('DOMContentLoaded',function(){setTimeou
  function tuneResetText(){
    var panel=document.getElementById('resetAllDataPanel');if(!panel)return;
    var p=panel.querySelector('p');if(p)p.textContent='Complete cloud reset: clears Clients, Ledger, Quotations, Invoices, AMC/Renewals and other business records. User accounts, roles and ERP setup are preserved.';
-   var warn=panel.querySelector('.data-safety-alert');if(warn)warn.textContent='Warning: this reset applies to the central PostgreSQL database and therefore affects every PC using this ERP. Backup is mandatory.';
+   var warn=panel.querySelector('.data-safety-alert');if(warn)warn.textContent='Warning: this reset applies to the central cloud database and therefore affects every PC using this ERP. Backup is mandatory.';
  }
  var oldRender=window.render;
  if(typeof oldRender==='function'&&!oldRender.__v28ResetText){var rr=function(){var x=oldRender.apply(this,arguments);setTimeout(tuneResetText,0);return x};rr.__v28ResetText=true;window.render=rr;try{render=rr}catch(e){}}
