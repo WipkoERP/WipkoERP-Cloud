@@ -122,22 +122,40 @@ async function migrateHeavyState(){
  }catch(e){try{await c.query('ROLLBACK')}catch(_e){}console.error('v043 heavy-state migration failed:',e);throw e}finally{c.release()}
 }
 async function bootstrapEmptyDatabase(){
- const r=await pool.query('SELECT version FROM wipko_app_state WHERE id=1');
- if(r.rowCount)return false;
+ // GoDaddy may create an empty app-state row before the bootstrap secret is added.
+ // Bootstrap based on the fast-auth table instead of only checking app-state existence.
+ const auth=await pool.query('SELECT COUNT(*) AS count FROM wipko_auth_users');
+ if(Number(auth.rows&&auth.rows[0]&&auth.rows[0].count||0)>0)return false;
+
  const password=String(process.env.WIPKO_BOOTSTRAP_PASSWORD||'').trim();
  if(!password){
-   console.warn('[WipkoERP v044] GoDaddy MySQL is empty. Set temporary WIPKO_BOOTSTRAP_PASSWORD, restart, login as admin, then restore the Railway backup.');
+   console.warn('[WipkoERP v044] No login user exists yet. Set temporary WIPKO_BOOTSTRAP_PASSWORD, restart, login as admin, then restore the Railway backup.');
    return false;
  }
  const username=String(process.env.WIPKO_BOOTSTRAP_USER||'admin').trim()||'admin';
  const now=new Date().toISOString();
- const db={
-   users:[{id:'USR-BOOTSTRAP',username,password,name:'Wipko Administrator',role:'Super Admin',status:'Active',permissions:{},createdAt:now,updatedAt:now}],
-   roleSettings:{},clients:[],accounts:[],invoices:[],quotations:[],proformas:[],cctv:[],employees:[],suppliers:[],vendors:[],companyVehicles:[],companyDocuments:[],reports:[],logs:[],importHistory:[],_deleted:[]
- };
- await pool.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[1,JSON.stringify(db),'godaddy-bootstrap']);
- await syncFastState(db,1,pool);
- console.log('[WipkoERP v044] Empty GoDaddy database initialized. Temporary login: '+username+' / WIPKO_BOOTSTRAP_PASSWORD. Restore your v044 backup, then remove the bootstrap secret.');
+ const state=await pool.query('SELECT version,data FROM wipko_app_state WHERE id=1');
+ let version=1;
+ let db;
+ if(state.rowCount){
+   version=Number(state.rows[0].version||1);
+   db=state.rows[0].data||{};
+ }else{
+   db={roleSettings:{},clients:[],accounts:[],invoices:[],quotations:[],proformas:[],cctv:[],employees:[],suppliers:[],vendors:[],companyVehicles:[],companyDocuments:[],reports:[],logs:[],importHistory:[],_deleted:[]};
+ }
+ const users=Array.isArray(db.users)?db.users:[];
+ if(!users.length){
+   users.push({id:'USR-BOOTSTRAP',username,password,name:'Wipko Administrator',role:'Super Admin',status:'Active',permissions:{},createdAt:now,updatedAt:now});
+   db.users=users;
+   if(state.rowCount){
+     version+=1;
+     await pool.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[version,JSON.stringify(db),'godaddy-bootstrap']);
+   }else{
+     await pool.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[version,JSON.stringify(db),'godaddy-bootstrap']);
+   }
+ }
+ await syncFastState(db,version,pool);
+ console.log('[WipkoERP v044] GoDaddy login initialized. Temporary login: '+username+' / WIPKO_BOOTSTRAP_PASSWORD. Restore your v044 backup, then remove the bootstrap secret.');
  return true;
 }
 
