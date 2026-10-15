@@ -1,0 +1,52 @@
+name: Fix GoDaddy dependencies
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout godaddy-mysql
+        uses: actions/checkout@v4
+        with:
+          ref: godaddy-mysql
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Rebuild runtime dependencies cleanly
+        run: |
+          rm -rf node_modules package-lock.json
+          npm install --save --save-exact \
+            express@4.21.2 \
+            body-parser@1.20.3 \
+            depd@2.0.0 \
+            compression@1.7.4 \
+            helmet@8.0.0 \
+            mysql2@3.15.3 \
+            --no-audit --no-fund
+
+      - name: Verify clean install and required modules
+        run: |
+          rm -rf node_modules
+          npm ci --omit=dev --ignore-scripts --no-audit --no-fund
+          node -e "for (const m of ['express','body-parser','depd','compression','helmet','mysql2']) console.log(m, '=>', require.resolve(m))"
+
+      - name: Commit package files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          if git diff --cached --quiet; then
+            echo "package.json and package-lock.json already correct"
+          else
+            git commit -m "Fix GoDaddy runtime dependencies"
+            git push origin HEAD:godaddy-mysql
+          fi
