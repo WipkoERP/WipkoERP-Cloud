@@ -7,16 +7,18 @@
   "scripts": {
     "build": "echo \"No build step required\"",
     "start": "node server.js",
-    "validate:hosting": "node scripts/validate-hosting.mjs"
+    "validate:hosting": "node scripts/validate-hosting.mjs",
+    "dev": "node server.js"
   },
   "engines": {
     "node": "22.x"
   },
   "dependencies": {
-    "body-parser": "^1.20.3",
-    "compression": "^1.7.4",
-    "express": "^4.21.2",
-    "helmet": "^8.0.0",
-    "mysql2": "^3.15.3"
+    "body-parser": "1.20.3",
+    "compression": "1.7.4",
+    "depd": "2.0.0",
+    "express": "4.21.2",
+    "helmet": "8.0.0",
+    "mysql2": "3.15.3"
   }
 }
