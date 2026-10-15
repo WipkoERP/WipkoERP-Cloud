@@ -1,0 +1,41 @@
+name: Generate real package-lock
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-lock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout godaddy-mysql branch
+        uses: actions/checkout@v4
+        with:
+          ref: godaddy-mysql
+
+      - name: Use Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Rebuild package-lock.json from npm registry
+        run: |
+          rm -f package-lock.json
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+
+      - name: Verify clean npm install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Commit real package-lock.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json
+          if git diff --cached --quiet; then
+            echo "package-lock.json already up to date"
+          else
+            git commit -m "Generate real package-lock for GoDaddy"
+            git push origin HEAD:godaddy-mysql
+          fi
