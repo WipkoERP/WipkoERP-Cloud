@@ -122,17 +122,22 @@ async function migrateHeavyState(){
  }catch(e){try{await c.query('ROLLBACK')}catch(_e){}console.error('v043 heavy-state migration failed:',e);throw e}finally{c.release()}
 }
 async function bootstrapEmptyDatabase(){
- // GoDaddy may create an empty app-state row before the bootstrap secret is added.
- // Bootstrap based on the fast-auth table instead of only checking app-state existence.
- const auth=await pool.query('SELECT COUNT(*) AS count FROM wipko_auth_users');
- if(Number(auth.rows&&auth.rows[0]&&auth.rows[0].count||0)>0)return false;
-
+ // Recovery/bootstrap mode for a fresh GoDaddy MySQL database.
+ // If WIPKO_BOOTSTRAP_PASSWORD is present, always make sure the bootstrap
+ // username can log in even when an earlier empty/default state already
+ // populated wipko_auth_users. Remove the secret after restoring production data.
  const password=String(process.env.WIPKO_BOOTSTRAP_PASSWORD||'').trim();
+ const username=String(process.env.WIPKO_BOOTSTRAP_USER||'admin').trim()||'admin';
+ const usernameKey=username.toLowerCase();
+ const auth=await pool.query('SELECT COUNT(*) AS count FROM wipko_auth_users');
+ const authCount=Number(auth.rows&&auth.rows[0]&&auth.rows[0].count||0);
+
  if(!password){
+   if(authCount>0)return false;
    console.warn('[WipkoERP v044] No login user exists yet. Set temporary WIPKO_BOOTSTRAP_PASSWORD, restart, login as admin, then restore the Railway backup.');
    return false;
  }
- const username=String(process.env.WIPKO_BOOTSTRAP_USER||'admin').trim()||'admin';
+
  const now=new Date().toISOString();
  const state=await pool.query('SELECT version,data FROM wipko_app_state WHERE id=1');
  let version=1;
@@ -143,19 +148,32 @@ async function bootstrapEmptyDatabase(){
  }else{
    db={roleSettings:{},clients:[],accounts:[],invoices:[],quotations:[],proformas:[],cctv:[],employees:[],suppliers:[],vendors:[],companyVehicles:[],companyDocuments:[],reports:[],logs:[],importHistory:[],_deleted:[]};
  }
+
  const users=Array.isArray(db.users)?db.users:[];
- if(!users.length){
-   users.push({id:'USR-BOOTSTRAP',username,password,name:'Wipko Administrator',role:'Super Admin',status:'Active',permissions:{},createdAt:now,updatedAt:now});
-   db.users=users;
-   if(state.rowCount){
-     version+=1;
-     await pool.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[version,JSON.stringify(db),'godaddy-bootstrap']);
-   }else{
-     await pool.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[version,JSON.stringify(db),'godaddy-bootstrap']);
-   }
+ let bootstrapUser=users.find(u=>String(u&&u.username||'').trim().toLowerCase()===usernameKey);
+ if(bootstrapUser){
+   bootstrapUser.password=password;
+   bootstrapUser.status='Active';
+   bootstrapUser.updatedAt=now;
+ }else{
+   bootstrapUser={id:'USR-BOOTSTRAP',username,password,name:'Wipko Administrator',role:'Super Admin',status:'Active',permissions:{},createdAt:now,updatedAt:now};
+   users.push(bootstrapUser);
  }
+ db.users=users;
+
+ if(state.rowCount){
+   version+=1;
+   await pool.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[version,JSON.stringify(db),'godaddy-bootstrap-login']);
+ }else{
+   await pool.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[version,JSON.stringify(db),'godaddy-bootstrap-login']);
+ }
+
  await syncFastState(db,version,pool);
- console.log('[WipkoERP v044] GoDaddy login initialized. Temporary login: '+username+' / WIPKO_BOOTSTRAP_PASSWORD. Restore your v044 backup, then remove the bootstrap secret.');
+ const verify=await pool.query('SELECT username,password,status FROM wipko_auth_users WHERE username_key=$1 LIMIT 1',[usernameKey]);
+ if(!verify.rowCount||String(verify.rows[0].password||'')!==password){
+   throw new Error('Bootstrap login verification failed');
+ }
+ console.log('[WipkoERP v044] GoDaddy bootstrap login ready for username: '+username+'. Restore the v044 backup, then remove WIPKO_BOOTSTRAP_PASSWORD.');
  return true;
 }
 
