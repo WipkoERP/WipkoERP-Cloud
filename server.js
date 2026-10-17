@@ -11,11 +11,11 @@ function mysqlConfigured(){return !!MYSQL_CONFIG}
 const DATABASE_URL = mysqlConfigured() ? 'godaddy-mysql' : '';
 const pool = mysqlConfigured() ? new Pool() : null;
 if(!pool){
-  console.error('[WipkoERP v045] GoDaddy managed MySQL is not configured. Publish the app with the GoDaddy database enabled so DB_HOST, DB_PORT, DB_NAME, DB_USER and DB_PASSWORD are available.');
+  console.error('[WipkoERP v046] GoDaddy managed MySQL is not configured. Publish the app with the GoDaddy database enabled so DB_HOST, DB_PORT, DB_NAME, DB_USER and DB_PASSWORD are available.');
 }
 const SESSION_COOKIE='wipko_session',SESSION_TTL_SEC=Math.max(3600,Number(process.env.WIPKO_SESSION_TTL_SEC||604800)||604800);
 const DB_DERIVED_SECRET=MYSQL_CONFIG?crypto.createHash('sha256').update([MYSQL_CONFIG.host,MYSQL_CONFIG.port,MYSQL_CONFIG.user,MYSQL_CONFIG.password,MYSQL_CONFIG.database].join('|')).digest('hex'):'';
-const SESSION_SECRET=String(process.env.WIPKO_SESSION_SECRET||process.env.SESSION_SECRET||DB_DERIVED_SECRET||'wipkoerp-v045-unconfigured');
+const SESSION_SECRET=String(process.env.WIPKO_SESSION_SECRET||process.env.SESSION_SECRET||DB_DERIVED_SECRET||'wipkoerp-v046-unconfigured');
 function b64url(v){return Buffer.from(v).toString('base64url')}
 function sessionSign(raw){return crypto.createHmac('sha256',SESSION_SECRET).update(raw).digest('base64url')}
 function sessionToken(user){const raw=b64url(JSON.stringify({id:String(user.id||''),username:String(user.username||''),exp:Math.floor(Date.now()/1000)+SESSION_TTL_SEC}));return raw+'.'+sessionSign(raw)}
@@ -48,7 +48,7 @@ async function putDiagram(executor,clientId,d){
 }
 app.disable('x-powered-by');app.use(helmet({contentSecurityPolicy:false,crossOriginResourcePolicy:false}));app.use(compression());
 const JSON_BODY_LIMIT=String(process.env.WIPKO_JSON_LIMIT||'200mb');
-app.use((req,res,next)=>{if(req.method==='POST'&&req.path==='/api/db'){const started=Date.now(),declared=Number(req.headers['content-length']||0)||0;res.on('finish',()=>{console.log('[v045 /api/db save] status=%s declared=%sMB duration=%sms',res.statusCode,(declared/1048576).toFixed(2),Date.now()-started)});req._wipkoSaveStarted=started;req._wipkoDeclaredBytes=declared}next()});
+app.use((req,res,next)=>{if(req.method==='POST'&&req.path==='/api/db'){const started=Date.now(),declared=Number(req.headers['content-length']||0)||0;res.on('finish',()=>{console.log('[v046 /api/db save] status=%s declared=%sMB duration=%sms',res.statusCode,(declared/1048576).toFixed(2),Date.now()-started)});req._wipkoSaveStarted=started;req._wipkoDeclaredBytes=declared}next()});
 app.use(express.json({limit:JSON_BODY_LIMIT}));app.use(express.urlencoded({extended:false,limit:JSON_BODY_LIMIT}));
 app.use((req,res,next)=>{
   if(pool||req.path==='/api/health'||req.path==='/api/ping')return next();
@@ -58,17 +58,59 @@ app.use((req,res,next)=>{
   }
   next();
 });
-async function syncAuthUsers(db,executor=pool){
- const users=Array.isArray(db&&db.users)?db.users:[],roleSettings=db&&db.roleSettings&&typeof db.roleSettings==='object'?db.roleSettings:{};
+function authUsersFromDb(db){return Array.isArray(db&&db.users)?db.users.filter(u=>u&&String(u.username||'').trim()):[]}
+function authRoleEnabled(db,u){const role=String(u&&u.role||'User'),roleSettings=db&&db.roleSettings&&typeof db.roleSettings==='object'?db.roleSettings:{};return role==='Super Admin'||roleSettings[role]!==false}
+async function upsertAuthUser(u,db,executor=pool){
+ const username=String(u&&u.username||'').trim();if(!username)return false;
+ const role=String(u.role||'User'),enabled=authRoleEnabled(db,u);
+ await executor.query(`INSERT INTO wipko_auth_users(id,username_key,username,password,name,role,status,permissions,role_enabled,updated_at)
+  VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,NOW()) ON CONFLICT(id) DO UPDATE SET username_key=EXCLUDED.username_key,username=EXCLUDED.username,password=EXCLUDED.password,name=EXCLUDED.name,role=EXCLUDED.role,status=EXCLUDED.status,permissions=EXCLUDED.permissions,role_enabled=EXCLUDED.role_enabled,updated_at=NOW()`,[
+  String(u.id||username),username.toLowerCase(),username,String(u.password||''),String(u.name||username),role,String(u.status||'Active'),JSON.stringify(u.permissions||{}),enabled
+ ]);
+ return true
+}
+async function seedAuthUsersIfEmpty(db,executor=pool){
+ const countRow=await executor.query('SELECT COUNT(*) AS count FROM wipko_auth_users'),count=Number(countRow.rows&&countRow.rows[0]&&countRow.rows[0].count||0);
+ if(count>0)return {seeded:false,count};
+ const users=authUsersFromDb(db);if(!users.length)return {seeded:false,count:0};
+ for(const u of users)await upsertAuthUser(u,db,executor);
+ console.log('[WipkoERP v046 auth] recovered '+users.length+' login user(s) from core ERP state because the auth table was empty.');
+ return {seeded:true,count:users.length}
+}
+async function replaceAuthUsersFromDb(db,executor=pool,reason='explicit-auth-replace'){
+ const users=authUsersFromDb(db);
+ if(!users.length)throw new Error('Refusing to replace authentication users with an empty user list');
  await executor.query('DELETE FROM wipko_auth_users');
- for(const u of users){
-  const username=String(u&&u.username||'').trim();if(!username)continue;
-  const role=String(u.role||'User'),enabled=(role==='Super Admin'||roleSettings[role]!==false);
-  await executor.query(`INSERT INTO wipko_auth_users(id,username_key,username,password,name,role,status,permissions,role_enabled,updated_at)
-   VALUES($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9,NOW())`,[
-   String(u.id||username),username.toLowerCase(),username,String(u.password||''),String(u.name||username),role,String(u.status||'Active'),JSON.stringify(u.permissions||{}),enabled
-  ]);
+ for(const u of users)await upsertAuthUser(u,db,executor);
+ console.log('[WipkoERP v046 auth] authentication users replaced from ERP users by '+reason+'; users='+users.length);
+ return users.length
+}
+async function applyAuthUserChanges(appliedUsers,db,executor=pool){
+ if(!appliedUsers)return {upserts:0,deletes:0};let upserts=0,deletes=0;
+ for(const u of(Array.isArray(appliedUsers.upserts)?appliedUsers.upserts:[])){if(await upsertAuthUser(u,db,executor))upserts++}
+ for(const id of(Array.isArray(appliedUsers.deletes)?appliedUsers.deletes:[])){
+  const key=String(id||'').trim();if(!key)continue;
+  const countRow=await executor.query('SELECT COUNT(*) AS count FROM wipko_auth_users'),count=Number(countRow.rows&&countRow.rows[0]&&countRow.rows[0].count||0);
+  if(count<=1)throw new Error('Cannot delete the last login user');
+  await executor.query('DELETE FROM wipko_auth_users WHERE id=$1 OR username_key=$2',[key,key.toLowerCase()]);deletes++
  }
+ if(upserts||deletes)console.log('[WipkoERP v046 auth] explicit user changes applied; upserts='+upserts+' deletes='+deletes);
+ return {upserts,deletes}
+}
+async function syncAuthRoleEnabled(db,executor=pool){
+ for(const u of authUsersFromDb(db))await executor.query('UPDATE wipko_auth_users SET role_enabled=$1,updated_at=NOW() WHERE id=$2 OR username_key=$3',[authRoleEnabled(db,u),String(u.id||u.username),String(u.username||'').trim().toLowerCase()])
+}
+async function mergeAuthoritativeAuthIntoDb(db,executor=pool){
+ const out={...(db||{})},core=Array.isArray(out.users)?out.users:[];
+ const r=await executor.query('SELECT id,username,password,name,role,status,permissions FROM wipko_auth_users ORDER BY username_key');
+ if(!r.rowCount){out.users=core;return out}
+ const byId=new Map(),byName=new Map();for(const a of r.rows){byId.set(String(a.id||''),a);byName.set(String(a.username||'').trim().toLowerCase(),a)}
+ const used=new Set(),users=core.map(u=>{const a=byId.get(String(u&&u.id||''))||byName.get(String(u&&u.username||'').trim().toLowerCase());if(!a)return u;used.add(String(a.id||''));return {...u,id:String(a.id||u.id||a.username),username:String(a.username||u.username||''),password:String(a.password||''),name:String(a.name||u.name||a.username||''),role:String(a.role||u.role||'User'),status:String(a.status||u.status||'Active'),permissions:a.permissions&&typeof a.permissions==='object'?a.permissions:(u.permissions||{})}});
+ for(const a of r.rows)if(!used.has(String(a.id||'')))users.push({id:String(a.id||a.username),username:String(a.username||''),password:String(a.password||''),name:String(a.name||a.username||''),role:String(a.role||'User'),status:String(a.status||'Active'),permissions:a.permissions&&typeof a.permissions==='object'?a.permissions:{}});
+ out.users=users;return out
+}
+async function reconcileCoreUsersFromAuth(){
+ const c=await pool.connect();try{await c.query('BEGIN');const r=await c.query('SELECT version,data FROM wipko_app_state WHERE id=1 FOR UPDATE');if(!r.rowCount){await c.query('COMMIT');return false}const before=r.rows[0].data||{},after=await mergeAuthoritativeAuthIntoDb(before,c),a=JSON.stringify(Array.isArray(before.users)?before.users:[]),b=JSON.stringify(Array.isArray(after.users)?after.users:[]);if(a!==b){const next=Number(r.rows[0].version||0)+1;await c.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,JSON.stringify(after),'v046-auth-reconcile']);await syncDashboard(after,next,c);console.log('[WipkoERP v046 auth] core ERP user records reconciled with authoritative login table.')}await c.query('COMMIT');return a!==b}catch(e){try{await c.query('ROLLBACK')}catch(_e){}throw e}finally{c.release()}
 }
 function dashboardSnapshot(db,version=0){
  const accounts=Array.isArray(db&&db.accounts)?db.accounts:[],invoices=Array.isArray(db&&db.invoices)?db.invoices:[],cctv=Array.isArray(db&&db.cctv)?db.cctv:[];
@@ -82,7 +124,7 @@ function dashboardSnapshot(db,version=0){
 async function syncDashboard(db,version=0,executor=pool){
  const snap=dashboardSnapshot(db,version);await executor.query(`INSERT INTO wipko_dashboard_state(id,version,data,updated_at) VALUES(1,$1,$2::jsonb,NOW()) ON CONFLICT(id) DO UPDATE SET version=EXCLUDED.version,data=EXCLUDED.data,updated_at=NOW()`,[Number(version||0),JSON.stringify(snap)]);
 }
-async function syncFastState(db,version=0,executor=pool){await syncAuthUsers(db,executor);await syncDashboard(db,version,executor)}
+async function syncFastState(db,version=0,executor=pool){await syncDashboard(db,version,executor)}
 async function sanitizeRecordForCloud(col,row,executor){
  if(!row||typeof row!=='object'||Array.isArray(row))return row;
  const x={...row},id=String(x.id||x.username||'');
@@ -122,59 +164,35 @@ async function migrateHeavyState(){
  }catch(e){try{await c.query('ROLLBACK')}catch(_e){}console.error('v043 heavy-state migration failed:',e);throw e}finally{c.release()}
 }
 async function bootstrapEmptyDatabase(){
- // Recovery/bootstrap mode for a fresh GoDaddy MySQL database.
- // If WIPKO_BOOTSTRAP_PASSWORD is present, always make sure the bootstrap
- // username can log in even when an earlier empty/default state already
- // populated wipko_auth_users. Remove the secret after restoring production data.
  const password=String(process.env.WIPKO_BOOTSTRAP_PASSWORD||'').trim();
  const username=String(process.env.WIPKO_BOOTSTRAP_USER||'admin').trim()||'admin';
  const usernameKey=username.toLowerCase();
  const auth=await pool.query('SELECT COUNT(*) AS count FROM wipko_auth_users');
  const authCount=Number(auth.rows&&auth.rows[0]&&auth.rows[0].count||0);
-
- if(!password){
-   if(authCount>0)return false;
-   console.warn('[WipkoERP v045] No login user exists yet. Set temporary WIPKO_BOOTSTRAP_PASSWORD, restart, login as admin, then restore the Railway backup.');
-   return false;
+ if(authCount>0){
+  console.log('[WipkoERP v046 auth] login users preserved; bootstrap skipped because auth table already contains '+authCount+' user(s).');
+  return false
  }
-
- const now=new Date().toISOString();
  const state=await pool.query('SELECT version,data FROM wipko_app_state WHERE id=1');
- let version=1;
- let db;
- if(state.rowCount){
-   version=Number(state.rows[0].version||1);
-   db=state.rows[0].data||{};
- }else{
-   db={roleSettings:{},clients:[],accounts:[],invoices:[],quotations:[],proformas:[],cctv:[],employees:[],suppliers:[],vendors:[],companyVehicles:[],companyDocuments:[],reports:[],logs:[],importHistory:[],_deleted:[]};
+ const coreDb=state.rowCount?(state.rows[0].data||{}):{};
+ const coreUsers=authUsersFromDb(coreDb);
+ if(coreUsers.length){
+  await seedAuthUsersIfEmpty(coreDb,pool);
+  return true
  }
-
- const users=Array.isArray(db.users)?db.users:[];
- let bootstrapUser=users.find(u=>String(u&&u.username||'').trim().toLowerCase()===usernameKey);
- if(bootstrapUser){
-   bootstrapUser.password=password;
-   bootstrapUser.status='Active';
-   bootstrapUser.updatedAt=now;
- }else{
-   bootstrapUser={id:'USR-BOOTSTRAP',username,password,name:'Wipko Administrator',role:'Super Admin',status:'Active',permissions:{},createdAt:now,updatedAt:now};
-   users.push(bootstrapUser);
+ if(!password){
+  console.warn('[WipkoERP v046] No login user exists yet. Set temporary WIPKO_BOOTSTRAP_PASSWORD only for a genuinely new empty installation.');
+  return false
  }
- db.users=users;
-
- if(state.rowCount){
-   version+=1;
-   await pool.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[version,JSON.stringify(db),'godaddy-bootstrap-login']);
- }else{
-   await pool.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[version,JSON.stringify(db),'godaddy-bootstrap-login']);
- }
-
- await syncFastState(db,version,pool);
- const verify=await pool.query('SELECT username,password,status FROM wipko_auth_users WHERE username_key=$1 LIMIT 1',[usernameKey]);
- if(!verify.rowCount||String(verify.rows[0].password||'')!==password){
-   throw new Error('Bootstrap login verification failed');
- }
- console.log('[WipkoERP v045] GoDaddy bootstrap login ready for username: '+username+'. Restore the v044/v045 backup, then remove WIPKO_BOOTSTRAP_PASSWORD.');
- return true;
+ const now=new Date().toISOString(),version=state.rowCount?Number(state.rows[0].version||1)+1:1;
+ const db=state.rowCount?coreDb:{roleSettings:{},clients:[],accounts:[],invoices:[],quotations:[],proformas:[],cctv:[],employees:[],suppliers:[],vendors:[],companyVehicles:[],companyDocuments:[],reports:[],logs:[],importHistory:[],_deleted:[]};
+ const bootstrapUser={id:'USR-BOOTSTRAP',username,password,name:'Wipko Administrator',role:'Super Admin',status:'Active',permissions:{},createdAt:now,updatedAt:now};
+ db.users=[bootstrapUser];
+ if(state.rowCount)await pool.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[version,JSON.stringify(db),'godaddy-bootstrap-login-v046']);
+ else await pool.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[version,JSON.stringify(db),'godaddy-bootstrap-login-v046']);
+ await upsertAuthUser(bootstrapUser,db,pool);
+ console.log('[WipkoERP v046] New-install bootstrap login created for username: '+username+'. Remove WIPKO_BOOTSTRAP_PASSWORD after initial setup.');
+ return true
 }
 
 async function initDb(){
@@ -187,24 +205,17 @@ async function initDb(){
  await pool.query(`CREATE INDEX IF NOT EXISTS wipko_media_owner_idx ON wipko_media(owner_type,owner_id)`);
  await pool.query(`CREATE TABLE IF NOT EXISTS wipko_diagrams (id TEXT PRIMARY KEY,client_id TEXT NOT NULL,name TEXT NOT NULL,data JSONB NOT NULL DEFAULT '{}'::jsonb,saved_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`);
  await pool.query(`CREATE INDEX IF NOT EXISTS wipko_diagrams_client_idx ON wipko_diagrams(client_id,updated_at DESC)`);
- await bootstrapEmptyDatabase();
  await migrateHeavyState();
- const r=await pool.query('SELECT version,data FROM wipko_app_state WHERE id=1');if(r.rowCount)await syncFastState(r.rows[0].data||{},Number(r.rows[0].version||0));
+ const r=await pool.query('SELECT version,data FROM wipko_app_state WHERE id=1');
+ if(r.rowCount){await seedAuthUsersIfEmpty(r.rows[0].data||{},pool);await syncFastState(r.rows[0].data||{},Number(r.rows[0].version||0))}
+ await bootstrapEmptyDatabase();
+ await reconcileCoreUsersFromAuth();
+ const ac=await pool.query('SELECT COUNT(*) AS count FROM wipko_auth_users');console.log('[WipkoERP v046 auth] login users: '+Number(ac.rows&&ac.rows[0]&&ac.rows[0].count||0)+'; authentication table preserved on startup.');
 }
-app.get('/api/health',async(_q,res)=>{if(!pool)return res.status(200).json({ok:true,app:'WipkoERP Cloud v1',build:'live-sync-v045-godaddy-mysql',database:false,configured:false,message:'GoDaddy managed MySQL is not configured'});try{const r=await pool.query('SELECT NOW() AS now');res.json({ok:true,app:'WipkoERP Cloud v1',build:'live-sync-v045-godaddy-mysql',database:true,configured:true,time:r.rows[0].now})}catch(e){res.status(200).json({ok:true,app:'WipkoERP Cloud v1',build:'live-sync-v045-godaddy-mysql',database:false,configured:true,message:e.message})}});app.get('/api/ping',(_q,res)=>res.json({ok:true,mode:'cloud',databaseConfigured:!!pool}));
+app.get('/api/health',async(_q,res)=>{if(!pool)return res.status(200).json({ok:true,app:'WipkoERP Cloud v1',build:'live-sync-v046-godaddy-mysql',database:false,configured:false,message:'GoDaddy managed MySQL is not configured'});try{const r=await pool.query('SELECT NOW() AS now');res.json({ok:true,app:'WipkoERP Cloud v1',build:'live-sync-v046-godaddy-mysql',database:true,configured:true,time:r.rows[0].now})}catch(e){res.status(200).json({ok:true,app:'WipkoERP Cloud v1',build:'live-sync-v046-godaddy-mysql',database:false,configured:true,message:e.message})}});app.get('/api/ping',(_q,res)=>res.json({ok:true,mode:'cloud',databaseConfigured:!!pool}));
 app.post('/api/login',async(req,res)=>{try{
  const username=String(req.body&&req.body.username||'').trim().toLowerCase(),password=String(req.body&&req.body.password||'');if(!username||!password)return res.status(400).json({ok:false,message:'Enter username and password'});
- const bootstrapUser=String(process.env.WIPKO_BOOTSTRAP_USER||'admin').trim().toLowerCase()||'admin';
- const bootstrapPassword=String(process.env.WIPKO_BOOTSTRAP_PASSWORD||'').trim();
  let r=await pool.query('SELECT id,username,password,name,role,status,permissions,role_enabled FROM wipko_auth_users WHERE username_key=$1 LIMIT 1',[username]);
- // Fresh GoDaddy databases can receive an old pre-login /api/db save from the
- // browser before the first sign-in. If that happened, re-seed the temporary
- // bootstrap account directly from the GoDaddy secret and retry the lookup.
- if(bootstrapPassword&&username===bootstrapUser&&password===bootstrapPassword&&(!r.rowCount||String(r.rows[0].password||'')!==bootstrapPassword)){
-   await bootstrapEmptyDatabase();
-   r=await pool.query('SELECT id,username,password,name,role,status,permissions,role_enabled FROM wipko_auth_users WHERE username_key=$1 LIMIT 1',[username]);
-   console.log('[WipkoERP v045] Bootstrap credentials refreshed during login.');
- }
  if(!r.rowCount)return res.status(401).json({ok:false,message:'Invalid username or password'});const u=r.rows[0];
  if(String(u.password||'')!==password||String(u.status||'Active').toLowerCase()==='inactive')return res.status(401).json({ok:false,message:'Invalid username or password'});
  if(!u.role_enabled)return res.status(403).json({ok:false,message:'This user role is disabled by Super Admin'});
@@ -221,7 +232,7 @@ app.get('/api/diagrams/:id',async(req,res)=>{try{if(!verifySession(req))return r
 app.put('/api/diagrams/:id',async(req,res)=>{try{const sess=verifySession(req);if(!sess)return res.status(401).json({ok:false});const id=String(req.params.id),cid=String(req.body&&req.body.clientId||''),name=String(req.body&&req.body.name||'CCTV Diagram'),data=req.body&&req.body.data;if(!cid||!data||typeof data!=='object')return res.status(400).json({ok:false,message:'Invalid diagram'});await pool.query(`INSERT INTO wipko_diagrams(id,client_id,name,data,saved_at,updated_at) VALUES($1,$2,$3,$4::jsonb,NOW(),NOW()) ON CONFLICT(id) DO UPDATE SET client_id=EXCLUDED.client_id,name=EXCLUDED.name,data=EXCLUDED.data,updated_at=NOW()`,[id,cid,name,JSON.stringify(data)]);const out={id,clientId:cid,name,updatedAt:new Date().toISOString()};liveBroadcast('diagram',{action:'saved',...out});res.json({ok:true,...out})}catch(e){res.status(500).json({ok:false,message:'Diagram save failed',detail:e.message})}});
 app.get('/api/db-meta',async(_req,res)=>{try{const r=await pool.query('SELECT version,updated_at FROM wipko_app_state WHERE id=1');res.set('Cache-Control','no-store');if(!r.rowCount)return res.json({ok:true,version:0,empty:true});res.json({ok:true,version:Number(r.rows[0].version||0),updatedAt:r.rows[0].updated_at})}catch(e){console.error('DB meta failed:',e);res.status(500).json({ok:false,message:'Database metadata unavailable'})}});
 app.get('/api/dashboard',async(_q,res)=>{try{const r=await pool.query('SELECT version,data,updated_at FROM wipko_dashboard_state WHERE id=1');if(!r.rowCount)return res.json({ok:true,version:0,data:{}});res.set('Cache-Control','no-store');res.json({ok:true,version:Number(r.rows[0].version||0),data:r.rows[0].data||{},updatedAt:r.rows[0].updated_at})}catch(e){console.error('Dashboard summary failed:',e);res.status(500).json({ok:false,message:'Dashboard summary unavailable'})}});
-app.get('/api/db',async(req,res)=>{const started=Date.now();try{const meta=await pool.query('SELECT version,updated_at FROM wipko_app_state WHERE id=1');if(!meta.rowCount)return res.json({version:0,db:null,empty:true});const version=Number(meta.rows[0].version||0),etag='\"wipko-db-v'+version+'\"';res.set('ETag',etag);res.set('Cache-Control','private, max-age=0, must-revalidate');if(String(req.headers['if-none-match']||'')===etag){res.set('Server-Timing','db;dur='+(Date.now()-started));return res.status(304).end()}const r=await pool.query('SELECT data,pg_column_size(data) AS db_bytes FROM wipko_app_state WHERE id=1');const body=JSON.stringify({version,db:r.rows[0].data,updatedAt:meta.rows[0].updated_at}),bytes=Buffer.byteLength(body);res.set('X-Wipko-DB-Bytes',String(bytes));res.set('X-Wipko-PG-Bytes',String(Number(r.rows[0].db_bytes||0)));res.set('Server-Timing','db;dur='+(Date.now()-started));console.log('[v045 /api/db] version=%s json=%sMB stored=%sMB build=%sms',version,(bytes/1048576).toFixed(2),(Number(r.rows[0].db_bytes||0)/1048576).toFixed(2),Date.now()-started);res.type('application/json').send(body)}catch(e){console.error(e);res.status(500).json({message:'Database read failed'})}});
+app.get('/api/db',async(req,res)=>{const started=Date.now();try{const meta=await pool.query('SELECT version,updated_at FROM wipko_app_state WHERE id=1');if(!meta.rowCount)return res.json({version:0,db:null,empty:true});const version=Number(meta.rows[0].version||0),etag='\"wipko-db-v'+version+'\"';res.set('ETag',etag);res.set('Cache-Control','private, max-age=0, must-revalidate');if(String(req.headers['if-none-match']||'')===etag){res.set('Server-Timing','db;dur='+(Date.now()-started));return res.status(304).end()}const r=await pool.query('SELECT data,pg_column_size(data) AS db_bytes FROM wipko_app_state WHERE id=1');const body=JSON.stringify({version,db:r.rows[0].data,updatedAt:meta.rows[0].updated_at}),bytes=Buffer.byteLength(body);res.set('X-Wipko-DB-Bytes',String(bytes));res.set('X-Wipko-PG-Bytes',String(Number(r.rows[0].db_bytes||0)));res.set('Server-Timing','db;dur='+(Date.now()-started));console.log('[v046 /api/db] version=%s json=%sMB stored=%sMB build=%sms',version,(bytes/1048576).toFixed(2),(Number(r.rows[0].db_bytes||0)/1048576).toFixed(2),Date.now()-started);res.type('application/json').send(body)}catch(e){console.error(e);res.status(500).json({message:'Database read failed'})}});
 app.get('/api/db-stats',async(_q,res)=>{try{const r=await pool.query('SELECT version,data,updated_at,pg_column_size(data) AS db_bytes FROM wipko_app_state WHERE id=1');if(!r.rowCount)return res.json({ok:true,empty:true});const db=r.rows[0].data||{},collections={};for(const [k,v] of Object.entries(db)){if(Array.isArray(v)){let chars=0;try{chars=JSON.stringify(v).length}catch(_e){}collections[k]={rows:v.length,approxBytes:chars}}}const sorted=Object.entries(collections).sort((a,b)=>b[1].approxBytes-a[1].approxBytes);const jsonBytes=Buffer.byteLength(JSON.stringify(db));res.set('Cache-Control','no-store');res.json({ok:true,version:Number(r.rows[0].version||0),jsonBytes,dbBytes:Number(r.rows[0].db_bytes||0),pgBytes:Number(r.rows[0].db_bytes||0),updatedAt:r.rows[0].updated_at,largestCollections:sorted.slice(0,15).map(([name,x])=>({name,rows:x.rows,approxBytes:x.approxBytes}))})}catch(e){console.error('DB stats failed:',e);res.status(500).json({ok:false,message:'DB stats unavailable'})}});
 function jsonBytes(v){try{return Buffer.byteLength(JSON.stringify(v==null?null:v))}catch(_e){return 0}}
 function fieldStats(rows){const fields=new Map();for(const row of(Array.isArray(rows)?rows:[])){if(!row||typeof row!=='object'||Array.isArray(row))continue;for(const [name,value] of Object.entries(row)){const bytes=jsonBytes(value),old=fields.get(name)||{name,approxBytes:0,rowsWithField:0,maxBytes:0,dataUriRows:0,longStringRows:0};old.approxBytes+=bytes;old.rowsWithField++;if(bytes>old.maxBytes)old.maxBytes=bytes;if(typeof value==='string'){if(value.startsWith('data:'))old.dataUriRows++;if(value.length>100000)old.longStringRows++}fields.set(name,old)}}return [...fields.values()].sort((a,b)=>b.approxBytes-a.approxBytes)}
@@ -253,18 +264,18 @@ app.post('/api/sync',async(req,res)=>{
    }
    const repl=changes.replace&&typeof changes.replace==='object'?changes.replace:{};if(Object.keys(repl).length&&baseVersion!==currentVersion)conflicts.push({collection:'__root__',id:'version'});else for(const [k,v] of Object.entries(repl)){db[k]=v;applied.replace[k]=v}
    if(conflicts.length){await client.query('ROLLBACK');return res.status(409).json({ok:false,conflict:true,currentVersion,conflicts,message:'Cloud data changed on another PC. The same record must be reloaded before saving.'})}
-   const next=currentVersion+1,finalDb=prune(db);await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,JSON.stringify(finalDb),source]);await syncFastState(finalDb,next,client);await client.query('COMMIT');const patch={version:next,source,changes:applied};liveBroadcast('sync',patch);res.json({ok:true,version:next,patch})
+   const next=currentVersion+1,finalDb=prune(db);await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,JSON.stringify(finalDb),source]);if(applied.collections.users)await applyAuthUserChanges(applied.collections.users,finalDb,client);if(Object.prototype.hasOwnProperty.call(applied.replace,'roleSettings'))await syncAuthRoleEnabled(finalDb,client);await syncFastState(finalDb,next,client);await client.query('COMMIT');const patch={version:next,source,changes:applied};liveBroadcast('sync',patch);res.json({ok:true,version:next,patch})
  }catch(e){try{await client.query('ROLLBACK')}catch(_e){}console.error('Delta sync failed:',e);res.status(500).json({ok:false,message:'Cloud sync failed',detail:e.message})}finally{client.release()}
 });
 app.post('/api/db',async(req,res)=>{
- const sess=verifySession(req);if(!sess){console.warn('[WipkoERP v045] Blocked unauthenticated /api/db save');return res.status(401).json({ok:false,message:'Login required'})}
+ const sess=verifySession(req);if(!sess){console.warn('[WipkoERP v046] Blocked unauthenticated /api/db save');return res.status(401).json({ok:false,message:'Login required'})}
  const incoming=req.body&&req.body.db;
  if(!incoming||typeof incoming!=='object'||Array.isArray(incoming))return res.status(400).json({message:'Invalid ERP database payload'});
  const source=String(req.body.source||incoming.__client||'web'),suppliedVersion=Number(req.body.version||0),client=await pool.connect();
  const started=Date.now();
  try{
   await client.query('BEGIN');
-  const finalDb=prune(await sanitizeWholeDb(incoming,client)),json=JSON.stringify(finalDb);
+  const authProtected=await mergeAuthoritativeAuthIntoDb(incoming,client),finalDb=prune(await sanitizeWholeDb(authProtected,client)),json=JSON.stringify(finalDb);
   let next=1,write;
   if(suppliedVersion>0){
    // v039: normal saves are one atomic record update. Do not read/copy the full
@@ -291,7 +302,7 @@ app.post('/api/db',async(req,res)=>{
   await syncFastState(finalDb,next,client);
   await client.query('COMMIT');
   liveBroadcast('reload',{version:next,source});
-  console.log('[v045 /api/db direct save] version=%s payload=%sMB duration=%sms',next,(Buffer.byteLength(json)/1048576).toFixed(2),Date.now()-started);
+  console.log('[v046 /api/db direct save] version=%s payload=%sMB duration=%sms',next,(Buffer.byteLength(json)/1048576).toFixed(2),Date.now()-started);
   res.json({ok:true,version:next,merged:false,conflict:false,conflicts:[]});
  }catch(e){
   try{await client.query('ROLLBACK')}catch(_e){}
@@ -299,7 +310,7 @@ app.post('/api/db',async(req,res)=>{
   res.status(500).json({message:'Database save failed',detail:e.message});
  }finally{client.release()}
 });
-app.post('/api/reset-business',async(req,res)=>{const sess=verifySession(req);if(!sess)return res.status(401).json({ok:false,message:'Login required'});const incoming=req.body&&req.body.db;if(!incoming||typeof incoming!=='object'||Array.isArray(incoming))return res.status(400).json({message:'Invalid reset database payload'});const source=String(req.body.source||'WipkoERP_v28_complete_reset'),client=await pool.connect();try{await client.query('BEGIN');const cur=await client.query('SELECT version,data FROM wipko_app_state WHERE id=1 FOR UPDATE');let next=1;if(cur.rowCount){const cv=Number(cur.rows[0].version||0),current=cur.rows[0].data||{};next=cv+1;await client.query('INSERT INTO wipko_state_backups(version,data,source) VALUES($1,$2::jsonb,$3)',[cv,JSON.stringify(current),'pre-complete-reset']);await client.query('DELETE FROM wipko_state_backups WHERE id NOT IN (SELECT id FROM wipko_state_backups ORDER BY id DESC LIMIT '+BACKUP_KEEP+')');await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,JSON.stringify(incoming),source])}else{await client.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[next,JSON.stringify(incoming),source])}await syncFastState(incoming,next,client);await client.query('COMMIT');res.json({ok:true,reset:true,version:next,db:incoming})}catch(e){try{await client.query('ROLLBACK')}catch(_e){}console.error('Business reset failed:',e);res.status(500).json({message:'Business reset failed',detail:e.message})}finally{client.release()}});
+app.post('/api/reset-business',async(req,res)=>{const sess=verifySession(req);if(!sess)return res.status(401).json({ok:false,message:'Login required'});const incoming=req.body&&req.body.db;if(!incoming||typeof incoming!=='object'||Array.isArray(incoming))return res.status(400).json({message:'Invalid reset database payload'});const source=String(req.body.source||'WipkoERP_v28_complete_reset'),client=await pool.connect();try{await client.query('BEGIN');const cur=await client.query('SELECT version,data FROM wipko_app_state WHERE id=1 FOR UPDATE');let next=1;if(cur.rowCount){const cv=Number(cur.rows[0].version||0),current=cur.rows[0].data||{};next=cv+1;await client.query('INSERT INTO wipko_state_backups(version,data,source) VALUES($1,$2::jsonb,$3)',[cv,JSON.stringify(current),'pre-complete-reset']);await client.query('DELETE FROM wipko_state_backups WHERE id NOT IN (SELECT id FROM wipko_state_backups ORDER BY id DESC LIMIT '+BACKUP_KEEP+')');await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,JSON.stringify(incoming),source])}else{await client.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[next,JSON.stringify(incoming),source])}if(authUsersFromDb(incoming).length)await replaceAuthUsersFromDb(incoming,client,'complete-business-reset');else console.warn('[WipkoERP v046 auth] reset payload had no users; existing login table preserved.');await syncFastState(incoming,next,client);await client.query('COMMIT');res.json({ok:true,reset:true,version:next,db:incoming})}catch(e){try{await client.query('ROLLBACK')}catch(_e){}console.error('Business reset failed:',e);res.status(500).json({message:'Business reset failed',detail:e.message})}finally{client.release()}});
 function v045CoreCounts(db){
  const out={},src=db&&typeof db==='object'&&!Array.isArray(db)?db:{};
  for(const [k,v] of Object.entries(src))if(Array.isArray(v))out[k]=v.length;
@@ -325,11 +336,11 @@ async function v045BuildBackup(){
   if(!r.rowCount){await client.query('ROLLBACK');return null}
   const dg=await client.query('SELECT id,client_id,name,data,saved_at,updated_at FROM wipko_diagrams ORDER BY updated_at');
   const md=await client.query('SELECT id,owner_type,owner_id,field_name,mime_type,data,updated_at FROM wipko_media ORDER BY owner_type,owner_id,field_name');
+  const db=await mergeAuthoritativeAuthIntoDb(r.rows[0].data||{},client),coreCollections=v045CoreCounts(db);
   await client.query('COMMIT');
-  const db=r.rows[0].data||{},coreCollections=v045CoreCounts(db);
   return {
-   application:'WipkoERP_Cloud_v045',
-   softwareVersion:'v045',
+   application:'WipkoERP_Cloud_v046',
+   softwareVersion:'v046',
    backupSchema:2,
    backupType:'full',
    version:Number(r.rows[0].version||0),
@@ -367,7 +378,7 @@ app.post('/api/restore-bundle',async(req,res)=>{
    const previousVersion=cur.rowCount?Number(cur.rows[0].version||0):0;
    const previousDb=cur.rowCount?(cur.rows[0].data||{}):{};
    if(cur.rowCount){
-    await client.query('INSERT INTO wipko_state_backups(version,data,source) VALUES($1,$2::jsonb,$3)',[previousVersion,JSON.stringify(previousDb),'pre-v045-full-restore']);
+    await client.query('INSERT INTO wipko_state_backups(version,data,source) VALUES($1,$2::jsonb,$3)',[previousVersion,JSON.stringify(previousDb),'pre-v046-full-restore']);
     await client.query('DELETE FROM wipko_state_backups WHERE id NOT IN (SELECT id FROM wipko_state_backups ORDER BY id DESC LIMIT '+BACKUP_KEEP+')');
    }
 
@@ -389,8 +400,9 @@ app.post('/api/restore-bundle',async(req,res)=>{
    }
 
    const clean=prune(await sanitizeWholeDb(incoming,client)),next=previousVersion+1,json=JSON.stringify(clean);
-   if(cur.rowCount)await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,json,'v045-restore:'+String(sess.username||'web')]);
-   else await client.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[next,json,'v045-restore:'+String(sess.username||'web')]);
+   if(cur.rowCount)await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,json,'v046-restore:'+String(sess.username||'web')]);
+   else await client.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[next,json,'v046-restore:'+String(sess.username||'web')]);
+   await replaceAuthUsersFromDb(clean,client,'full-backup-restore');
    await syncFastState(clean,next,client);
 
    const mediaCheck=await client.query('SELECT COUNT(*) AS count FROM wipko_media');
@@ -402,11 +414,11 @@ app.post('/api/restore-bundle',async(req,res)=>{
 
    await client.query('COMMIT');
    const coreCollections=v045CoreCounts(clean),summary={coreRecords:v045CoreRecordCount(coreCollections),coreCollections,media:actualMedia,diagrams:actualDiagrams,mediaIncluded:hasMedia,diagramsIncluded:hasDiagrams};
-   liveBroadcast('reload',{version:next,source:'v045-full-restore'});
+   liveBroadcast('reload',{version:next,source:'v046-full-restore'});
    res.json({ok:true,verified:true,version:next,summary,mediaRestored:hasMedia?actualMedia:null,diagramsRestored:hasDiagrams?actualDiagrams:null,warnings:[...(!hasMedia?['Backup has no media section; existing media was preserved.']:[]),...(!hasDiagrams?['Backup has no diagrams section; existing diagrams were preserved.']:[])]})
  }catch(e){
   try{await client.query('ROLLBACK')}catch(_e){}
-  console.error('v045 full restore failed:',e);
+  console.error('v046 full restore failed:',e);
   res.status(500).json({ok:false,message:'Full backup restore failed. No partial restore was committed.',detail:e.message})
  }finally{client.release()}
 });
@@ -417,13 +429,13 @@ app.get('/api/backup',async(req,res)=>{
   const stamp=new Date().toISOString().replace(/[:.]/g,'-');
   res.setHeader('Content-Type','application/json; charset=utf-8');
   res.setHeader('Cache-Control','no-store');
-  res.setHeader('Content-Disposition',`attachment; filename="WipkoERP_v045_FullBackup_${stamp}.json"`);
+  res.setHeader('Content-Disposition',`attachment; filename="WipkoERP_v046_FullBackup_${stamp}.json"`);
   res.send(JSON.stringify(b,null,2))
  }catch(e){console.error('Backup failed:',e);res.status(500).json({message:'Backup failed',detail:e.message})}
 });
 app.use((req,res,next)=>{if(req.path==='/'||req.path.endsWith('/index.html')){res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate');res.set('Pragma','no-cache');res.set('Expires','0');res.set('Surrogate-Control','no-store')}next()});app.use(express.static(path.join(__dirname,'public'),{maxAge:'7d',etag:true,setHeaders:(res,filePath)=>{if(/(?:^|[\\/])index\.html$/i.test(filePath)){res.setHeader('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate');return}if(/diagram-(maker\.(?:js|css|html)|header\.png|footer\.png|watermark-logo\.svg)$/i.test(filePath))res.setHeader('Cache-Control','public, max-age=604800')}}));app.get('*',(_q,res)=>{res.set('Cache-Control','no-store, no-cache, must-revalidate, proxy-revalidate');res.sendFile(path.join(__dirname,'public','index.html'))});
 let dbInitReady=false,dbInitTimer=null,dbInitAttempt=0;
 async function initDbResilient(){clearTimeout(dbInitTimer);if(!pool){dbInitReady=false;console.error('Database initialization skipped: GoDaddy managed MySQL is not configured.');return}try{await initDb();dbInitReady=true;dbInitAttempt=0;console.log('WipkoERP database ready')}catch(err){dbInitReady=false;dbInitAttempt++;const wait=Math.min(15000,Math.max(3000,dbInitAttempt*3000));console.error('Database initialization unavailable; retrying in '+wait+'ms:',err&&err.message?err.message:err);dbInitTimer=setTimeout(initDbResilient,wait)}}
-const httpServer=app.listen(PORT,'0.0.0.0',()=>{console.log(`WipkoERP Cloud v045 (GitHub + GoDaddy MySQL) listening on ${PORT}; JSON body limit ${JSON_BODY_LIMIT}`);initDbResilient()});
+const httpServer=app.listen(PORT,'0.0.0.0',()=>{console.log(`WipkoERP Cloud v046 (GitHub + GoDaddy MySQL) listening on ${PORT}; JSON body limit ${JSON_BODY_LIMIT}`);initDbResilient()});
 httpServer.requestTimeout=10*60*1000;
 httpServer.headersTimeout=65*1000;
