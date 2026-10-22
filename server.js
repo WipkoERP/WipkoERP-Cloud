@@ -252,8 +252,9 @@ function acceptCurrentVersion(current,incoming,source){const out={...incoming};f
 function patchRowId(r,i){if(!r||typeof r!=='object')return String(i);if(r.col&&r.id)return String(r.col)+'|'+String(r.id);return String(r.id||r.username||r.invoiceNo||r.no||r.code||i)}
 app.post('/api/sync',async(req,res)=>{
  const sess=verifySession(req);if(!sess)return res.status(401).json({ok:false,message:'Login required'});
- const baseVersion=Number(req.body&&req.body.baseVersion||0),source=String(req.body&&req.body.source||sess.username||'web'),changes=req.body&&req.body.changes||{},client=await pool.connect();
- try{await client.query('BEGIN');const cur=await client.query('SELECT version,data FROM wipko_app_state WHERE id=1 FOR UPDATE');if(!cur.rowCount){await client.query('ROLLBACK');return res.status(409).json({ok:false,message:'Cloud database not initialized'})}
+ const baseVersion=Number(req.body&&req.body.baseVersion||0),source=String(req.body&&req.body.source||sess.username||'web'),changes=req.body&&req.body.changes||{};
+ let client=null;
+ try{client=await pool.connect();await client.query('BEGIN');const cur=await client.query('SELECT version,data FROM wipko_app_state WHERE id=1 FOR UPDATE');if(!cur.rowCount){await client.query('ROLLBACK');return res.status(409).json({ok:false,message:'Cloud database not initialized'})}
    const currentVersion=Number(cur.rows[0].version||0),db=cur.rows[0].data||{},conflicts=[],applied={collections:{},replace:{}};
    const cols=changes.collections&&typeof changes.collections==='object'?changes.collections:{};
    for(const [col,ch] of Object.entries(cols)){
@@ -265,15 +266,17 @@ app.post('/api/sync',async(req,res)=>{
    const repl=changes.replace&&typeof changes.replace==='object'?changes.replace:{};if(Object.keys(repl).length&&baseVersion!==currentVersion)conflicts.push({collection:'__root__',id:'version'});else for(const [k,v] of Object.entries(repl)){db[k]=v;applied.replace[k]=v}
    if(conflicts.length){await client.query('ROLLBACK');return res.status(409).json({ok:false,conflict:true,currentVersion,conflicts,message:'Cloud data changed on another PC. The same record must be reloaded before saving.'})}
    const next=currentVersion+1,finalDb=prune(db);await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,JSON.stringify(finalDb),source]);if(applied.collections.users)await applyAuthUserChanges(applied.collections.users,finalDb,client);if(Object.prototype.hasOwnProperty.call(applied.replace,'roleSettings'))await syncAuthRoleEnabled(finalDb,client);await syncFastState(finalDb,next,client);await client.query('COMMIT');const patch={version:next,source,changes:applied};liveBroadcast('sync',patch);res.json({ok:true,version:next,patch})
- }catch(e){try{await client.query('ROLLBACK')}catch(_e){}console.error('Delta sync failed:',e);res.status(500).json({ok:false,message:'Cloud sync failed',detail:e.message})}finally{client.release()}
+ }catch(e){if(client){try{await client.query('ROLLBACK')}catch(_e){}}console.error('Delta sync failed:',e);res.status(client?500:503).json({ok:false,message:client?'Cloud sync failed':'Cloud database connection unavailable',detail:e.message})}finally{if(client)client.release()}
 });
 app.post('/api/db',async(req,res)=>{
  const sess=verifySession(req);if(!sess){console.warn('[WipkoERP v046] Blocked unauthenticated /api/db save');return res.status(401).json({ok:false,message:'Login required'})}
  const incoming=req.body&&req.body.db;
  if(!incoming||typeof incoming!=='object'||Array.isArray(incoming))return res.status(400).json({message:'Invalid ERP database payload'});
- const source=String(req.body.source||incoming.__client||'web'),suppliedVersion=Number(req.body.version||0),client=await pool.connect();
+ const source=String(req.body.source||incoming.__client||'web'),suppliedVersion=Number(req.body.version||0);
+ let client=null;
  const started=Date.now();
  try{
+  client=await pool.connect();
   await client.query('BEGIN');
   const authProtected=await mergeAuthoritativeAuthIntoDb(incoming,client),finalDb=prune(await sanitizeWholeDb(authProtected,client)),json=JSON.stringify(finalDb);
   let next=1,write;
@@ -305,10 +308,10 @@ app.post('/api/db',async(req,res)=>{
   console.log('[v046 /api/db direct save] version=%s payload=%sMB duration=%sms',next,(Buffer.byteLength(json)/1048576).toFixed(2),Date.now()-started);
   res.json({ok:true,version:next,merged:false,conflict:false,conflicts:[]});
  }catch(e){
-  try{await client.query('ROLLBACK')}catch(_e){}
+  if(client){try{await client.query('ROLLBACK')}catch(_e){}}
   console.error('Database save failed:',e);
-  res.status(500).json({message:'Database save failed',detail:e.message});
- }finally{client.release()}
+  res.status(client?500:503).json({message:client?'Database save failed':'Cloud database connection unavailable',detail:e.message});
+ }finally{if(client)client.release()}
 });
 app.post('/api/reset-business',async(req,res)=>{const sess=verifySession(req);if(!sess)return res.status(401).json({ok:false,message:'Login required'});const incoming=req.body&&req.body.db;if(!incoming||typeof incoming!=='object'||Array.isArray(incoming))return res.status(400).json({message:'Invalid reset database payload'});const source=String(req.body.source||'WipkoERP_v28_complete_reset'),client=await pool.connect();try{await client.query('BEGIN');const cur=await client.query('SELECT version,data FROM wipko_app_state WHERE id=1 FOR UPDATE');let next=1;if(cur.rowCount){const cv=Number(cur.rows[0].version||0),current=cur.rows[0].data||{};next=cv+1;await client.query('INSERT INTO wipko_state_backups(version,data,source) VALUES($1,$2::jsonb,$3)',[cv,JSON.stringify(current),'pre-complete-reset']);await client.query('DELETE FROM wipko_state_backups WHERE id NOT IN (SELECT id FROM wipko_state_backups ORDER BY id DESC LIMIT '+BACKUP_KEEP+')');await client.query('UPDATE wipko_app_state SET version=$1,data=$2::jsonb,updated_at=NOW(),updated_by=$3 WHERE id=1',[next,JSON.stringify(incoming),source])}else{await client.query('INSERT INTO wipko_app_state(id,version,data,updated_by) VALUES(1,$1,$2::jsonb,$3)',[next,JSON.stringify(incoming),source])}if(authUsersFromDb(incoming).length)await replaceAuthUsersFromDb(incoming,client,'complete-business-reset');else console.warn('[WipkoERP v046 auth] reset payload had no users; existing login table preserved.');await syncFastState(incoming,next,client);await client.query('COMMIT');res.json({ok:true,reset:true,version:next,db:incoming})}catch(e){try{await client.query('ROLLBACK')}catch(_e){}console.error('Business reset failed:',e);res.status(500).json({message:'Business reset failed',detail:e.message})}finally{client.release()}});
 function v045CoreCounts(db){
